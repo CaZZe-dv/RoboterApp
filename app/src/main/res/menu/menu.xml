@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item1"
+          android:icon="@drawable/ic_move"
+          android:title="Achsen Bewegen"></item>
+    <item android:id="@+id/item2"
+          android:icon="@drawable/ic_reset"
+          android:title="Achsen drehen"></item>
+    <item android:id="@+id/item3"
+          android:icon="@drawable/ic_home"
+          android:title="Home Position"></item>
+    <item android:id="@+id/item4"
+          android:icon="@drawable/ic_code"
+          android:title="Consolen Log"></item>
+</menu>

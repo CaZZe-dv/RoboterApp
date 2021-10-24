@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+    <LinearLayout
+            android:id="@+id/Manuelle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                android:text="Greifer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisSix" android:max="70"
+                android:progress="0" android:indeterminate="false"
+                style="@style/Widget.AppCompat.SeekBar"/>
+        <TextView
+                android:text="Achse 5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisFive" android:max="180"
+                android:progress="0"/>
+        <TextView
+                android:text="Achse 4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisFour" android:max="180"
+                android:progress="0"/>
+        <TextView
+                android:text="Achse 3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView2"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisThree"
+                android:progress="0" android:max="180"/>
+        <TextView
+                android:text="Achse 2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView3"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisTwo"
+                android:progress="0" android:max="180"/>
+        <TextView
+                android:text="Achse 1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="24sp"
+                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView4"/>
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/AxisOne"
+                android:progress="0" android:max="180"/>
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView" android:textColor="#FFFFFF"
+                        android:textSize="24sp"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

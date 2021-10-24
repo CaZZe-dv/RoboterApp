@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <Button
+            android:text="Einloggen"
+            android:layout_width="246dp"
+            android:layout_height="63dp" android:id="@+id/loginButton"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.496" app:layout_constraintVertical_bias="0.881"
+            app:backgroundTint="@color/design_default_color_primary"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/username"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.377"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+            android:text="Benutzername:"
+            android:layout_width="187dp"
+            android:layout_height="35dp"
+            android:textSize="24sp" android:textColor="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.441" app:layout_constraintVertical_bias="0.321"
+            android:id="@+id/textView7"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.491"
+    />
+    <TextView
+            android:text="Passwort:"
+            android:layout_width="136dp"
+            android:layout_height="33dp"
+            android:textSize="24sp" android:textColor="#FFFFFF"
+            android:id="@+id/textView6" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.36"
+            app:layout_constraintVertical_bias="0.435"/>
+    <TextView
+            android:text="Willkommen in der App für die Steuerung des Roboters!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.056" android:textSize="24sp"
+            app:layout_constraintHorizontal_bias="1.0" android:gravity="center_horizontal|center_vertical"
+            android:textColor="#FFFFFF"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
