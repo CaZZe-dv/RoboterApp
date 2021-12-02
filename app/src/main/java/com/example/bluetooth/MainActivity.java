@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ParcelUuid;
+import android.renderscript.RenderScript;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -15,30 +17,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainer;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
 
     private OutputStream outputStream;
     private InputStream inputStream;
 
-    private SeekBar axisSix;
-    private SeekBar axisFive;
-    private SeekBar axisFour;
-    private SeekBar axisThree;
-    private SeekBar axisTwo;
-    private SeekBar axisOne;
+    public SeekBar axisSix;
+    public SeekBar axisFive;
+    public SeekBar axisFour;
+    public SeekBar axisThree;
+    public SeekBar axisTwo;
+    public SeekBar axisOne;
 
-    private Switch switchAxisSix;
-    private Switch switchAxisFive;
-    private Switch switchAxisFour;
-    private Switch switchAxisThree;
-    private Switch switchAxisTwo;
-    private Switch switchAxisOne;
+    public Switch switchAxisSix;
+    public Switch switchAxisFive;
+    public Switch switchAxisFour;
+    public Switch switchAxisThree;
+    public Switch switchAxisTwo;
+    public Switch switchAxisOne;
 
     private BluetoothAdapter bt;
 
@@ -53,16 +58,23 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public FragmentView fragment3;
     public FragmentView fragment4;
 
+    public SeekBar delay;
+
+    public Button homeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragment1 = new FragmentView(R.layout.fragment1);
-        fragment2 = new FragmentView(R.layout.fragment2);
-        fragment3 = new FragmentView(R.layout.fragment3);
-        fragment4 = new FragmentView(R.layout.fragment4);
+        fragment1 = new FragmentView(R.layout.fragment1,this);
+        fragment2 = new FragmentView(R.layout.fragment2,this);
+        fragment3 = new FragmentView(R.layout.fragment3,this);
+        fragment4 = new FragmentView(R.layout.fragment4,this);
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment4).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment3).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment2).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,fragment1).commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
@@ -91,135 +103,103 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             }
         });
 
-        //axisSix = findViewById(R.id.AxisSix);
-        //axisFive = findViewById(R.id.AxisFive);
-        //axisFour = findViewById(R.id.AxisFour);
-        //axisThree = findViewById(R.id.AxisThree);
-        //axisTwo = findViewById(R.id.AxisTwo);
-        //axisOne = findViewById(R.id.AxisOne);
-//
-        //switchAxisSix = findViewById(R.id.SwitchAxisSix);
-        //switchAxisFive = findViewById(R.id.SwitchAxisFive);
-        //switchAxisFour = findViewById(R.id.SwitchAxisFour);
-        //switchAxisThree = findViewById(R.id.SwitchAxisThree);
-        //switchAxisTwo = findViewById(R.id.SwitchAxisTwo);
-        //switchAxisOne = findViewById(R.id.SwitchAxisOne);
-
         drawLine = new DrawLine(this);
 
         LinearLayout l = findViewById(R.id.View);
 
         l.addView(drawLine,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        //switchAxisSix.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("6"+70);
-        //            return;
-        //        }
-        //        write("6"+0);
-        //    }
-        //});
-        //switchAxisFive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("5"+180);
-        //            return;
-        //        }
-        //        write("5"+0);
-        //    }
-        //});
-        //switchAxisFour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("4"+180);
-        //            return;
-        //        }
-        //        write("4"+0);
-        //    }
-        //});
-        //switchAxisThree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("3"+180);
-        //            return;
-        //        }
-        //        write("3"+0);
-        //    }
-        //});
-        //switchAxisTwo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("2"+180);
-        //            return;
-        //        }
-        //        write("2"+0);
-        //    }
-        //});
-        //switchAxisOne.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        //    @Override
-        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //        if(isChecked){
-        //            write("1"+180);
-        //            return;
-        //        }
-        //        write("1"+0);
-        //    }
-        //});
-//
-        //axisSix.setOnSeekBarChangeListener(this);
-        //axisFive.setOnSeekBarChangeListener(this);
-        //axisFour.setOnSeekBarChangeListener(this);
-        //axisThree.setOnSeekBarChangeListener(this);
-        //axisTwo.setOnSeekBarChangeListener(this);
-        //axisOne.setOnSeekBarChangeListener(this);
-
-        //textLog = findViewById(R.id.textView);
-
-        //connectBluetooth();
-
 
     }
+
+    public void addListeners(){
+        axisSix.setOnSeekBarChangeListener(this);
+        axisFive.setOnSeekBarChangeListener(this);
+        axisFour.setOnSeekBarChangeListener(this);
+        axisThree.setOnSeekBarChangeListener(this);
+        axisTwo.setOnSeekBarChangeListener(this);
+        axisOne.setOnSeekBarChangeListener(this);
+
+        switchAxisOne.setOnCheckedChangeListener(this);
+        switchAxisTwo.setOnCheckedChangeListener(this);
+        switchAxisThree.setOnCheckedChangeListener(this);
+        switchAxisFour.setOnCheckedChangeListener(this);
+        switchAxisFive.setOnCheckedChangeListener(this);
+        switchAxisSix.setOnCheckedChangeListener(this);
+
+        delay.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                write("d"+(seekBar.getProgress()+20));
+                writeConsole("Delay wurde auf "+(seekBar.getProgress()+20)+" ms gestellt");
+            }
+        });
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    drawLine.axes.changePosition(90, 120, 25, 50,0,60);
+                    write("190");
+                    write("2120");
+                    write("325");
+                    write("450");
+                    write("50");
+                    write("660");
+                    writeConsole("Roboter wird in Home Position gefahren");
+                }catch (Exception e){
+                    writeConsole(e.getMessage());
+                }
+            }
+        });
+
+        drawLine.axes.changePosition(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+    }
+
+    public void writeConsole(String text){
+        textView.setText(textView.getText()+"\r\n"+text);
+    }
+
     public void write(String s){
         try{
+            s += ".";
             outputStream.write(s.getBytes());
         }catch (Exception e){
-
+            writeConsole("Senden der Anweisung hat nicht geklappt");
         }
 
     }
     public void connectBluetooth(){
-        bt = BluetoothAdapter.getDefaultAdapter();
-        for(BluetoothDevice device : bt.getBondedDevices()){
-            if(device.getName().equals("HC-05")){
-                try {
+        try {
+            bt = BluetoothAdapter.getDefaultAdapter();
+            for(BluetoothDevice device : bt.getBondedDevices()){
+                if(device.getName().equals("HC-05")){
                     ParcelUuid[] uuids = device.getUuids();
                     BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuids[0].getUuid());
                     socket.connect();
-
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
-
-
-                }catch (Exception e){
-
+                    writeConsole("Verbindung mit Bluetooth erfolgreich");
                 }
             }
+        }catch (Exception e){
+            writeConsole("Verbindung mit Bluetooth fehlgeschlagen");
         }
     }
-    //public void switchToControllerLogin(){
-    //    Intent intent = new Intent(this, ControllerLogin.class);
-    //    startActivity(intent);
-    //}
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        drawLine.axes.changePosition(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress());
+        drawLine.axes.changePosition(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
     }
 
     @Override
@@ -231,27 +211,82 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public void onStopTrackingTouch(SeekBar seekBar) {
         if(seekBar.equals(axisSix)){
             write("6"+axisSix.getProgress());
-            textView.setText("6"+axisSix.getProgress());
+            writeConsole("6 Achse auf "+axisSix.getProgress()+" Grad");
         }
         if(seekBar.equals(axisFive)){
             write("5"+axisFive.getProgress());
-            textView.setText("5"+axisFive.getProgress());
+            writeConsole("5 Achse auf "+axisFive.getProgress()+" Grad");
         }
         if(seekBar.equals(axisFour)){
             write("4"+axisFour.getProgress());
-            textView.setText("4"+axisFour.getProgress());
+            writeConsole("4 Achse auf "+axisFour.getProgress()+" Grad");
         }
         if(seekBar.equals(axisThree)){
             write("3"+axisThree.getProgress());
-            textView.setText("3"+axisThree.getProgress());
+            writeConsole("3 Achse auf "+axisThree.getProgress()+" Grad");
         }
         if(seekBar.equals(axisTwo)){
             write("2"+axisTwo.getProgress());
-            textView.setText("2"+axisTwo.getProgress());
+            writeConsole("2 Achse auf "+axisTwo.getProgress()+" Grad");
         }
         if(seekBar.equals(axisOne)){
             write("1"+axisOne.getProgress());
-            textView.setText("1"+axisOne.getProgress());
+            writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            if(buttonView.equals(switchAxisSix)){
+                write("6180");
+                writeConsole("6 Achse auf 180 Grad");
+            }
+            if(buttonView.equals(switchAxisFive)){
+                write("5180");
+                writeConsole("5 Achse auf 180 Grad");
+            }
+            if(buttonView.equals(switchAxisFour)){
+                write("4180");
+                writeConsole("4 Achse auf 180 Grad");
+            }
+            if(buttonView.equals(switchAxisThree)){
+                write("3180");
+                writeConsole("3 Achse auf 180 Grad");
+            }
+            if(buttonView.equals(switchAxisTwo)){
+                write("2180");
+                writeConsole("2 Achse auf 180 Grad");
+            }
+            if(buttonView.equals(switchAxisOne)){
+                write("1180");
+                writeConsole("1 Achse auf 180 Grad");
+            }
+        }
+        if(buttonView.equals(switchAxisSix)){
+            write("60");
+            writeConsole("6 Achse auf 0 Grad");
+        }
+        if(buttonView.equals(switchAxisFive)){
+            write("50");
+            writeConsole("5 Achse auf 0 Grad");
+        }
+        if(buttonView.equals(switchAxisFour)){
+            write("40");
+            writeConsole("4 Achse auf 0 Grad");
+        }
+        if(buttonView.equals(switchAxisThree)){
+            write("30");
+            writeConsole("3 Achse auf 0 Grad");
+        }
+        if(buttonView.equals(switchAxisTwo)){
+            write("20");
+            writeConsole("2 Achse auf 0 Grad");
+        }
+        if(buttonView.equals(switchAxisOne)){
+            write("10");
+            writeConsole("1 Achse auf 0 Grad");
+        }
+
     }
 }

@@ -26,6 +26,9 @@ public class ControllerLogin extends AppCompatActivity {
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
 
+        username.setText("admin");
+        password.setText("admin");
+
         try {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override

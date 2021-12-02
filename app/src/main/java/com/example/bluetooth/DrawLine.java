@@ -16,32 +16,29 @@ class DrawLine extends View {
     }
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.translate(getWidth()/2,getHeight()-100);
         paint.setStrokeWidth(4);
-        paint.setColor(Color.BLACK);
-
-        Vector3D v2 = axes.axis2.getRelativVector();
-
-        canvas.drawLine(0,0,(int)(v2.x*axes.axis1.getDrawFactor()),-v2.y,paint);
-
-        Vector3D v3 = Vector3D.addVector3D(v2,axes.axis3.getRelativVector());
-
-        canvas.drawLine((int)(v2.x*axes.axis1.getDrawFactor()),-v2.y,(int)(v3.x*axes.axis1.getDrawFactor()),-v3.y,paint);
-
-        Vector3D v4 = Vector3D.addVector3D(v3,axes.axis4.getRelativVector());
-
-        canvas.drawLine((int)(v3.x*axes.axis1.getDrawFactor()),-v3.y ,(int)(v4.x*axes.axis1.getDrawFactor()),-v4.y,paint);
-
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(50);
+        //Achsen Grade und Positionen in der Welt anzeigen lassen
+        canvas.drawText("|Achse 1: "+axes.axis1.degree+"|Achse 2: "+axes.axis2.degree+"|Achse 3: "
+                +axes.axis3.degree+"|",0,50,paint);
+        canvas.drawText("|Achse 4: "+axes.axis4.degree+"|Achse 5: "+axes.axis5.degree
+                +"|Achse 6: "+axes.axis6.degree+"|",0,100,paint);
+        canvas.translate(getWidth()/2,getHeight()-100);
+        //Von Achse 2 bis Achse 3
+        Vector2D axis2 = axes.axis2.getVectorWorld2D();
+        canvas.drawLine(0,0,(int)(axis2.x*axes.axis1.getDrawFactor()),-axis2.y,paint);
+        //Von Achse 3 bis Achse 4
+        Vector2D axis3 = axes.axis3.getVectorWorld2D();
+        canvas.drawLine((int)(axis2.x*axes.axis1.getDrawFactor()),-axis2.y,(int)(axis3.x*axes.axis1.getDrawFactor()),-axis3.y,paint);
+        //Von Achse 4 bis Ende
+        Vector2D axis4 = axes.axis4.getVectorWorld2D();
+        canvas.drawLine((int)(axis3.x*axes.axis1.getDrawFactor()),-axis3.y,(int)(axis4.x*axes.axis1.getDrawFactor()),-axis4.y,paint);
+        //Weltpunkt einzeichen
         paint.setColor(Color.RED);
-
-        canvas.drawLine(0,0,(int)(v4.x*axes.axis1.getDrawFactor()),-v4.y,paint);
-
-        int x = (int)(Math.cos(Math.toRadians(axes.axis1.degree))*v4.x);
-        int z = (int)(Math.sin(Math.toRadians(axes.axis1.degree))*v4.x);
-
-        Vector3D vector3DWorld = new Vector3D(x,v4.y,z);
-
-        canvas.drawText("(x: "+vector3DWorld.x+", y: "+vector3DWorld.y+", z: "+vector3DWorld.z+")",(int)(v4.x*axes.axis1.getDrawFactor()),-v4.y,paint);
+        canvas.drawLine(0,0,(int)(axis4.x*axes.axis1.getDrawFactor()),-axis4.y,paint);
+        Vector3D vectorWorld = axes.getVectorWorld3D();
+        canvas.drawText("(x: "+vectorWorld.x+" y: "+vectorWorld.y+" z: "+vectorWorld.z+")",(int)(axis4.x*axes.axis1.getDrawFactor()),-axis4.y,paint);
     }
 
 }

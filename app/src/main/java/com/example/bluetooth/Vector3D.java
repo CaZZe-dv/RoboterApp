@@ -1,11 +1,8 @@
 package com.example.bluetooth;
-public class Vector3D {
-    public int x;
-    public int y;
+public class Vector3D extends Vector2D{
     public int z;
     public Vector3D(int x, int y, int z){
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.z = z;
     }
 

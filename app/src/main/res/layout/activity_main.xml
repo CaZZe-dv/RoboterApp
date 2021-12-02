@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity" android:background="@color/design_default_color_on_secondary">
 
-    <FrameLayout android:layout_width="0dp" android:layout_height="450dp"
+    <FrameLayout android:layout_width="0dp" android:layout_height="345dp"
                  android:id="@+id/fragmentContainer" app:layout_constraintEnd_toEndOf="parent"
                  app:layout_constraintStart_toStartOf="parent"
                  app:layout_constraintTop_toTopOf="parent"

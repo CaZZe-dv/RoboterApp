@@ -1,25 +1,43 @@
 package com.example.bluetooth;
 public class Axes {
+
     public Axis axis1;
     public Axis axis2;
     public Axis axis3;
     public Axis axis4;
-    public DrawLine drawLine;
-    public Axes(DrawLine drawLine){
+    public Axis axis5;
+    public Axis axis6;
 
-        this.axis1 = new Axis(0,null, 0);
-        this.axis2 = new Axis(45,null,150);
-        this.axis3 = new Axis(45,axis2,150);
-        this.axis4 = new Axis(45,axis3,150);
+    public DrawLine drawLine;
+
+    public Axes(DrawLine drawLine){
+        this.axis1 = new Axis(0,null, 0,null);
+        this.axis2 = new Axis(0,null,120,axis1);
+        this.axis3 = new Axis(0,axis2,120,axis1);
+        this.axis4 = new Axis(0,axis3,190,axis1);
+        this.axis5 = new Axis(0,null,0,null);
+        this.axis6 = new Axis(0,null,0,null);
         this.drawLine = drawLine;
     }
 
-    public void changePosition(int d1, int d2, int d3, int d4){
+    public void changePosition(int d1, int d2, int d3, int d4, int d5, int d6){
         axis1.degree = d1;
         axis2.degree = d2;
         axis3.degree = d3;
         axis4.degree = d4;
-
+        axis5.degree = d5;
+        axis6.degree = d6;
         drawLine.invalidate();
     }
+
+    public Vector3D getVectorWorld3D(){
+        int degree = axis1.degree;
+        Vector2D vectorWorld2D = axis4.getVectorWorld2D();
+        int x = (int)(Math.cos(Math.toRadians(degree))*vectorWorld2D.x);
+        int z = (int)(Math.sin(Math.toRadians(degree))*vectorWorld2D.x);
+        int y = vectorWorld2D.y;
+
+        return new Vector3D(x,y,z);
+    }
+
 }
