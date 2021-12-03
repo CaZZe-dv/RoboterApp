@@ -36,7 +36,7 @@ public class ControllerChoose extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 controller.setChecked(true);
-                toolTip.setText("Mit diesem Modus können die den Roboter steuern");
+                toolTip.setText("Mit diesem Modus können Sie den Roboter steuern");
             }
         });
 
@@ -44,7 +44,7 @@ public class ControllerChoose extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 programms.setChecked(true);
-                toolTip.setText("Mit diesem Modus können sie Programme erstellen und abspielen");
+                toolTip.setText("Mit diesem Modus können Sie Programme erstellen und abspielen");
             }
         });
 
@@ -52,8 +52,10 @@ public class ControllerChoose extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RadioButton r = findViewById(radioGroup.getCheckedRadioButtonId());
-                if(r.equals(controller)) {
+                if(r.equals(controller)) {//Controller Modus
                     switchToMainActivity();
+                }else if(r.equals(programms)){//Programm Modus
+                    switchToProgrammActivity();
                 }
             }
         });
@@ -61,6 +63,10 @@ public class ControllerChoose extends AppCompatActivity {
 
     public void switchToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+    public void switchToProgrammActivity(){
+        Intent intent = new Intent(this, ProgrammActivity.class);
         startActivity(intent);
     }
 }
