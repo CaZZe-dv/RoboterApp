@@ -17,7 +17,7 @@ public class Point {
         this.axisFive=axisFive;
         this.axisSix=axisSix;
     }
-    public void setAxis(int axisOne, int axisTwo, int axisThree, int axisFour, int axisFive, int axisSix){
+    public void setAxis(int axisOne, int axisTwo, int axisThree, int axisFour, int axisFive, int axisSix) {
         this.axisOne=axisOne;
         this.axisTwo=axisTwo;
         this.axisThree=axisThree;

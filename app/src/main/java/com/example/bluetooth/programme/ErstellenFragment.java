@@ -8,31 +8,44 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
 
-public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener{
+import java.util.ArrayList;
+
+public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     View view;
 
     Connector connector;
     BTConnector btConnector;
 
-    public SeekBar axisSix;
-    public SeekBar axisFive;
-    public SeekBar axisFour;
-    public SeekBar axisThree;
-    public SeekBar axisTwo;
-    public SeekBar axisOne;
+    SeekBar axisSix;
+    SeekBar axisFive;
+    SeekBar axisFour;
+    SeekBar axisThree;
+    SeekBar axisTwo;
+    SeekBar axisOne;
 
-    public Button btnReset;
-    public Button btnAddPoint;
+    Button btnReset;
+    Button btnAddPoint;
+    Button btnAddProgramm;
 
-    public TextView textViewProgrammName;
+    EditText textViewProgrammName;
+    EditText textViewBeschreibung;
+    EditText textViewGeschwindigkeit;
+
+    ListView listView;
+    ArrayList<String> arrayList;
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -60,10 +73,25 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
         //Buttons
         btnReset = view.findViewById(R.id.btnResetProgramm);
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
+        btnAddProgramm = view.findViewById(R.id.btnAddProgramm);
+
+        btnReset.setOnClickListener(this);
+        btnAddPoint.setOnClickListener(this);
+        btnAddProgramm.setOnClickListener(this);
         //TextView
         textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
-    }
+        textViewBeschreibung = view.findViewById(R.id.textViewProgrammBeschreibung);
+        textViewGeschwindigkeit = view.findViewById(R.id.textViewGeschwindigkeit);
+        //Liste
+        listView=(ListView)view.findViewById(R.id.listViewPunkte);
+        listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
+        arrayList=new ArrayList<String>();
+
+        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
+        listView.setAdapter(arrayAdapter);
+    }
 
 
     //SeekBar Listener
@@ -73,7 +101,6 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
     }
-
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if(seekBar.equals(axisSix)){
@@ -101,5 +128,28 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
             //writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
         }
 
+    }
+    //Button Listeners
+    @Override
+    public void onClick(View view) {
+        if(view.equals(btnAddPoint)){
+            //ausgewählte Achsenpositionen als Punkt hinzufügen
+
+        }
+        if(view.equals(btnReset)){
+        }
+        if(view.equals(btnAddProgramm)){
+        }
+    }
+    //Liste Listeners
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        //Bei einfachem Klick können Infos angesehen werden
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+        //Bei halten kann das Item gelöscht werden
     }
 }

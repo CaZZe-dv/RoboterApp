@@ -48,6 +48,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     }
     private void initListView(){
         //Da kein Programmname doppelt verwendet werden kann, kann einfach der Name der Tabelle verwendet werden.
+        //TODO: Überarbeiten, Name wird in externer Tabelle gespeichert
         listView=(ListView)view.findViewById(R.id.listview_programme);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
