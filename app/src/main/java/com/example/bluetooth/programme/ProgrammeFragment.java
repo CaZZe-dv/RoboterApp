@@ -41,7 +41,6 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     private void init(){
         //Connector
         connector=new Connector(view.getContext());
-
         //ListView
         initListView();
         updateListView();
@@ -59,7 +58,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
         listView.setAdapter(arrayAdapter);
     }
     private void updateListView(){
-        Collections.addAll(arrayList,connector.getTableNames());
+        arrayList=connector.getProgrammListe();
 
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);

@@ -13,12 +13,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS programmeData (id INTEGER PRIMARY KEY, tableName TEXT, programmName TEXT, beschreibung TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS programmData (id INTEGER PRIMARY KEY, programmName TEXT, beschreibung TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS pointData (id INTEGER PRIMARY KEY, pid INTEGER, geschwindigkeit INTEGER, achse1 INTEGER, achse2 INTEGER, achse3 INTEGER, achse4 INTEGER, achse5 INTEGER, achse6 INTEGER, delay INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS programmeData");
+        db.execSQL("DROP TABLE IF EXISTS programmData");
+        db.execSQL("DROP TABLE IF EXISTS pointData");
         onCreate(db);
     }
     @Override

@@ -1,4 +1,4 @@
-package com.example.bluetooth.programme;
+package com.example.bluetooth.programme.erstellen;
 
 public class Point {
     //Achsenstellungen für einen exakten Punkt
@@ -16,6 +16,14 @@ public class Point {
         this.axisFour=axisFour;
         this.axisFive=axisFive;
         this.axisSix=axisSix;
+    }
+    public Point(Point p){
+        this.axisOne=p.getAxisOne();
+        this.axisTwo=p.getAxisTwo();
+        this.axisThree=p.getAxisThree();
+        this.axisFour=p.getAxisFour();
+        this.axisFive=p.getAxisFive();
+        this.axisSix=p.getAxisSix();
     }
     public void setAxis(int axisOne, int axisTwo, int axisThree, int axisFour, int axisFive, int axisSix) {
         this.axisOne=axisOne;

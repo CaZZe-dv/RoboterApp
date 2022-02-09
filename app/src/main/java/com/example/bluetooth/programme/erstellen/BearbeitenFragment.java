@@ -1,8 +1,7 @@
-package com.example.bluetooth.programme;
+package com.example.bluetooth.programme.erstellen;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,19 +13,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     View view;
-
     Connector connector;
-    BTConnector btConnector;
 
     SeekBar axisSix;
     SeekBar axisFive;
@@ -35,28 +32,28 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
     SeekBar axisTwo;
     SeekBar axisOne;
 
-    Button btnReset;
     Button btnAddPoint;
-    Button btnAddProgramm;
+    FloatingActionButton btnSaveProgramm;
 
-    EditText textViewProgrammName;
-    EditText textViewBeschreibung;
     EditText textViewGeschwindigkeit;
 
     ListView listView;
     ArrayList<String> arrayList;
+    ArrayList<PointG> pointList;
     ArrayAdapter<String> arrayAdapter;
+
+    int defaultGeschwindigkeit = 10;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_erstellen, container, false);
+        view = inflater.inflate(R.layout.fragment_bearbeiten, container, false);
         init();
         return view;
     }
     private void init(){
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         //Seekbars
+
         axisSix = view.findViewById(R.id.AxisSix_Programme);
         axisFive = view.findViewById(R.id.AxisFive_Programme);
         axisFour = view.findViewById(R.id.AxisFour_Programme);
@@ -70,31 +67,39 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
         axisThree.setOnSeekBarChangeListener(this);
         axisTwo.setOnSeekBarChangeListener(this);
         axisOne.setOnSeekBarChangeListener(this);
-        //Buttons
-        btnReset = view.findViewById(R.id.btnResetProgramm);
-        btnAddPoint = view.findViewById(R.id.btnAddPunkt);
-        btnAddProgramm = view.findViewById(R.id.btnAddProgramm);
 
-        btnReset.setOnClickListener(this);
+        //Buttons
+        btnAddPoint = view.findViewById(R.id.btnAddPunkt);
+        btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
+
         btnAddPoint.setOnClickListener(this);
-        btnAddProgramm.setOnClickListener(this);
+        btnSaveProgramm.setOnClickListener(this);
         //TextView
-        textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
-        textViewBeschreibung = view.findViewById(R.id.textViewProgrammBeschreibung);
         textViewGeschwindigkeit = view.findViewById(R.id.textViewGeschwindigkeit);
+
         //Liste
         listView=(ListView)view.findViewById(R.id.listViewPunkte);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
         arrayList=new ArrayList<String>();
-
+        pointList=new ArrayList<PointG>();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
 
-
-    //SeekBar Listener
+    //Listen
+    private void updateList(){
+        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
+        listView.setAdapter(arrayAdapter);
+    }
+    private void addListItem(PointG pg){
+        int index=arrayList.size()+1;
+        arrayList.add("Punkt "+index);
+        pointList.add(pg);
+        updateList();
+    }
+//SeekBar Listener
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     }
@@ -134,11 +139,18 @@ public class ErstellenFragment extends Fragment implements SeekBar.OnSeekBarChan
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
             //ausgewählte Achsenpositionen als Punkt hinzufügen
-
+            Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+            PointG pg;
+            if(textViewGeschwindigkeit.getText().toString().isEmpty()){
+                pg=new PointG(p,defaultGeschwindigkeit);
+            }else{
+                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()));
+            }
+            addListItem(pg);
+            //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
-        if(view.equals(btnReset)){
-        }
-        if(view.equals(btnAddProgramm)){
+        if(view.equals(btnSaveProgramm)){
+            //TODO: Save Programm
         }
     }
     //Liste Listeners
