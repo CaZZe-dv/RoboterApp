@@ -90,13 +90,71 @@ public class Connector {
         }
         return arrayList;
     }
+    public ArrayList<Integer> getIDListe(){
+        columns=new String[]{"id"};
+
+        cursor = dbRead.query("programmData ", columns, null, null, null, null,null);
+        ArrayList<Integer> arrayList=new ArrayList<>();
+
+        if(cursor!=null && cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                arrayList.add(cursor.getInt(0));
+            }
+        }
+        return arrayList;
+    }
+
+
+
     public void newProgramm(String name,String beschreibung){
         values.clear();
         values.put("programmName", name);
         values.put("beschreibung",beschreibung);
         dbWrite.insert("programmData", null,values);
     }
+    public void addPoints(ArrayList<PointG> arrayList, int id){
+        //Zuerst alle Punkte mit dieser ID löschen
+        selection = "pid = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+        dbWrite.delete("pointData", selection, selectionArgs);
+        //Dann alle Punkte hinzufügen mit id als pid
+        for(int i=0;i<arrayList.size();i++){
+            values.clear();
+            values.put("pid", id);
+            values.put("geschwindigkeit",arrayList.get(i).getGeschwindigkeit());
+            values.put("achse1",arrayList.get(i).getAxisOne());
+            values.put("achse2",arrayList.get(i).getAxisTwo());
+            values.put("achse3",arrayList.get(i).getAxisThree());
+            values.put("achse4",arrayList.get(i).getAxisFour());
+            values.put("achse5",arrayList.get(i).getAxisFive());
+            values.put("achse6",arrayList.get(i).getAxisSix());
+            values.put("delay",arrayList.get(i).getDelay());
+            dbWrite.insert("pointData", null,values);
+        }
+    }
+    public ArrayList<PointG> getPoints(int id){
+        columns=new String[]{"geschwindigkeit","achse1","achse2","achse3","achse4","achse5","achse6","delay"};
+        selection="pid = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
 
+        cursor = dbRead.query("pointData ", columns, selection, selectionArgs, null, null,null);
+        ArrayList<PointG> arrayList=new ArrayList<>();
 
+        if(cursor!=null && cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                int geschwindigkeit = cursor.getInt(0);
+                int achse1 = cursor.getInt(1);
+                int achse2 = cursor.getInt(2);
+                int achse3 = cursor.getInt(3);
+                int achse4 = cursor.getInt(4);
+                int achse5 = cursor.getInt(5);
+                int achse6 = cursor.getInt(6);
+                int delay = cursor.getInt(7);
 
+                PointG pg=new PointG(achse1, achse2, achse3, achse4, achse5, achse6, geschwindigkeit, delay);
+                arrayList.add(pg);
+            }
+        }
+        return arrayList;
+    }
 }

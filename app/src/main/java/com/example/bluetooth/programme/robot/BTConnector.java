@@ -1,12 +1,16 @@
-package com.example.bluetooth.programme;
+package com.example.bluetooth.programme.robot;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 import android.os.ParcelUuid;
+
+import com.example.bluetooth.programme.erstellen.PointG;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class BTConnector {
     //Methoden für die Verbindung mit dem Bluetooth Modul
@@ -43,4 +47,29 @@ public class BTConnector {
         }
 
     }
+    public void playbackProgramm(ArrayList<PointG> points){
+        for(int i=0;i<points.size();i++){
+            //Delay (= Geschwindigkeit)
+            write("d"+String.valueOf(points.get(i).getGeschwindigkeit()));
+            //Punkte
+            write("1"+String.valueOf(points.get(i).getAxisOne()));
+            write("1"+String.valueOf(points.get(i).getAxisTwo()));
+            write("1"+String.valueOf(points.get(i).getAxisThree()));
+            write("1"+String.valueOf(points.get(i).getAxisFour()));
+            write("1"+String.valueOf(points.get(i).getAxisFive()));
+            write("1"+String.valueOf(points.get(i).getAxisSix()));
+        }
+    }
+    public void test(int l){
+        for(int i=0;i<l;i++){
+            System.out.print("Nach 1 Sekunde ");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    System.out.println("kommt der Rest des Textes");
+                }
+            }, 1000);
+        }
+    }
+
 }

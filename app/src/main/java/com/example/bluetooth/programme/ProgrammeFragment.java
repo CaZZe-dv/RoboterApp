@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.robot.BTConnector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     View view;
 
     Connector connector;
+    BTConnector btConnector;
 
     //Liste
     ListView listView;
@@ -41,6 +43,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     private void init(){
         //Connector
         connector=new Connector(view.getContext());
+        btConnector=new BTConnector();
         //ListView
         initListView();
         updateListView();
@@ -66,7 +69,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        btConnector.test(10);
     }
 
     @Override

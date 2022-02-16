@@ -12,22 +12,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SeekBar;
 
 import com.example.bluetooth.R;
-import com.example.bluetooth.programme.BTConnector;
 import com.example.bluetooth.programme.database.Connector;
 
 import java.util.ArrayList;
 
-public class ErstellenFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class ErstellenFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
 
     View view;
 
     BearbeitenFragment fragmentBearbeiten;
 
     Connector connector;
-    BTConnector btConnector;
 
     Button btnAddProgramm;
 
@@ -36,7 +33,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
 
     ListView listView;
     ArrayList<String> arrayList;
-    ArrayList<PointG> pointList;
+    ArrayList<Integer> idList;
     ArrayAdapter<String> arrayAdapter;
 
     @Override
@@ -47,7 +44,6 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     }
     private void init(){
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         fragmentBearbeiten=new BearbeitenFragment();
 
         //Buttons
@@ -58,19 +54,21 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
         textViewBeschreibung = view.findViewById(R.id.textViewProgrammBeschreibung);
         //Liste
-        /*listView=(ListView)view.findViewById(R.id.listViewPunkte);
+        listView=(ListView)view.findViewById(R.id.listViewProgramme);
         listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
 
         arrayList=new ArrayList<String>();
-        pointList=new ArrayList<PointG>();
+        idList=new ArrayList<Integer>();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
-         */
+        updateList();
     }
 
     //Listen
     private void updateList(){
+        arrayList = connector.getProgrammListe();
+        idList = connector.getIDListe();
+
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
@@ -82,18 +80,21 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
             String name=textViewProgrammName.getText().toString();
             String beschreibung=textViewBeschreibung.getText().toString();
             connector.newProgramm(name,beschreibung);
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
+            idList=connector.getIDListe();
+            int id=idList.get(idList.size()-1);
+            switchFrag(id);
         }
     }
     //Liste Listeners
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Bei einfachem Klick können Infos angesehen werden
-    }
+        //Bei einfachem Klick wird das ausgewählte Programm bearbeitet
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
-        //Bei halten kann das Item gelöscht werden
+        int id=idList.get(i);
+        switchFrag(id);
+    }
+    private void switchFrag(int id){
+        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
+        fragmentBearbeiten.setId(id);
     }
 }

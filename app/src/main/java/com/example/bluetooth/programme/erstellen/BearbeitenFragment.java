@@ -25,6 +25,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     View view;
     Connector connector;
 
+    ErstellenFragment fragmentErstellen;
+    int id;//ID von zu bearbeitendem Programm
+
     SeekBar axisSix;
     SeekBar axisFive;
     SeekBar axisFour;
@@ -43,6 +46,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     ArrayAdapter<String> arrayAdapter;
 
     int defaultGeschwindigkeit = 10;
+    int defaultDelay = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
+        fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
         axisSix = view.findViewById(R.id.AxisSix_Programme);
@@ -82,10 +87,17 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        arrayList=new ArrayList<String>();
-        pointList=new ArrayList<PointG>();
+        pointList=connector.getPoints(id);
+        arrayList=new ArrayList<>();
+        for(int i=0;i<pointList.size();i++){
+            arrayList.add("Punkt "+(i+1));
+        }
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
+        updateList();
+    }
+    public void setId(int id){
+        this.id=id;
     }
 
     //Listen
@@ -138,19 +150,22 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
+            System.out.println("HDHADJDA");
             //ausgewählte Achsenpositionen als Punkt hinzufügen
             Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
             PointG pg;
             if(textViewGeschwindigkeit.getText().toString().isEmpty()){
-                pg=new PointG(p,defaultGeschwindigkeit);
+                pg=new PointG(p,defaultGeschwindigkeit, defaultDelay);
             }else{
-                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()));
+                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
             }
             addListItem(pg);
             //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
             //TODO: Save Programm
+            connector.addPoints(pointList,id);
+            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
         }
     }
     //Liste Listeners
