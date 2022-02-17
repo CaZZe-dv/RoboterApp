@@ -65,7 +65,7 @@ public class FragmentView extends Fragment {
         viewsCreated++;
         if(viewsCreated == 4) {
             mainActivity.addListeners();
-            //mainActivity.connectBluetooth();
+            mainActivity.connectBluetooth();
         }
     }
 }
