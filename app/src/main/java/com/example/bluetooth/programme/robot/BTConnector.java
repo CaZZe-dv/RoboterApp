@@ -20,6 +20,7 @@ public class BTConnector {
     private OutputStream outputStream;
     private InputStream inputStream;
     private Point curPosition;
+    private int defaultSpeed = 1;//TODO: richtigen defaultSpeed setzen
     public BTConnector(){
         //connectBluetooth();
         curPosition=new Point();
@@ -97,6 +98,16 @@ public class BTConnector {
         curPosition.setAxisFour(50);
         curPosition.setAxisFive(0);
         curPosition.setAxisSix(60);
+    }
+    public void goTo(Point p){
+        write("d"+String.valueOf(defaultSpeed));
+
+        write("1"+p.getAxisOne());
+        write("1"+p.getAxisTwo());
+        write("1"+p.getAxisThree());
+        write("1"+p.getAxisFour());
+        write("1"+p.getAxisFive());
+        write("1"+p.getAxisSix());
     }
     public void setCurPosition(Point p){
         this.curPosition=p;

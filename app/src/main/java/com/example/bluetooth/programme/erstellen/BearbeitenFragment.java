@@ -42,6 +42,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     Button btnAddPoint;
     int btnAddPointState;
+    int editPoint;
     FloatingActionButton btnSaveProgramm;
 
     EditText textViewGeschwindigkeit;
@@ -82,6 +83,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisThree.setOnSeekBarChangeListener(this);
         axisTwo.setOnSeekBarChangeListener(this);
         axisOne.setOnSeekBarChangeListener(this);
+        disableSeekbars();
 
         //Buttons
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
@@ -124,6 +126,10 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         pointList.add(pg);
         updateList();
     }
+    private void updateListItem(PointG pg){
+        int index=editPoint;
+        pointList.set(index,pg);
+    }
 //SeekBar Listener
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -163,26 +169,46 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
-            if(btnAddPointState==1){//1=Neuer Punkt
+            switch (btnAddPointState){
+                case 1:
+                    applyCurrentState();
 
-            }else if(btnAddPointState==2){//2=Punkt hinzufügen
+                    enableSeekbars();
+                    btnAddPointState=2;
+                    btnAddPoint.setText("Punkt hinzufügen");
+                    textViewEdit.setText("Neuen Punkt hinzufügen");
+                    break;
+                case 2:
+                    Point pNew=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+                    PointG pgNew;
+                    if(textViewGeschwindigkeit.getText().toString().isEmpty()){
+                        pgNew=new PointG(pNew,defaultGeschwindigkeit, defaultDelay);
+                    }else{
+                        pgNew=new PointG(pNew,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
+                    }
+                    addListItem(pgNew);
 
-            }else if(btnAddPointState==3){//3=Änderung übernehmen
+                    disableSeekbars();
+                    btnAddPointState=1;
+                    btnAddPoint.setText("Neuer Punkt");
+                    textViewEdit.setText("Keinen Punkt ausgewählt");
+                    break;
+                case 3:
+                    Point pEdit=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+                    PointG pgEdit;
+                    if(textViewGeschwindigkeit.getText().toString().isEmpty()){
+                        pgEdit=new PointG(pEdit,defaultGeschwindigkeit, defaultDelay);
+                    }else{
+                        pgEdit=new PointG(pEdit,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
+                    }
+                    updateListItem(pgEdit);
 
+                    disableSeekbars();
+                    btnAddPointState=1;
+                    btnAddPoint.setText("Neuer Punkt");
+                    textViewEdit.setText("Keinen Punkt ausgewählt");
+                    break;
             }
-            //ausgewählte Achsenpositionen als Punkt hinzufügen
-            btnAddPoint.setText("Punkt hinzufügen");
-            textViewEdit.setText("Kein Punkt ausgewählt...");
-            applyCurrentState();
-
-            Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-            PointG pg;
-            if(textViewGeschwindigkeit.getText().toString().isEmpty()){
-                pg=new PointG(p,defaultGeschwindigkeit, defaultDelay);
-            }else{
-                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
-            }
-            addListItem(pg);
             //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
@@ -195,8 +221,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //Bei einfachem Klick können Infos angesehen werden und die Seekbars werden auf die Position gesetzt, auf die sie bei diesem Punkt sind
-        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
-        btnAddPoint.setText("Änderungen übernehmen");
         PointG point=pointList.get(i);
         axisOne.setProgress(point.getAxisOne());
         axisTwo.setProgress(point.getAxisTwo());
@@ -204,6 +228,14 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisFour.setProgress(point.getAxisFour());
         axisFive.setProgress(point.getAxisFive());
         axisSix.setProgress(point.getAxisSix());
+        Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+        btConnector.goTo(p);
+
+        btnAddPointState=3;
+        editPoint=i;
+        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
+        btnAddPoint.setText("Änderungen übernehmen");
+        enableSeekbars();
     }
 
     @Override
@@ -220,5 +252,22 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisFour.setProgress(curPosition.getAxisFour());
         axisFive.setProgress(curPosition.getAxisFive());
         axisSix.setProgress(curPosition.getAxisSix());
+    }
+    private void enableSeekbars(){
+        axisOne.setEnabled(true);
+        axisTwo.setEnabled(true);
+        axisThree.setEnabled(true);
+        axisFour.setEnabled(true);
+        axisFive.setEnabled(true);
+        axisSix.setEnabled(true);
+
+    }
+    private void disableSeekbars(){
+        axisOne.setEnabled(false);
+        axisTwo.setEnabled(false);
+        axisThree.setEnabled(false);
+        axisFour.setEnabled(false);
+        axisFive.setEnabled(false);
+        axisSix.setEnabled(false);
     }
 }
