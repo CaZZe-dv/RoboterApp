@@ -13,10 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -24,6 +28,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     View view;
     Connector connector;
+    BTConnector btConnector;
 
     ErstellenFragment fragmentErstellen;
     int id;//ID von zu bearbeitendem Programm
@@ -36,9 +41,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     SeekBar axisOne;
 
     Button btnAddPoint;
+    int btnAddPointState;
     FloatingActionButton btnSaveProgramm;
 
     EditText textViewGeschwindigkeit;
+    TextView textViewEdit;
 
     ListView listView;
     ArrayList<String> arrayList;
@@ -56,6 +63,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
+        btConnector=new BTConnector();
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
@@ -66,6 +74,8 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisTwo = view.findViewById(R.id.AxisTwo_Programme);
         axisOne = view.findViewById(R.id.AxisOne_Programme);
 
+        btConnector.homePosition();
+
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
         axisFour.setOnSeekBarChangeListener(this);
@@ -75,12 +85,15 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
         //Buttons
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
+        btnAddPointState=1;
         btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
         //TextView
         textViewGeschwindigkeit = view.findViewById(R.id.textViewGeschwindigkeit);
+        textViewEdit = view.findViewById(R.id.textViewEdit);
+        textViewEdit.setText("Kein Punkt ausgewählt...");
 
         //Liste
         listView=(ListView)view.findViewById(R.id.listViewPunkte);
@@ -150,8 +163,18 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
-            System.out.println("HDHADJDA");
+            if(btnAddPointState==1){//1=Neuer Punkt
+
+            }else if(btnAddPointState==2){//2=Punkt hinzufügen
+
+            }else if(btnAddPointState==3){//3=Änderung übernehmen
+
+            }
             //ausgewählte Achsenpositionen als Punkt hinzufügen
+            btnAddPoint.setText("Punkt hinzufügen");
+            textViewEdit.setText("Kein Punkt ausgewählt...");
+            applyCurrentState();
+
             Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
             PointG pg;
             if(textViewGeschwindigkeit.getText().toString().isEmpty()){
@@ -171,12 +194,31 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     //Liste Listeners
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Bei einfachem Klick können Infos angesehen werden
+        //Bei einfachem Klick können Infos angesehen werden und die Seekbars werden auf die Position gesetzt, auf die sie bei diesem Punkt sind
+        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
+        btnAddPoint.setText("Änderungen übernehmen");
+        PointG point=pointList.get(i);
+        axisOne.setProgress(point.getAxisOne());
+        axisTwo.setProgress(point.getAxisTwo());
+        axisThree.setProgress(point.getAxisThree());
+        axisFour.setProgress(point.getAxisFour());
+        axisFive.setProgress(point.getAxisFive());
+        axisSix.setProgress(point.getAxisSix());
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         return false;
         //Bei halten kann das Item gelöscht werden
+    }
+    private void applyCurrentState(){
+        //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
+        Point curPosition=btConnector.getCurPosition();
+        axisOne.setProgress(curPosition.getAxisOne());
+        axisTwo.setProgress(curPosition.getAxisTwo());
+        axisThree.setProgress(curPosition.getAxisThree());
+        axisFour.setProgress(curPosition.getAxisFour());
+        axisFive.setProgress(curPosition.getAxisFive());
+        axisSix.setProgress(curPosition.getAxisSix());
     }
 }
