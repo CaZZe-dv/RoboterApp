@@ -19,8 +19,10 @@ public class BTConnector {
     private BluetoothAdapter bt;
     private OutputStream outputStream;
     private InputStream inputStream;
+    private Point curPosition;
     public BTConnector(){
         //connectBluetooth();
+        curPosition=new Point();
     }
 
     private void connectBluetooth(){
@@ -41,6 +43,7 @@ public class BTConnector {
         }
     }
     public void write(String s){
+        //TODO: curPosition updaten
         try{
             s += ".";
             outputStream.write(s.getBytes());
@@ -80,8 +83,26 @@ public class BTConnector {
                 }
             }
         }, points.get(i).getDelay());
-
-
+    }
+    public void homePosition(){
+        write("190");
+        write("2120");
+        write("325");
+        write("450");
+        write("50");
+        write("660");
+        curPosition.setAxisOne(90);
+        curPosition.setAxisTwo(120);
+        curPosition.setAxisThree(25);
+        curPosition.setAxisFour(50);
+        curPosition.setAxisFive(0);
+        curPosition.setAxisSix(60);
+    }
+    public void setCurPosition(Point p){
+        this.curPosition=p;
+    }
+    public Point getCurPosition(){
+        return curPosition;
     }
 
 }

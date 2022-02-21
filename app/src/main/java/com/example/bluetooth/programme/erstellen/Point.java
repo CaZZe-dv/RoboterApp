@@ -9,6 +9,8 @@ public class Point {
     private int axisThree;
     private int axisTwo;
     private int axisOne;
+    public Point(){
+    }
     public Point(int axisOne, int axisTwo, int axisThree, int axisFour, int axisFive, int axisSix){
         this.axisOne=axisOne;
         this.axisTwo=axisTwo;
@@ -32,6 +34,14 @@ public class Point {
         this.axisFour=axisFour;
         this.axisFive=axisFive;
         this.axisSix=axisSix;
+    }
+    public void setHomePosition(){
+        this.axisOne=90;
+        this.axisTwo=120;
+        this.axisThree=25;
+        this.axisFour=50;
+        this.axisFive=0;
+        this.axisSix=60;
     }
 
     public int getAxisSix() {
