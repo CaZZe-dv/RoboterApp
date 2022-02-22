@@ -1,10 +1,14 @@
-package com.example.bluetooth.programme;
+package com.example.bluetooth.programme.liste;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +36,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
     //Liste
     ListView listView;
-    ArrayList<String> arrayList;
+    ArrayList<SpannableString> arrayList;
     ArrayList<Integer> idList;
     ArrayAdapter arrayAdapter;
 
@@ -56,16 +60,27 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        arrayList=new ArrayList<String>();
+        arrayList=new ArrayList<SpannableString>();
         idList=connector.getIDListe();
 
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
     private void updateListView(){
-        arrayList=connector.getProgrammListe();
-        idList=connector.getIDListe();
+        ArrayList<String> nameList=connector.getProgrammListe();
+        ArrayList<String> beschreibungList=connector.getBeschreibungListe();
+        arrayList=new ArrayList<SpannableString>();
+        for(int i=0;i<nameList.size();i++){
+            String name=nameList.get(i);
+            String beschreibung=beschreibungList.get(i);
+            SpannableString sString = new SpannableString(name+"\n"+beschreibung);
+            sString.setSpan(new RelativeSizeSpan(1f), 0, name.length(), 0);
+            sString.setSpan(new RelativeSizeSpan(0.7f), name.length(), name.length()+beschreibung.length()+1, 0);
 
+            arrayList.add(sString);
+        }
+
+        idList=connector.getIDListe();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }

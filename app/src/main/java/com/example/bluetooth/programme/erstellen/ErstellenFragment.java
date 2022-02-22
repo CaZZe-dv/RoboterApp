@@ -1,5 +1,7 @@
 package com.example.bluetooth.programme.erstellen;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +27,9 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     BearbeitenFragment fragmentBearbeiten;
 
     Connector connector;
+
+    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder;
 
     Button btnAddProgramm;
 
@@ -77,12 +82,18 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddProgramm)){
-            String name=textViewProgrammName.getText().toString();
-            String beschreibung=textViewBeschreibung.getText().toString();
-            connector.newProgramm(name,beschreibung);
-            idList=connector.getIDListe();
-            int id=idList.get(idList.size()-1);
-            switchFrag(id);
+            String name;
+            String beschreibung;
+            if((name=textViewProgrammName.getText().toString()).isEmpty()){
+                dialogError("Bitte Namen angeben");
+            }else if((beschreibung=textViewBeschreibung.getText().toString()).isEmpty()){
+                dialogError("Bitte Beschreibung angeben");
+            }else{
+                connector.newProgramm(name,beschreibung);
+                idList=connector.getIDListe();
+                int id=idList.get(idList.size()-1);
+                switchFrag(id);
+            }
         }
     }
     //Liste Listeners
@@ -96,5 +107,21 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     private void switchFrag(int id){
         getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
         fragmentBearbeiten.setId(id);
+    }
+
+    //AlertDialogs
+    private void dialogError(String errorMessage){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setTitle("Fehler");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

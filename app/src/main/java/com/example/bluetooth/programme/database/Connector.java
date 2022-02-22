@@ -90,6 +90,19 @@ public class Connector {
         }
         return arrayList;
     }
+    public ArrayList<String> getBeschreibungListe(){
+        columns=new String[]{"beschreibung"};
+
+        cursor = dbRead.query("programmData ", columns, null, null, null, null,null);
+        ArrayList<String> arrayList=new ArrayList<>();
+
+        if(cursor!=null && cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                arrayList.add(cursor.getString(0));
+            }
+        }
+        return arrayList;
+    }
     public ArrayList<Integer> getIDListe(){
         columns=new String[]{"id"};
 

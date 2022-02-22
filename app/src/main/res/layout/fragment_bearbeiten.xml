@@ -169,11 +169,11 @@
 
     <EditText
         android:id="@+id/textViewDelay"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
+        android:layout_width="107dp"
+        android:layout_height="0dp"
         android:ems="10"
-        android:hint="Delay"
-        android:inputType="textPersonName"
+        android:hint="Delay(ms)"
+        android:inputType="number|text"
         app:layout_constraintBottom_toBottomOf="@+id/btnAddPunkt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnAddPunkt"
