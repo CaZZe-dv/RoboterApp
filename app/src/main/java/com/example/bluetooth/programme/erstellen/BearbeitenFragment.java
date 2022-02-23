@@ -1,5 +1,7 @@
 package com.example.bluetooth.programme.erstellen;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,9 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -24,6 +28,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     View view;
     Connector connector;
+    BTConnector btConnector;
 
     ErstellenFragment fragmentErstellen;
     int id;//ID von zu bearbeitendem Programm
@@ -34,11 +39,18 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     SeekBar axisThree;
     SeekBar axisTwo;
     SeekBar axisOne;
+    SeekBar axisGeschwindigkeit;
+
+    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder;
 
     Button btnAddPoint;
+    int btnAddPointState;
+    int editPoint;
     FloatingActionButton btnSaveProgramm;
 
-    EditText textViewGeschwindigkeit;
+    EditText textViewDelay;
+    TextView textViewEdit;
 
     ListView listView;
     ArrayList<String> arrayList;
@@ -56,6 +68,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
+        btConnector=new BTConnector();
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
@@ -65,6 +78,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisThree = view.findViewById(R.id.AxisThree_Programme);
         axisTwo = view.findViewById(R.id.AxisTwo_Programme);
         axisOne = view.findViewById(R.id.AxisOne_Programme);
+        axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
+
+        btConnector.homePosition();
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -72,15 +88,21 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisThree.setOnSeekBarChangeListener(this);
         axisTwo.setOnSeekBarChangeListener(this);
         axisOne.setOnSeekBarChangeListener(this);
+        axisGeschwindigkeit.setOnSeekBarChangeListener(this);
 
         //Buttons
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
+        btnAddPointState=1;
         btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
         //TextView
-        textViewGeschwindigkeit = view.findViewById(R.id.textViewGeschwindigkeit);
+        textViewDelay = view.findViewById(R.id.textViewDelay);
+        textViewEdit = view.findViewById(R.id.textViewEdit);
+        textViewEdit.setText("Kein Punkt ausgewählt...");
+
+        disableInput();
 
         //Liste
         listView=(ListView)view.findViewById(R.id.listViewPunkte);
@@ -90,7 +112,10 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         pointList=connector.getPoints(id);
         arrayList=new ArrayList<>();
         for(int i=0;i<pointList.size();i++){
-            arrayList.add("Punkt "+(i+1));
+            PointG pg=pointList.get(i);
+            int index=i+1;
+            String pName=generatePointName(pg,index);
+            arrayList.add(pName);
         }
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
@@ -102,13 +127,26 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     //Listen
     private void updateList(){
+        arrayList=new ArrayList<>();
+        for(int i=0;i<pointList.size();i++){
+            PointG pg=pointList.get(i);
+            int index=i+1;
+            String pName=generatePointName(pg,index);
+            arrayList.add(pName);
+        }
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
     private void addListItem(PointG pg){
         int index=arrayList.size()+1;
-        arrayList.add("Punkt "+index);
+        String pName=generatePointName(pg, index);
+        arrayList.add(pName);
         pointList.add(pg);
+        updateList();
+    }
+    private void updateListItem(PointG pg){
+        int index=editPoint;
+        pointList.set(index,pg);
         updateList();
     }
 //SeekBar Listener
@@ -143,6 +181,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         if(seekBar.equals(axisOne)){
             //btConnector.write("1"+axisOne.getProgress());
             //writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
+        }if(seekBar.equals(axisGeschwindigkeit)){
+            //btConnector.write("d"+axisGeschwindigkeit.getProgress());
+            //writeConsole("Geschwindigkeit auf "+axisGeschwindigkeit.getProgress()+ "gesetzt);
         }
 
     }
@@ -150,16 +191,56 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
-            System.out.println("HDHADJDA");
-            //ausgewählte Achsenpositionen als Punkt hinzufügen
-            Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-            PointG pg;
-            if(textViewGeschwindigkeit.getText().toString().isEmpty()){
-                pg=new PointG(p,defaultGeschwindigkeit, defaultDelay);
-            }else{
-                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
+            switch (btnAddPointState){
+                case 1: //geklickt auf: "Neuer Punkt"
+                    applyCurrentState();
+
+                    enableInput();
+                    btnAddPointState=2;
+                    btnAddPoint.setText("Punkt hinzufügen");
+                    textViewEdit.setText("Neuen Punkt hinzufügen");
+                    break;
+                case 2: //geklickt auf "Punkt hinzufügen"
+                    Point pNew=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+                    PointG pgNew;
+                    //Delay überprüfen
+                    int delayNew=0;
+                    if(textViewDelay.getText().toString().isEmpty()){
+                        dialogError("Bitte Delay angeben");
+                    }else if((delayNew=Integer.parseInt(textViewDelay.getText().toString()))<0){
+                        dialogError("Delay muss >= 0 sein");
+                    }else{
+                        pgNew=new PointG(pNew,axisGeschwindigkeit.getProgress(), delayNew);
+                        dialogAddPunkt(pgNew);
+
+                        textViewDelay.setText("");
+                        disableInput();
+                        btnAddPointState=1;
+                        btnAddPoint.setText("Neuer Punkt");
+                        textViewEdit.setText("Keinen Punkt ausgewählt");
+                    }
+                    break;
+                case 3: //geklickt auf "Änderungen übernehmen"
+                    Point pEdit=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+                    PointG pgEdit;
+                    //Delay überprüfen
+                    int delayEdit=0;
+                    if(textViewDelay.getText().toString().isEmpty()){
+                        dialogError("Bitte Delay angeben");
+                    }else if((delayEdit=Integer.parseInt(textViewDelay.getText().toString()))<0){
+                        dialogError("Delay muss >= 0 sein");
+                    }else {
+                        pgEdit = new PointG(pEdit, axisGeschwindigkeit.getProgress(), delayEdit);
+                        dialogEditPunkt(pgEdit);
+
+                        textViewDelay.setText("");
+                        disableInput();
+                        btnAddPointState = 1;
+                        btnAddPoint.setText("Neuer Punkt");
+                        textViewEdit.setText("Keinen Punkt ausgewählt");
+                    }
+                    break;
             }
-            addListItem(pg);
             //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
@@ -171,12 +252,155 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     //Liste Listeners
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Bei einfachem Klick können Infos angesehen werden
+        //Bei einfachem Klick können Infos angesehen werden und die Seekbars werden auf die Position gesetzt, auf die sie bei diesem Punkt sind
+        PointG point=pointList.get(i);
+        axisOne.setProgress(point.getAxisOne());
+        axisTwo.setProgress(point.getAxisTwo());
+        axisThree.setProgress(point.getAxisThree());
+        axisFour.setProgress(point.getAxisFour());
+        axisFive.setProgress(point.getAxisFive());
+        axisSix.setProgress(point.getAxisSix());
+        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit());
+        textViewDelay.setText(String.valueOf(point.getDelay()));
+        Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+        btConnector.goTo(p);
+
+        btnAddPointState=3;
+        editPoint=i;
+        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
+        btnAddPoint.setText("Änderungen übernehmen");
+        enableInput();
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
+        dialogDeletePunkt(i);
+        return true;
         //Bei halten kann das Item gelöscht werden
+    }
+    private void applyCurrentState(){
+        //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
+        Point curPosition=btConnector.getCurPosition();
+        axisOne.setProgress(curPosition.getAxisOne());
+        axisTwo.setProgress(curPosition.getAxisTwo());
+        axisThree.setProgress(curPosition.getAxisThree());
+        axisFour.setProgress(curPosition.getAxisFour());
+        axisFive.setProgress(curPosition.getAxisFive());
+        axisSix.setProgress(curPosition.getAxisSix());
+    }
+    private void enableInput(){
+        axisOne.setEnabled(true);
+        axisTwo.setEnabled(true);
+        axisThree.setEnabled(true);
+        axisFour.setEnabled(true);
+        axisFive.setEnabled(true);
+        axisSix.setEnabled(true);
+        axisGeschwindigkeit.setEnabled(true);
+        textViewDelay.setEnabled(true);
+    }
+    private void disableInput(){
+        axisOne.setEnabled(false);
+        axisTwo.setEnabled(false);
+        axisThree.setEnabled(false);
+        axisFour.setEnabled(false);
+        axisFive.setEnabled(false);
+        axisSix.setEnabled(false);
+        axisGeschwindigkeit.setEnabled(false);
+        textViewDelay.setEnabled(false);
+    }
+
+    private String generatePointName(PointG pg, int index){
+        String pName="P"+index+ " ["+"A1:"+pg.getAxisOne()+", A2:"+pg.getAxisTwo()+", A3:"+pg.getAxisThree()+", A4:"+pg.getAxisFour()+", A5:"+pg.getAxisFive()+", AGreifer:"+pg.getAxisSix()+"] Speed:"+pg.getGeschwindigkeit()+", Delay:"+pg.getDelay();
+        return pName;
+    }
+
+    //AlertDialogs
+    private void dialogDeletePunkt(final int index){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("P"+(index+1)+" löschen?");
+        dialogBuilder.setTitle("Punkt löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt löschen
+                arrayList.remove(index);
+                pointList.remove(index);
+                updateList();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogAddPunkt(final PointG pg){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        final int index=arrayList.size()+1;
+        String pName=generatePointName(pg,index);
+        dialogBuilder.setMessage(pName+" hinzufügen?");
+        dialogBuilder.setTitle("Punkt hinzufügen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt hinzufügen
+                addListItem(pg);
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogEditPunkt(final PointG pg){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        int index = editPoint+1;
+        String pName=generatePointName(pg,index);
+        dialogBuilder.setMessage("Änderungen für "+pName+" übernehmen?");
+        dialogBuilder.setTitle("Punkt ändern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt löschen
+                updateListItem(pg);
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogError(String errorMessage){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setTitle("Fehler");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }
