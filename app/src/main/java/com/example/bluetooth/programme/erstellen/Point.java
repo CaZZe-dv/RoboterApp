@@ -35,6 +35,9 @@ public class Point {
         this.axisFive=axisFive;
         this.axisSix=axisSix;
     }
+    public int[] getAxis(){
+        return new int[]{axisOne, axisTwo, axisThree, axisFour, axisFive, axisSix};
+    }
     public void setHomePosition(){
         this.axisOne=90;
         this.axisTwo=120;

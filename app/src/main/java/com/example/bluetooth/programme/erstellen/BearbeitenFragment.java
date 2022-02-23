@@ -1,11 +1,15 @@
 package com.example.bluetooth.programme.erstellen;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.ParcelUuid;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +28,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+    private OutputStream outputStream;
+    private InputStream inputStream;
+    public BluetoothAdapter bluetoothAdapter;
+    public String deviceName;
+
 
     View view;
     Connector connector;
-    BTConnector btConnector;
 
     ErstellenFragment fragmentErstellen;
     int id;//ID von zu bearbeitendem Programm
@@ -70,7 +80,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
@@ -81,8 +90,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisTwo = view.findViewById(R.id.AxisTwo_Programme);
         axisOne = view.findViewById(R.id.AxisOne_Programme);
         axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
-
-        btConnector.homePosition();
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -122,6 +129,8 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
         updateList();
+
+        applyCurrentState();
     }
     public void setId(int id){
         this.id=id;
@@ -161,31 +170,24 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if(seekBar.equals(axisSix)){
-            //btConnector.write("6"+axisSix.getProgress());
-            //writeConsole("6 Achse auf "+axisSix.getProgress()+" Grad");
+            BTConnector.sendMessage("6", String.valueOf(axisSix.getProgress()));
         }
         if(seekBar.equals(axisFive)){
-            //btConnector.write("5"+axisFive.getProgress());
-            //writeConsole("5 Achse auf "+axisFive.getProgress()+" Grad");
+            BTConnector.sendMessage("5", String.valueOf(axisFive.getProgress()));
         }
         if(seekBar.equals(axisFour)){
-            //btConnector.write("4"+axisFour.getProgress());
-            //writeConsole("4 Achse auf "+axisFour.getProgress()+" Grad");
+            BTConnector.sendMessage("4", String.valueOf(axisFour.getProgress()));
         }
         if(seekBar.equals(axisThree)){
-            //btConnector.write("3"+axisThree.getProgress());
-            //writeConsole("3 Achse auf "+axisThree.getProgress()+" Grad");
+            BTConnector.sendMessage("3", String.valueOf(axisThree.getProgress()));
         }
         if(seekBar.equals(axisTwo)){
-            //btConnector.write("2"+axisTwo.getProgress());
-            //writeConsole("2 Achse auf "+axisTwo.getProgress()+" Grad");
+            BTConnector.sendMessage("2", String.valueOf(axisTwo.getProgress()));
         }
         if(seekBar.equals(axisOne)){
-            //btConnector.write("1"+axisOne.getProgress());
-            //writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
+            BTConnector.sendMessage("1", String.valueOf(axisOne.getProgress()));
         }if(seekBar.equals(axisGeschwindigkeit)){
-            //btConnector.write("d"+axisGeschwindigkeit.getProgress());
-            //writeConsole("Geschwindigkeit auf "+axisGeschwindigkeit.getProgress()+ "gesetzt);
+            BTConnector.sendMessage("d", String.valueOf(getGeschwindigkeit()));
         }
 
     }
@@ -212,7 +214,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else if((delayNew=Integer.parseInt(textViewDelay.getText().toString()))<0){
                         dialogError("Delay muss >= 0 sein");
                     }else{
-                        pgNew=new PointG(pNew,axisGeschwindigkeit.getProgress(), delayNew);
+                        pgNew=new PointG(pNew,getGeschwindigkeit(), delayNew);
                         dialogAddPunkt(pgNew);
 
                         textViewDelay.setText("");
@@ -232,7 +234,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else if((delayEdit=Integer.parseInt(textViewDelay.getText().toString()))<0){
                         dialogError("Delay muss >= 0 sein");
                     }else {
-                        pgEdit = new PointG(pEdit, axisGeschwindigkeit.getProgress(), delayEdit);
+                        pgEdit = new PointG(pEdit, getGeschwindigkeit(), delayEdit);
                         dialogEditPunkt(pgEdit);
 
                         textViewDelay.setText("");
@@ -262,10 +264,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisFour.setProgress(point.getAxisFour());
         axisFive.setProgress(point.getAxisFive());
         axisSix.setProgress(point.getAxisSix());
-        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit());
+        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit()-10);
         textViewDelay.setText(String.valueOf(point.getDelay()));
         Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-        btConnector.goTo(p);
+        int geschw=getGeschwindigkeit();
+        BTConnector.goTo(p,geschw);
 
         btnAddPointState=3;
         editPoint=i;
@@ -282,7 +285,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void applyCurrentState(){
         //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
-        Point curPosition=btConnector.getCurPosition();
+        Point curPosition=BTConnector.getCurPosition();
         axisOne.setProgress(curPosition.getAxisOne());
         axisTwo.setProgress(curPosition.getAxisTwo());
         axisThree.setProgress(curPosition.getAxisThree());
@@ -404,5 +407,10 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         });
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+    private int getGeschwindigkeit(){
+        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
+        int speed=axisGeschwindigkeit.getProgress()+10;
+        return speed;
     }
 }

@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.erstellen.ErstellenFragment;
 import com.example.bluetooth.programme.liste.ProgrammeFragment;
+import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +36,9 @@ public class ProgrammActivity extends AppCompatActivity {
         fragmentEinstellungen = new EinstellungenFragment();
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentEinstellungen).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentProgramme).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentEinstellungen).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentErstellen).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentProgramme).commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigation_Programm);
 
@@ -43,7 +47,7 @@ public class ProgrammActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
                 Fragment fragment = null;
 
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menuitem_programme:
                         fragment = fragmentProgramme;
                         break;
@@ -54,10 +58,13 @@ public class ProgrammActivity extends AppCompatActivity {
                         fragment = fragmentEinstellungen;
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragment).commit();
                 return true;
             }
         });
 
+        //Bluetooth
+
+        BTConnector.init();
     }
 }
