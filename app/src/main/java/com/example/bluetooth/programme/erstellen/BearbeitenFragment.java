@@ -18,12 +18,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
-import com.example.bluetooth.programme.app.DialogBuilder;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
