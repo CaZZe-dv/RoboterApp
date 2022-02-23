@@ -4,57 +4,75 @@
                                                    android:layout_height="match_parent">
 
     <Button
-            android:text="Einloggen"
-            android:layout_width="246dp"
-            android:layout_height="63dp" android:id="@+id/loginButton"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.496" app:layout_constraintVertical_bias="0.881"
-            app:backgroundTint="@color/design_default_color_primary"/>
+        android:id="@+id/loginButton"
+        android:layout_width="246dp"
+        android:layout_height="63dp"
+        android:text="Einloggen"
+        app:backgroundTint="@color/design_default_color_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.847" />
+
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/username"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.377"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" tools:text="admin"/>
-    <TextView
-            android:text="Benutzername:"
-            android:layout_width="187dp"
-            android:layout_height="35dp"
-            android:textSize="24sp" android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.441" app:layout_constraintVertical_bias="0.321"
-            android:id="@+id/textView7"/>
+        android:id="@+id/username"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:drawableStart="@drawable/ic_baseline_edit_24"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/password"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.491"
-            android:singleLine="false" tools:text="admin"/>
+        android:id="@+id/password"
+        android:layout_width="250dp"
+        android:layout_height="61dp"
+        android:drawableStart="@drawable/ic_baseline_lock_24"
+        android:ems="10"
+        android:hint="Passwort"
+        android:inputType="textPassword"
+        android:singleLine="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.613" />
+
     <TextView
-            android:text="Passwort:"
-            android:layout_width="136dp"
-            android:layout_height="33dp"
-            android:textSize="24sp" android:textColor="#FFFFFF"
-            android:id="@+id/textView6" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.36"
-            app:layout_constraintVertical_bias="0.435"/>
-    <TextView
-            android:text="Willkommen in der App für die Steuerung des Roboters!"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/textView5"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.056" android:textSize="24sp"
-            app:layout_constraintHorizontal_bias="1.0" android:gravity="center_horizontal|center_vertical"
-            android:textColor="#FFFFFF"/>
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:rotationX="0"
+        android:text="Willkommen in der App für die Robotersteuerung"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.057" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="176dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="32dp"
+        android:rotationX="0"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.446"
+        app:srcCompat="@mipmap/logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

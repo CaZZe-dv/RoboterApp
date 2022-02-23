@@ -7,21 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".programme.erstellen.BearbeitenFragment" >
 
-    <TextView
-        android:id="@+id/textViewEdit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEdit">
+        app:layout_constraintTop_toBottomOf="@+id/textViewProgrammBeschreibung">
 
         <TextView
             android:layout_width="match_parent"
@@ -117,30 +108,25 @@
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="90" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="Geschwindigkeit"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
-
-        <SeekBar
-            android:id="@+id/AxisGeschwindigkeit_Programme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="80" />
-
     </LinearLayout>
 
     <Button
         android:id="@+id/btnAddPunkt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Neuer Punkt"
+        android:text="Punkt hinzufügen"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <EditText
+        android:id="@+id/textViewGeschwindigkeit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Geschwindigkeit"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnAddPunkt"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <ListView
@@ -166,17 +152,5 @@
         android:src="@android:drawable/ic_menu_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/textViewDelay"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Delay"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/btnAddPunkt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnAddPunkt"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

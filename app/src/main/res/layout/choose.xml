@@ -5,43 +5,83 @@
                                                    android:layout_height="match_parent">
 
     <RadioGroup
-            android:layout_width="343dp"
-            android:layout_height="114dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:checkedButton="@id/Controller"
-            android:id="@+id/radioGroup" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.45">
+        android:id="@+id/radioGroup"
+        android:layout_width="291dp"
+        android:layout_height="158dp"
+        android:checkedButton="@id/Controller"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.352">
+
         <RadioButton
-                android:text="Programme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/Programms"/>
+            android:id="@+id/Programms"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/modus_selector"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/ic_settings"
+            android:text="Programme"
+            android:textAlignment="center"
+            android:textSize="24dp" />
+
         <RadioButton
-                android:text="Controller"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/Controller"/>
+            android:id="@+id/Controller"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/modus_selector"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/ic_move"
+            android:text="Controller"
+            android:textAlignment="center"
+            android:textSize="24dp" />
+
     </RadioGroup>
+
     <Button
-            android:text="Auswählen"
-            android:layout_width="246dp"
-            android:layout_height="63dp" android:id="@+id/ChooseButton"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.859"/>
+        android:id="@+id/ChooseButton"
+        android:layout_width="246dp"
+        android:layout_height="63dp"
+        android:text="Auswählen"
+        app:backgroundTint="@color/design_default_color_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.856" />
+
     <TextView
-            android:text="Wählen Sie einen der Modis aus!"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/textView8"
-            android:textSize="24sp" android:textColor="#FFFFFF" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintVertical_bias="0.133"/>
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Wählen Sie einen Modus"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.083" />
+
     <TextView
-            android:layout_width="274dp"
-            android:layout_height="67dp" android:id="@+id/Tooltip"
-            android:textSize="18sp"
-            android:text="Mit diesem Modus wird der Roboter gesteuert" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup" app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintVertical_bias="0.107" android:gravity="clip_vertical|center_horizontal"
-            android:textColor="#FFFFFF"/>
+        android:id="@+id/Tooltip"
+        android:layout_width="241dp"
+        android:layout_height="97dp"
+        android:background="@drawable/custom_background"
+        android:gravity="clip_vertical|center_horizontal"
+        android:text="Mit diesem Modus wird der Roboter gesteuert"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.156" />
 </androidx.constraintlayout.widget.ConstraintLayout>

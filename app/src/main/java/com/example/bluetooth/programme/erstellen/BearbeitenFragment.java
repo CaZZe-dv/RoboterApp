@@ -1,7 +1,5 @@
 package com.example.bluetooth.programme.erstellen;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,15 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.example.bluetooth.R;
-import com.example.bluetooth.programme.app.DialogBuilder;
 import com.example.bluetooth.programme.database.Connector;
-import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -31,7 +24,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     View view;
     Connector connector;
-    BTConnector btConnector;
 
     ErstellenFragment fragmentErstellen;
     int id;//ID von zu bearbeitendem Programm
@@ -42,18 +34,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     SeekBar axisThree;
     SeekBar axisTwo;
     SeekBar axisOne;
-    SeekBar axisGeschwindigkeit;
-
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
 
     Button btnAddPoint;
-    int btnAddPointState;
-    int editPoint;
     FloatingActionButton btnSaveProgramm;
 
-    EditText textViewDelay;
-    TextView textViewEdit;
+    EditText textViewGeschwindigkeit;
 
     ListView listView;
     ArrayList<String> arrayList;
@@ -71,7 +56,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
@@ -81,9 +65,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisThree = view.findViewById(R.id.AxisThree_Programme);
         axisTwo = view.findViewById(R.id.AxisTwo_Programme);
         axisOne = view.findViewById(R.id.AxisOne_Programme);
-        axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
-
-        btConnector.homePosition();
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -91,20 +72,15 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisThree.setOnSeekBarChangeListener(this);
         axisTwo.setOnSeekBarChangeListener(this);
         axisOne.setOnSeekBarChangeListener(this);
-        axisGeschwindigkeit.setOnSeekBarChangeListener(this);
-        disableSeekbars();
 
         //Buttons
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
-        btnAddPointState=1;
         btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
         //TextView
-        textViewDelay = view.findViewById(R.id.textViewDelay);
-        textViewEdit = view.findViewById(R.id.textViewEdit);
-        textViewEdit.setText("Kein Punkt ausgewählt...");
+        textViewGeschwindigkeit = view.findViewById(R.id.textViewGeschwindigkeit);
 
         //Liste
         listView=(ListView)view.findViewById(R.id.listViewPunkte);
@@ -134,10 +110,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         arrayList.add("Punkt "+index);
         pointList.add(pg);
         updateList();
-    }
-    private void updateListItem(PointG pg){
-        int index=editPoint;
-        pointList.set(index,pg);
     }
 //SeekBar Listener
     @Override
@@ -171,9 +143,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         if(seekBar.equals(axisOne)){
             //btConnector.write("1"+axisOne.getProgress());
             //writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
-        }if(seekBar.equals(axisGeschwindigkeit)){
-            //btConnector.write("d"+axisGeschwindigkeit.getProgress());
-            //writeConsole("Geschwindigkeit auf "+axisGeschwindigkeit.getProgress()+ "gesetzt);
         }
 
     }
@@ -181,38 +150,16 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onClick(View view) {
         if(view.equals(btnAddPoint)){
-            switch (btnAddPointState){
-                case 1:
-                    applyCurrentState();
-
-                    enableSeekbars();
-                    btnAddPointState=2;
-                    btnAddPoint.setText("Punkt hinzufügen");
-                    textViewEdit.setText("Neuen Punkt hinzufügen");
-                    break;
-                case 2:
-                    Point pNew=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-                    PointG pgNew;
-                    pgNew=new PointG(pNew,axisGeschwindigkeit.getProgress(), defaultDelay);
-                    addListItem(pgNew);
-
-                    disableSeekbars();
-                    btnAddPointState=1;
-                    btnAddPoint.setText("Neuer Punkt");
-                    textViewEdit.setText("Keinen Punkt ausgewählt");
-                    break;
-                case 3:
-                    Point pEdit=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-                    PointG pgEdit;
-                    pgEdit=new PointG(pEdit,axisGeschwindigkeit.getProgress(), defaultDelay);
-                    updateListItem(pgEdit);
-
-                    disableSeekbars();
-                    btnAddPointState=1;
-                    btnAddPoint.setText("Neuer Punkt");
-                    textViewEdit.setText("Keinen Punkt ausgewählt");
-                    break;
+            System.out.println("HDHADJDA");
+            //ausgewählte Achsenpositionen als Punkt hinzufügen
+            Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
+            PointG pg;
+            if(textViewGeschwindigkeit.getText().toString().isEmpty()){
+                pg=new PointG(p,defaultGeschwindigkeit, defaultDelay);
+            }else{
+                pg=new PointG(p,Integer.parseInt(textViewGeschwindigkeit.getText().toString()),defaultDelay);
             }
+            addListItem(pg);
             //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
@@ -224,82 +171,12 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     //Liste Listeners
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Bei einfachem Klick können Infos angesehen werden und die Seekbars werden auf die Position gesetzt, auf die sie bei diesem Punkt sind
-        PointG point=pointList.get(i);
-        axisOne.setProgress(point.getAxisOne());
-        axisTwo.setProgress(point.getAxisTwo());
-        axisThree.setProgress(point.getAxisThree());
-        axisFour.setProgress(point.getAxisFour());
-        axisFive.setProgress(point.getAxisFive());
-        axisSix.setProgress(point.getAxisSix());
-        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit());
-        Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-        btConnector.goTo(p);
-
-        btnAddPointState=3;
-        editPoint=i;
-        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
-        btnAddPoint.setText("Änderungen übernehmen");
-        enableSeekbars();
+        //Bei einfachem Klick können Infos angesehen werden
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        deletePunktDialog(i+1);
-        return true;
+        return false;
         //Bei halten kann das Item gelöscht werden
-    }
-    private void applyCurrentState(){
-        //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
-        Point curPosition=btConnector.getCurPosition();
-        axisOne.setProgress(curPosition.getAxisOne());
-        axisTwo.setProgress(curPosition.getAxisTwo());
-        axisThree.setProgress(curPosition.getAxisThree());
-        axisFour.setProgress(curPosition.getAxisFour());
-        axisFive.setProgress(curPosition.getAxisFive());
-        axisSix.setProgress(curPosition.getAxisSix());
-    }
-    private void enableSeekbars(){
-        axisOne.setEnabled(true);
-        axisTwo.setEnabled(true);
-        axisThree.setEnabled(true);
-        axisFour.setEnabled(true);
-        axisFive.setEnabled(true);
-        axisSix.setEnabled(true);
-        axisGeschwindigkeit.setEnabled(true);
-    }
-    private void disableSeekbars(){
-        axisOne.setEnabled(false);
-        axisTwo.setEnabled(false);
-        axisThree.setEnabled(false);
-        axisFour.setEnabled(false);
-        axisFive.setEnabled(false);
-        axisSix.setEnabled(false);
-        axisGeschwindigkeit.setEnabled(false);
-    }
-
-
-    //Alerts
-    private void deletePunktDialog(int index){//false=nicht löschen, true=löschen
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("Punkt"+index+" löschen?");
-        dialogBuilder.setTitle("Punkt löschen");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Punkt löschen
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
     }
 }
