@@ -15,12 +15,15 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class BTConnector {
-    //Methoden für die Verbindung mit dem Bluetooth Modul
+    //Methoden fÃ¼r die Verbindung mit dem Bluetooth Modul
     private BluetoothAdapter bt;
     private OutputStream outputStream;
     private InputStream inputStream;
+    private Point curPosition;
+    private int defaultSpeed = 1;//TODO: richtigen defaultSpeed setzen
     public BTConnector(){
         //connectBluetooth();
+        curPosition=new Point();
     }
 
     private void connectBluetooth(){
@@ -41,6 +44,7 @@ public class BTConnector {
         }
     }
     public void write(String s){
+        //TODO: curPosition updaten
         try{
             s += ".";
             outputStream.write(s.getBytes());
@@ -80,8 +84,36 @@ public class BTConnector {
                 }
             }
         }, points.get(i).getDelay());
+    }
+    public void homePosition(){
+        write("190");
+        write("2120");
+        write("325");
+        write("450");
+        write("50");
+        write("660");
+        curPosition.setAxisOne(90);
+        curPosition.setAxisTwo(120);
+        curPosition.setAxisThree(25);
+        curPosition.setAxisFour(50);
+        curPosition.setAxisFive(0);
+        curPosition.setAxisSix(60);
+    }
+    public void goTo(Point p){
+        write("d"+String.valueOf(defaultSpeed));
 
-
+        write("1"+p.getAxisOne());
+        write("1"+p.getAxisTwo());
+        write("1"+p.getAxisThree());
+        write("1"+p.getAxisFour());
+        write("1"+p.getAxisFive());
+        write("1"+p.getAxisSix());
+    }
+    public void setCurPosition(Point p){
+        this.curPosition=p;
+    }
+    public Point getCurPosition(){
+        return curPosition;
     }
 
 }

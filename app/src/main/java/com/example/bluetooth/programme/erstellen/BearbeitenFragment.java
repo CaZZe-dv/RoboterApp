@@ -22,6 +22,8 @@ import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
@@ -149,7 +151,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         pointList.set(index,pg);
         updateList();
     }
-//SeekBar Listener
+    //SeekBar Listener
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     }
