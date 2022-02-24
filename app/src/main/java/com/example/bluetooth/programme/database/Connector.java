@@ -170,4 +170,40 @@ public class Connector {
         }
         return arrayList;
     }
+    public String getProgrammName(int id){
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+
+        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
+        cursor.moveToFirst();
+        String name=cursor.getString(cursor.getColumnIndexOrThrow("programmName"));
+        return name;
+    }
+    public String getProgrammBeschreibung(int id){
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+
+        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
+        cursor.moveToFirst();
+        String beschreibung=cursor.getString(cursor.getColumnIndexOrThrow("beschreibung"));
+        return beschreibung;
+    }
+    public void alterProgrammName(int id, String name){
+        values.clear();
+        values.put("programmName", name);
+
+        String selection="id = ?";
+        String[] selectionArgs={String.valueOf(id)};
+
+        dbWrite.update("programmData",values,selection,selectionArgs);
+    }
+    public void alterProgrammBeschreibung(int id, String beschreibung){
+        values.clear();
+        values.put("beschreibung", beschreibung);
+
+        String selection="id = ?";
+        String[] selectionArgs={String.valueOf(id)};
+
+        dbWrite.update("programmData",values,selection,selectionArgs);
+    }
 }

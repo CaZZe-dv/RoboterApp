@@ -44,7 +44,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     ListView listView;
     ArrayList<SpannableString> arrayList;
     ArrayList<Integer> idList;
-    ArrayAdapter arrayAdapter;
+    ArrayAdapter<SpannableString> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -84,7 +84,6 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
             arrayList.add(sString);
         }
-
         idList=connector.getIDListe();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
