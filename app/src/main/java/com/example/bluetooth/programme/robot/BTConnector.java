@@ -86,7 +86,6 @@ public class BTConnector {
         Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
         goTo(p,point.getGeschwindigkeit());
 
-        System.out.println("Nach dieser Nachricht sollen "+point.getDelay()+" ms Pause sein");
         if(points.size()>1){
             playbackProgramm(points,points.size()-1,1);
         }
@@ -104,7 +103,6 @@ public class BTConnector {
                 Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
                 goTo(p,point.getGeschwindigkeit());
 
-                System.out.println("Nach dieser Nachricht sollen "+point.getDelay()+" ms Pause sein");
 
                 if(i<size) {
                     i++;
