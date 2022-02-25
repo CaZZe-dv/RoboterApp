@@ -57,6 +57,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
 
         //Buttons
         btnAddProgramm = view.findViewById(R.id.btnAddProgramm);
+        btnAddProgrammState=1;
 
         btnAddProgramm.setOnClickListener(this);
         //TextView
@@ -150,7 +151,6 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     }
     private void changeName(){
         int id=idList.get(editProgramm);
-        System.out.println("ID: "+id);
         String name=connector.getProgrammName(id);
         String beschreibung = connector.getProgrammBeschreibung(id);
         textViewProgrammName.setText(name);

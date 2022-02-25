@@ -40,6 +40,8 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     AlertDialog dialog;
     AlertDialog.Builder dialogBuilder;
 
+    int delProgramm;
+
     //Liste
     ListView listView;
     ArrayList<SpannableString> arrayList;
@@ -102,6 +104,8 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        delProgramm=idList.get(i);
+        dialogDeleteProgramm();
         return false;
     }
 
@@ -118,6 +122,31 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
                 dialog.cancel();
             }
         });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    //AlertDialogs
+    private void dialogDeleteProgramm(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        String name=connector.getProgrammName(delProgramm);
+        dialogBuilder.setMessage("Programm "+name+" löschen?");
+        dialogBuilder.setTitle("Programm löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                connector.deleteProgramm(delProgramm);
+                updateListView();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
         dialog = dialogBuilder.create();
         dialog.show();
     }

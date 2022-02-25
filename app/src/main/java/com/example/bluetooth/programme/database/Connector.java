@@ -192,8 +192,8 @@ public class Connector {
         values.clear();
         values.put("programmName", name);
 
-        String selection="id = ?";
-        String[] selectionArgs={String.valueOf(id)};
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
 
         dbWrite.update("programmData",values,selection,selectionArgs);
     }
@@ -205,5 +205,15 @@ public class Connector {
         String[] selectionArgs={String.valueOf(id)};
 
         dbWrite.update("programmData",values,selection,selectionArgs);
+    }
+    public void deleteProgramm(int id){
+        //Aus programmDate löschen
+        selection="id = ?";
+        selectionArgs= new String[]{String.valueOf(id)};
+        dbWrite.delete("programmData",selection,selectionArgs);
+
+        //Aus pointData löschen
+        selection="pid = ?";
+        dbWrite.delete("pointData",selection,selectionArgs);
     }
 }
