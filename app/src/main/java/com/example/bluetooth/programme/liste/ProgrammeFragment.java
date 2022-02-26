@@ -1,5 +1,7 @@
 package com.example.bluetooth.programme.liste;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -17,9 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.ProgrammActivity;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.erstellen.PointG;
 import com.example.bluetooth.programme.robot.BTConnector;
+import com.example.bluetooth.steuerung.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,13 +36,17 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     View view;
 
     Connector connector;
-    BTConnector btConnector;
+
+    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder;
+
+    int delProgramm;
 
     //Liste
     ListView listView;
     ArrayList<SpannableString> arrayList;
     ArrayList<Integer> idList;
-    ArrayAdapter arrayAdapter;
+    ArrayAdapter<SpannableString> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -49,7 +57,6 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     private void init(){
         //Connector
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         //ListView
         initListView();
         updateListView();
@@ -79,7 +86,6 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
             arrayList.add(sString);
         }
-
         idList=connector.getIDListe();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
@@ -88,11 +94,60 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         ArrayList<PointG>points = connector.getPoints(idList.get(i));
-        btConnector.playbackProgramm(points);
+        if(points.isEmpty()){
+            dialogError("Programm enthält keinen Punkt");
+        }else{
+            BTConnector.playbackProgramm(points);
+        }
+
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
+        delProgramm=idList.get(i);
+        dialogDeleteProgramm();
+        return true;
+    }
+
+
+    //AlertDialogs
+    private void dialogError(String errorMessage){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setTitle("Fehler");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    //AlertDialogs
+    private void dialogDeleteProgramm(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        String name=connector.getProgrammName(delProgramm);
+        dialogBuilder.setMessage("Programm "+name+" löschen?");
+        dialogBuilder.setTitle("Programm löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                connector.deleteProgramm(delProgramm);
+                updateListView();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

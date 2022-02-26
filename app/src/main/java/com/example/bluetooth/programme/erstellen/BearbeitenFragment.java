@@ -1,11 +1,15 @@
 package com.example.bluetooth.programme.erstellen;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.ParcelUuid;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +26,19 @@ import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     View view;
     Connector connector;
-    BTConnector btConnector;
 
     ErstellenFragment fragmentErstellen;
-    int id;//ID von zu bearbeitendem Programm
+    int idProgramm;//ID von zu bearbeitendem Programm
 
     SeekBar axisSix;
     SeekBar axisFive;
@@ -50,15 +57,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     FloatingActionButton btnSaveProgramm;
 
     EditText textViewDelay;
-    TextView textViewEdit;
 
     ListView listView;
     ArrayList<String> arrayList;
     ArrayList<PointG> pointList;
     ArrayAdapter<String> arrayAdapter;
-
-    int defaultGeschwindigkeit = 10;
-    int defaultDelay = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -68,7 +71,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void init(){
         connector=new Connector(view.getContext());
-        btConnector=new BTConnector();
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
 
@@ -79,8 +81,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisTwo = view.findViewById(R.id.AxisTwo_Programme);
         axisOne = view.findViewById(R.id.AxisOne_Programme);
         axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
-
-        //btConnector.homePosition();
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -99,8 +99,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         btnSaveProgramm.setOnClickListener(this);
         //TextView
         textViewDelay = view.findViewById(R.id.textViewDelay);
-        textViewEdit = view.findViewById(R.id.textViewEdit);
-        textViewEdit.setText("Kein Punkt ausgewählt...");
 
         disableInput();
 
@@ -109,7 +107,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        pointList=connector.getPoints(id);
+        pointList=connector.getPoints(idProgramm);
         arrayList=new ArrayList<>();
         for(int i=0;i<pointList.size();i++){
             PointG pg=pointList.get(i);
@@ -120,9 +118,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
         updateList();
+
+        applyCurrentState();
     }
     public void setId(int id){
-        this.id=id;
+        this.idProgramm=id;
     }
 
     //Listen
@@ -149,7 +149,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         pointList.set(index,pg);
         updateList();
     }
-//SeekBar Listener
+    //SeekBar Listener
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     }
@@ -159,31 +159,24 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if(seekBar.equals(axisSix)){
-            //btConnector.write("6"+axisSix.getProgress());
-            //writeConsole("6 Achse auf "+axisSix.getProgress()+" Grad");
+            BTConnector.sendMessage("6", String.valueOf(axisSix.getProgress()));
         }
         if(seekBar.equals(axisFive)){
-            //btConnector.write("5"+axisFive.getProgress());
-            //writeConsole("5 Achse auf "+axisFive.getProgress()+" Grad");
+            BTConnector.sendMessage("5", String.valueOf(axisFive.getProgress()));
         }
         if(seekBar.equals(axisFour)){
-            //btConnector.write("4"+axisFour.getProgress());
-            //writeConsole("4 Achse auf "+axisFour.getProgress()+" Grad");
+            BTConnector.sendMessage("4", String.valueOf(axisFour.getProgress()));
         }
         if(seekBar.equals(axisThree)){
-            //btConnector.write("3"+axisThree.getProgress());
-            //writeConsole("3 Achse auf "+axisThree.getProgress()+" Grad");
+            BTConnector.sendMessage("3", String.valueOf(axisThree.getProgress()));
         }
         if(seekBar.equals(axisTwo)){
-            //btConnector.write("2"+axisTwo.getProgress());
-            //writeConsole("2 Achse auf "+axisTwo.getProgress()+" Grad");
+            BTConnector.sendMessage("2", String.valueOf(axisTwo.getProgress()));
         }
         if(seekBar.equals(axisOne)){
-            //btConnector.write("1"+axisOne.getProgress());
-            //writeConsole("1 Achse auf "+axisOne.getProgress()+" Grad");
+            BTConnector.sendMessage("1", String.valueOf(axisOne.getProgress()));
         }if(seekBar.equals(axisGeschwindigkeit)){
-            //btConnector.write("d"+axisGeschwindigkeit.getProgress());
-            //writeConsole("Geschwindigkeit auf "+axisGeschwindigkeit.getProgress()+ "gesetzt);
+            BTConnector.sendMessage("d", String.valueOf(getGeschwindigkeit()));
         }
 
     }
@@ -198,7 +191,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     enableInput();
                     btnAddPointState=2;
                     btnAddPoint.setText("Punkt hinzufügen");
-                    textViewEdit.setText("Neuen Punkt hinzufügen");
                     break;
                 case 2: //geklickt auf "Punkt hinzufügen"
                     Point pNew=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
@@ -210,14 +202,13 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else if((delayNew=Integer.parseInt(textViewDelay.getText().toString()))<0){
                         dialogError("Delay muss >= 0 sein");
                     }else{
-                        pgNew=new PointG(pNew,axisGeschwindigkeit.getProgress(), delayNew);
+                        pgNew=new PointG(pNew,getGeschwindigkeit(), delayNew);
                         dialogAddPunkt(pgNew);
 
                         textViewDelay.setText("");
                         disableInput();
                         btnAddPointState=1;
                         btnAddPoint.setText("Neuer Punkt");
-                        textViewEdit.setText("Keinen Punkt ausgewählt");
                     }
                     break;
                 case 3: //geklickt auf "Änderungen übernehmen"
@@ -230,23 +221,19 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else if((delayEdit=Integer.parseInt(textViewDelay.getText().toString()))<0){
                         dialogError("Delay muss >= 0 sein");
                     }else {
-                        pgEdit = new PointG(pEdit, axisGeschwindigkeit.getProgress(), delayEdit);
+                        pgEdit = new PointG(pEdit, getGeschwindigkeit(), delayEdit);
                         dialogEditPunkt(pgEdit);
 
                         textViewDelay.setText("");
                         disableInput();
                         btnAddPointState = 1;
                         btnAddPoint.setText("Neuer Punkt");
-                        textViewEdit.setText("Keinen Punkt ausgewählt");
                     }
                     break;
             }
-            //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
-            //TODO: Save Programm
-            connector.addPoints(pointList,id);
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+            dialogSaveProgramm();
         }
     }
     //Liste Listeners
@@ -260,14 +247,14 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisFour.setProgress(point.getAxisFour());
         axisFive.setProgress(point.getAxisFive());
         axisSix.setProgress(point.getAxisSix());
-        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit());
+        axisGeschwindigkeit.setProgress(point.getGeschwindigkeit()-10);
         textViewDelay.setText(String.valueOf(point.getDelay()));
         Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-        //btConnector.goTo(p);
+        int geschw=getGeschwindigkeit();
+        BTConnector.goTo(p,geschw);
 
         btnAddPointState=3;
         editPoint=i;
-        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
         btnAddPoint.setText("Änderungen übernehmen");
         enableInput();
     }
@@ -280,13 +267,13 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void applyCurrentState(){
         //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
-        //Point curPosition=btConnector.getCurPosition();
-        //axisOne.setProgress(curPosition.getAxisOne());
-        //axisTwo.setProgress(curPosition.getAxisTwo());
-        //axisThree.setProgress(curPosition.getAxisThree());
-        //axisFour.setProgress(curPosition.getAxisFour());
-        //axisFive.setProgress(curPosition.getAxisFive());
-        //axisSix.setProgress(curPosition.getAxisSix());
+        Point curPosition=BTConnector.getCurPosition();
+        axisOne.setProgress(curPosition.getAxisOne());
+        axisTwo.setProgress(curPosition.getAxisTwo());
+        axisThree.setProgress(curPosition.getAxisThree());
+        axisFour.setProgress(curPosition.getAxisFour());
+        axisFive.setProgress(curPosition.getAxisFive());
+        axisSix.setProgress(curPosition.getAxisSix());
     }
     private void enableInput(){
         axisOne.setEnabled(true);
@@ -312,6 +299,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     private String generatePointName(PointG pg, int index){
         String pName="P"+index+ " ["+"A1:"+pg.getAxisOne()+", A2:"+pg.getAxisTwo()+", A3:"+pg.getAxisThree()+", A4:"+pg.getAxisFour()+", A5:"+pg.getAxisFive()+", AGreifer:"+pg.getAxisSix()+"] Speed:"+pg.getGeschwindigkeit()+", Delay:"+pg.getDelay();
         return pName;
+    }
+    private int getGeschwindigkeit(){
+        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
+        int speed=axisGeschwindigkeit.getProgress()+10;
+        return speed;
     }
 
     //AlertDialogs
@@ -400,6 +392,62 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                 dialog.cancel();
             }
         });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogSaveProgramm(final int index) {
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("P" + (index + 1) + " löschen?");
+        dialogBuilder.setTitle("Punkt löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt löschen
+                arrayList.remove(index);
+                pointList.remove(index);
+                updateList();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogSaveProgramm(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("Programm speichern?");
+        dialogBuilder.setTitle("Programm speichern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm speichern
+                connector.addPoints(pointList,idProgramm);
+                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm nicht speichern
+                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
         dialog = dialogBuilder.create();
         dialog.show();
     }

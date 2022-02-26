@@ -8,9 +8,10 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="181dp"
+        android:layout_width="0dp"
         android:layout_height="25dp"
         android:text="Neues Programm erstellen"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +21,9 @@
         android:layout_height="48dp"
         android:ems="10"
         android:hint="Programmname"
-        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -31,7 +34,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Programmbeschreibung"
-        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewProgrammname" />
@@ -61,6 +66,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" >
+
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
