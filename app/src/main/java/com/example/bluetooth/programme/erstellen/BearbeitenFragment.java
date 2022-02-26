@@ -33,11 +33,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
-    private OutputStream outputStream;
-    private InputStream inputStream;
-    public BluetoothAdapter bluetoothAdapter;
-    public String deviceName;
-
 
     View view;
     Connector connector;
@@ -62,7 +57,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     FloatingActionButton btnSaveProgramm;
 
     EditText textViewDelay;
-    TextView textViewEdit;
 
     ListView listView;
     ArrayList<String> arrayList;
@@ -105,8 +99,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         btnSaveProgramm.setOnClickListener(this);
         //TextView
         textViewDelay = view.findViewById(R.id.textViewDelay);
-        textViewEdit = view.findViewById(R.id.textViewEdit);
-        textViewEdit.setText("Kein Punkt ausgewählt...");
 
         disableInput();
 
@@ -199,7 +191,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     enableInput();
                     btnAddPointState=2;
                     btnAddPoint.setText("Punkt hinzufügen");
-                    textViewEdit.setText("Neuen Punkt hinzufügen");
                     break;
                 case 2: //geklickt auf "Punkt hinzufügen"
                     Point pNew=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
@@ -218,7 +209,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                         disableInput();
                         btnAddPointState=1;
                         btnAddPoint.setText("Neuer Punkt");
-                        textViewEdit.setText("Keinen Punkt ausgewählt");
                     }
                     break;
                 case 3: //geklickt auf "Änderungen übernehmen"
@@ -238,7 +228,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                         disableInput();
                         btnAddPointState = 1;
                         btnAddPoint.setText("Neuer Punkt");
-                        textViewEdit.setText("Keinen Punkt ausgewählt");
                     }
                     break;
             }
@@ -266,7 +255,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
         btnAddPointState=3;
         editPoint=i;
-        textViewEdit.setText("Punkt "+(i+1)+" bearbeiten");
         btnAddPoint.setText("Änderungen übernehmen");
         enableInput();
     }
