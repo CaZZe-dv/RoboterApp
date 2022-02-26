@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     ErstellenFragment fragmentErstellen;
     int idProgramm;//ID von zu bearbeitendem Programm
+    String nameProgramm;//Name des Programms
 
     SeekBar axisSix;
     SeekBar axisFive;
@@ -55,7 +57,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     int btnAddPointState;
     int editPoint;
     FloatingActionButton btnSaveProgramm;
+    ImageButton btnBack;
+    ImageButton btnHome;
+    ImageButton btnSleep;
 
+    TextView textViewName;
     EditText textViewDelay;
 
     ListView listView;
@@ -94,11 +100,19 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         btnAddPoint = view.findViewById(R.id.btnAddPunkt);
         btnAddPointState=1;
         btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
+        btnBack = view.findViewById(R.id.btnBearbeitenBack);
+        btnHome = view.findViewById(R.id.btnBearbeitenHome);
+        btnSleep = view.findViewById(R.id.btnBearbeitenSleep);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        btnHome.setOnClickListener(this);
+        btnSleep.setOnClickListener(this);
         //TextView
         textViewDelay = view.findViewById(R.id.textViewDelay);
+        textViewName = view.findViewById(R.id.textViewBearbeitenName);
+        textViewName.setText(nameProgramm);
 
         disableInput();
 
@@ -123,6 +137,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     public void setId(int id){
         this.idProgramm=id;
+    }
+    public void setProgrammName(String programmName){
+        this.nameProgramm=programmName;
     }
 
     //Listen
@@ -231,9 +248,16 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }
                     break;
             }
-        }
-        if(view.equals(btnSaveProgramm)){
+        }else if(view.equals(btnSaveProgramm)){
             dialogSaveProgramm();
+        }else if(view.equals(btnBack)){
+            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+        }else if(view.equals(btnHome)){
+            BTConnector.homePosition();
+            applyCurrentState();
+        }else if(view.equals(btnSleep)){
+            BTConnector.sleepPosition();
+            applyCurrentState();
         }
     }
     //Liste Listeners

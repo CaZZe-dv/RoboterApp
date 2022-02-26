@@ -25,7 +25,7 @@ public class BTConnector {
     private static int defaultSpeed = 20;
 
     public static void init(){
-        connectBluetooth();
+        //connectBluetooth();
         curPosition=new Point();
         homePosition();
     }
@@ -150,18 +150,19 @@ public class BTConnector {
         return points;
     }
     public static void homePosition(){
-        curPosition.setAxisOne(90);
-        curPosition.setAxisTwo(120);
-        curPosition.setAxisThree(25);
-        curPosition.setAxisFour(50);
-        curPosition.setAxisFive(0);
-        curPosition.setAxisSix(60);
-        curSpeed=20;
-
         sendMessage("1","90");
         sendMessage("2","120");
         sendMessage("3","25");
         sendMessage("4","50");
+        sendMessage("5","0");
+        sendMessage("6","60");
+        sendMessage("d","20");
+    }
+    public static void sleepPosition(){
+        sendMessage("1","90");
+        sendMessage("2","60");
+        sendMessage("3","33");
+        sendMessage("4","25");
         sendMessage("5","0");
         sendMessage("6","60");
         sendMessage("d","20");

@@ -113,7 +113,8 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
                 }else{
                     connector.newProgramm(name,beschreibung);
                     idList=connector.getIDListe();
-                    int id=idList.get(idList.size()-1);
+                    int index = idList.size()-1;
+                    int id=idList.get(index);
                     BTConnector.homePosition();
                     switchFrag(id);
                 }
@@ -153,6 +154,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     private void switchFrag(int id){
         getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
         fragmentBearbeiten.setId(id);
+        fragmentBearbeiten.setProgrammName(connector.getProgrammName(id));
     }
     private void changeName(){
         int id=idList.get(editProgramm);
