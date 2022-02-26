@@ -5,13 +5,20 @@
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical">
+
         <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:id="@+id/scrollViewConsole"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb">
+
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/ConsolenView" android:textSize="24sp"
-                    android:textColor="#FFFFFF"/>
+                android:id="@+id/ConsolenView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
         </ScrollView>
     </LinearLayout>
 </RelativeLayout>

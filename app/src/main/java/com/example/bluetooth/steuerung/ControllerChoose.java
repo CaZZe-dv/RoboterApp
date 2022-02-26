@@ -1,5 +1,6 @@
 package com.example.bluetooth.steuerung;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bluetooth.R;
@@ -25,6 +28,9 @@ public class ControllerChoose extends AppCompatActivity {
     public TextView toolTip;
     //RadioGroup damit immer nur ein RadioButton aktiv sein kann
     public RadioGroup radioGroup;
+
+    public AlertDialog.Builder builder;
+    public AlertDialog alert;
     //Methode onCreate der Überklasse überschreiben
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,13 @@ public class ControllerChoose extends AppCompatActivity {
         controller = findViewById(R.id.Controller);
         toolTip = findViewById(R.id.Tooltip);
         radioGroup = findViewById(R.id.radioGroup);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Verbindung zum Bluetooth wird aufgebaut, kann einige Sekunden dauern!");
+        builder.setCancelable(true);
+        builder.setTitle("Hinweis");
+        builder.setPositiveButton("OK",null);
+        alert = builder.create();
         //Dem Controller RadioButton einen ClickListener hinzufügen
         controller.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +84,7 @@ public class ControllerChoose extends AppCompatActivity {
                 }else if(r.equals(programms)){//Programm Modus
                     switchToProgrammActivity();
                 }
+                alert.show();
             }
         });
     }

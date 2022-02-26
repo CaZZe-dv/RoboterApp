@@ -3,11 +3,13 @@ package com.example.bluetooth.steuerung;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Build;
 import android.os.ParcelUuid;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.jetbrains.annotations.NotNull;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 //Kümmert sich um alle Bestandteile für die Steuerung des Roboters
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener, BottomNavigationView.OnNavigationItemSelectedListener {
     //Für jede Achse eine Seekbar 1 bis 5 gehen von 0 bis 180 Grad
@@ -33,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     //TextView um den Text in der selbst erstellten Console anzeigen
     //zu können
     public TextView textView;
+
+    public ScrollView scrollViewConsole;
     //BottomNavigationView ist da um zwischen den Fragmenten zu wechseln
     public BottomNavigationView bottomNavigationView;
     //Alle Fragmente von 1 bis 3
@@ -42,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     //Seekbar für das Einstellen des Delays
     public SeekBar delay;
     //Einen Switch für das Schließen und Öffnen des Greifers
-    public Switch greiferCloseAndOpen;
+    public Switch switchGreifer;
     //Home und Sleep Button für das Anfahren der fixen Positionen
     public Button homeButton;
     public Button sleepButton;
@@ -110,14 +121,17 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 writeConsole("Roboter wird in Schlaf Position gefahren");
             }
         });
+        switchGreifer.setOnCheckedChangeListener(this);
 
         drawCanvas.axes.changePosition(axisOne.getProgress(), axisTwo.getProgress(), axisThree.getProgress(), axisFour.getProgress(), axisFive.getProgress(), axisSix.getProgress());
         bluetoothConnection = new BluetoothConnection(this,"HC-05");
     }
 
-
     public void writeConsole(String text) {
-        textView.setText(textView.getText() + "\r\n" + text);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd/HH:mm:ss", Locale.getDefault());
+        String uhrzeit = sdf.format(new Date());
+        textView.setText(textView.getText() + "\r\n----------"+uhrzeit+"----------" + "\r\n" + text);
+        scrollViewConsole.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
@@ -166,12 +180,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){
-            if(buttonView.equals(greiferCloseAndOpen)){
+            if(buttonView.equals(switchGreifer)){
                 bluetoothConnection.sendMessage("670");
                 writeConsole("6 Achse auf 70 Grad");
             }
         }
-        if(buttonView.equals(greiferCloseAndOpen)){
+        if(buttonView.equals(switchGreifer)){
             bluetoothConnection.sendMessage("60");
             writeConsole("6 Achse auf 0 Grad");
         }

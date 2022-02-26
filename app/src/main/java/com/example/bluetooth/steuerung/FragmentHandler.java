@@ -53,12 +53,14 @@ public class FragmentHandler extends Fragment {
                 mainActivity.axisOne = getView().findViewById(R.id.AxisOne);
                 break;
             case R.layout.fragment_funktionen:
-                mainActivity.delay = getView().findViewById(R.id.Delay);
+                mainActivity.delay = getView().findViewById(R.id.delay);
                 mainActivity.homeButton = getView().findViewById(R.id.homeButton);
                 mainActivity.sleepButton = getView().findViewById(R.id.sleepButton);
+                mainActivity.switchGreifer = getView().findViewById(R.id.switchGreifer);
                 break;
             case R.layout.fragment_konsole:
                 mainActivity.textView = getView().findViewById(R.id.ConsolenView);
+                mainActivity.scrollViewConsole = getView().findViewById(R.id.scrollViewConsole);
                 break;
         }
         viewsCreated++;
