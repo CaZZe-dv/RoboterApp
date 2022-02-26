@@ -40,10 +40,10 @@
                 android:textColor="#FFFFFF"/>
         <SeekBar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/Delay" android:max="80" android:progress="20"/>
+                android:layout_height="wrap_content" android:id="@+id/delay" android:max="80" android:progress="20"/>
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/switchGreifer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Greifer Öffnen/Schließen"

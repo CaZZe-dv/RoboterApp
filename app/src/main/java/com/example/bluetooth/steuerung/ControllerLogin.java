@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bluetooth.R;
@@ -19,6 +21,9 @@ public class ControllerLogin extends AppCompatActivity {
      * Input Feld für das Passwort
      */
     public TextView password;
+
+    public AlertDialog.Builder builder;
+    public AlertDialog alert;
     //Methode onCreate überschreiben, damit man eigene Daten verwenden kann
     protected void onCreate(Bundle savedInstanceState) {
         //Methode der Überklasse AppCompatActivity aufrufen
@@ -28,6 +33,18 @@ public class ControllerLogin extends AppCompatActivity {
         //Eigenschaften username, password und loginButton deklarieren mit findViewById
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+
+        username.setText("admin");
+        password.setText("admin");
+
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Benutzername oder Passwort sind falsch, bitte versuchen sie es erneut!");
+        builder.setCancelable(true);
+        builder.setTitle("Hinweis");
+        builder.setPositiveButton("OK",null);
+
+        alert = builder.create();
+
         loginButton = findViewById(R.id.loginButton);
         //Dem Login Button einen ClickListener hinzufügen
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +55,9 @@ public class ControllerLogin extends AppCompatActivity {
                         && password.getText().toString().equals("admin")) {
                     //Falls dies zutrifft wird zum nächsten Fenster gewechselt
                     switchToChoose();
+                    return;
                 }
+                alert.show();
             }
         });
     }

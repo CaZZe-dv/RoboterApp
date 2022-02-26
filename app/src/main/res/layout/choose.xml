@@ -57,23 +57,22 @@
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="369dp"
+        android:layout_height="92dp"
         android:gravity="center_horizontal"
         android:text="Wählen Sie einen Modus"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.083" />
+        app:layout_constraintVertical_bias="0.082" />
 
     <TextView
         android:id="@+id/Tooltip"
-        android:layout_width="241dp"
-        android:layout_height="97dp"
+        android:layout_width="293dp"
+        android:layout_height="79dp"
         android:background="@drawable/custom_background"
         android:gravity="clip_vertical|center_horizontal"
         android:text="Mit diesem Modus wird der Roboter gesteuert"

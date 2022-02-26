@@ -80,7 +80,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisOne = view.findViewById(R.id.AxisOne_Programme);
         axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
 
-        btConnector.homePosition();
+        //btConnector.homePosition();
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -263,7 +263,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisGeschwindigkeit.setProgress(point.getGeschwindigkeit());
         textViewDelay.setText(String.valueOf(point.getDelay()));
         Point p=new Point(axisOne.getProgress(),axisTwo.getProgress(),axisThree.getProgress(),axisFour.getProgress(),axisFive.getProgress(),axisSix.getProgress());
-        btConnector.goTo(p);
+        //btConnector.goTo(p);
 
         btnAddPointState=3;
         editPoint=i;
@@ -280,13 +280,13 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private void applyCurrentState(){
         //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
-        Point curPosition=btConnector.getCurPosition();
-        axisOne.setProgress(curPosition.getAxisOne());
-        axisTwo.setProgress(curPosition.getAxisTwo());
-        axisThree.setProgress(curPosition.getAxisThree());
-        axisFour.setProgress(curPosition.getAxisFour());
-        axisFive.setProgress(curPosition.getAxisFive());
-        axisSix.setProgress(curPosition.getAxisSix());
+        //Point curPosition=btConnector.getCurPosition();
+        //axisOne.setProgress(curPosition.getAxisOne());
+        //axisTwo.setProgress(curPosition.getAxisTwo());
+        //axisThree.setProgress(curPosition.getAxisThree());
+        //axisFour.setProgress(curPosition.getAxisFour());
+        //axisFive.setProgress(curPosition.getAxisFive());
+        //axisSix.setProgress(curPosition.getAxisSix());
     }
     private void enableInput(){
         axisOne.setEnabled(true);
