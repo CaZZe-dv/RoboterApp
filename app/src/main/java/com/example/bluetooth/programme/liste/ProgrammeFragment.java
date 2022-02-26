@@ -106,7 +106,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         delProgramm=idList.get(i);
         dialogDeleteProgramm();
-        return false;
+        return true;
     }
 
 

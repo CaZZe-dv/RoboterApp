@@ -43,7 +43,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     Connector connector;
 
     ErstellenFragment fragmentErstellen;
-    int id;//ID von zu bearbeitendem Programm
+    int idProgramm;//ID von zu bearbeitendem Programm
 
     SeekBar axisSix;
     SeekBar axisFive;
@@ -68,9 +68,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     ArrayList<String> arrayList;
     ArrayList<PointG> pointList;
     ArrayAdapter<String> arrayAdapter;
-
-    int defaultGeschwindigkeit = 10;
-    int defaultDelay = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -118,7 +115,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        pointList=connector.getPoints(id);
+        pointList=connector.getPoints(idProgramm);
         arrayList=new ArrayList<>();
         for(int i=0;i<pointList.size();i++){
             PointG pg=pointList.get(i);
@@ -133,7 +130,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         applyCurrentState();
     }
     public void setId(int id){
-        this.id=id;
+        this.idProgramm=id;
     }
 
     //Listen
@@ -245,12 +242,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }
                     break;
             }
-            //TODO: kleines Fenster vor finalem Hinzufügen aufrufen
         }
         if(view.equals(btnSaveProgramm)){
-            //TODO: Save Programm
-            connector.addPoints(pointList,id);
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+            dialogSaveProgramm();
         }
     }
     //Liste Listeners
@@ -317,6 +311,11 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     private String generatePointName(PointG pg, int index){
         String pName="P"+index+ " ["+"A1:"+pg.getAxisOne()+", A2:"+pg.getAxisTwo()+", A3:"+pg.getAxisThree()+", A4:"+pg.getAxisFour()+", A5:"+pg.getAxisFive()+", AGreifer:"+pg.getAxisSix()+"] Speed:"+pg.getGeschwindigkeit()+", Delay:"+pg.getDelay();
         return pName;
+    }
+    private int getGeschwindigkeit(){
+        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
+        int speed=axisGeschwindigkeit.getProgress()+10;
+        return speed;
     }
 
     //AlertDialogs
@@ -408,9 +407,60 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
-    private int getGeschwindigkeit(){
-        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
-        int speed=axisGeschwindigkeit.getProgress()+10;
-        return speed;
+    private void dialogSaveProgramm(final int index) {
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("P" + (index + 1) + " löschen?");
+        dialogBuilder.setTitle("Punkt löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt löschen
+                arrayList.remove(index);
+                pointList.remove(index);
+                updateList();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogSaveProgramm(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("Programm speichern?");
+        dialogBuilder.setTitle("Programm speichern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm speichern
+                connector.addPoints(pointList,idProgramm);
+                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm nicht speichern
+                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

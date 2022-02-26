@@ -19,6 +19,7 @@ import android.widget.ListView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.robot.BTConnector;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,9 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         //TextView
         textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
         textViewBeschreibung = view.findViewById(R.id.textViewProgrammBeschreibung);
+        textViewProgrammName.setText("");
+        textViewBeschreibung.setText("");
+
         //Liste
         listView=(ListView)view.findViewById(R.id.listViewProgramme);
         listView.setOnItemClickListener(this);
@@ -110,6 +114,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
                     connector.newProgramm(name,beschreibung);
                     idList=connector.getIDListe();
                     int id=idList.get(idList.size()-1);
+                    BTConnector.homePosition();
                     switchFrag(id);
                 }
             }else if(btnAddProgrammState==2){

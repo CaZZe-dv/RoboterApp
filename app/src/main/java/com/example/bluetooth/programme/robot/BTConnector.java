@@ -42,8 +42,9 @@ public class BTConnector {
                     inputStream = socket.getInputStream();
                 }
             }
-        }catch (SecurityException e){
         }catch (Exception e){
+            //Bluetooth Verbindung konnte nicht hergestellt werden
+
         }
     }
     public static void sendMessage(String axis,String message){
@@ -149,14 +150,6 @@ public class BTConnector {
         return points;
     }
     public static void homePosition(){
-        sendMessage("1","90");
-        sendMessage("2","120");
-        sendMessage("3","25");
-        sendMessage("4","50");
-        sendMessage("5","0");
-        sendMessage("6","60");
-        sendMessage("d","20");
-
         curPosition.setAxisOne(90);
         curPosition.setAxisTwo(120);
         curPosition.setAxisThree(25);
@@ -164,6 +157,14 @@ public class BTConnector {
         curPosition.setAxisFive(0);
         curPosition.setAxisSix(60);
         curSpeed=20;
+
+        sendMessage("1","90");
+        sendMessage("2","120");
+        sendMessage("3","25");
+        sendMessage("4","50");
+        sendMessage("5","0");
+        sendMessage("6","60");
+        sendMessage("d","20");
     }
     public static void goTo(Point p,int geschw){
         sendMessage("d", String.valueOf(geschw));
