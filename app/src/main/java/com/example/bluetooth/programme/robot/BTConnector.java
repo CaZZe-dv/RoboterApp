@@ -25,7 +25,7 @@ public class BTConnector {
     private static int defaultSpeed = 20;
 
     public static void init(){
-        //connectBluetooth();
+        connectBluetooth();
         curPosition=new Point();
         homePosition();
     }
