@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.einstellungen.Console;
+import com.example.bluetooth.programme.einstellungen.EinstellungenFragment;
 import com.example.bluetooth.programme.erstellen.ErstellenFragment;
 import com.example.bluetooth.programme.liste.ProgrammeFragment;
 import com.example.bluetooth.programme.robot.BTConnector;
@@ -63,8 +62,8 @@ public class ProgrammActivity extends AppCompatActivity {
             }
         });
 
-        //Bluetooth
-
+        //Bluetooth & Console
+        Console.init();
         BTConnector.init();
     }
 }

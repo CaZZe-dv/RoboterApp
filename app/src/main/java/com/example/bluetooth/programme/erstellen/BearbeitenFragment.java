@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.einstellungen.Console;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

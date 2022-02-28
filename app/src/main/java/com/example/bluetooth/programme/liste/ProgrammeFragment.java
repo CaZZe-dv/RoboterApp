@@ -97,7 +97,7 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
         if(points.isEmpty()){
             dialogError("Programm enthält keinen Punkt");
         }else{
-            BTConnector.playbackProgramm(points);
+            BTConnector.playbackProgramm(points,connector.getProgrammName(idList.get(i)));
         }
 
     }
