@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.ParcelUuid;
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
@@ -156,11 +159,12 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
-    private void addListItem(PointG pg){
-        int index=arrayList.size()+1;
-        String pName=generatePointName(pg, index);
-        arrayList.add(pName);
-        pointList.add(pg);
+    private void addListItem(PointG pg, int index){
+        if(index==pointList.size()){
+            pointList.add(pg);
+        }else{
+            pointList.add(index,pg);
+        }
         updateList();
     }
     private void updateListItem(PointG pg){
@@ -377,16 +381,27 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
      */
     private void dialogAddPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
-        final int index=arrayList.size()+1;
-        String pName=generatePointName(pg,index);
-        dialogBuilder.setMessage(pName+" hinzufügen?");
+        dialogBuilder.setMessage("Punkt hinzufügen?"+"\n\n"+"Nach welchem Punkt soll die neue Position hinzugefügt werden?");
         dialogBuilder.setTitle("Punkt hinzufügen");
         dialogBuilder.setCancelable(true);
+
+        Spinner spinner =new Spinner(view.getContext());
+        ArrayList<String> spinnerList=new ArrayList<String>();
+        spinnerList.add("an erster Stelle");
+        for(int i=0;i<arrayList.size();i++){
+            spinnerList.add("P"+(i+1));
+        }
+        ArrayAdapter arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,spinnerList);
+        spinner.setAdapter(arrayAdapterSpinner);
+        spinner.setSelection(spinnerList.size()-1);
+
+        dialogBuilder.setView(spinner);
 
         dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //Punkt hinzufügen
-                addListItem(pg);
+                int index=spinner.getSelectedItemPosition(); //Position ist äuqivilent zu index, an dem es eingefügt werden soll
+                addListItem(pg,index);
 
                 textViewDelay.setText("");
                 disableInput();
@@ -418,6 +433,52 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
+    /*
+    private void openAddAlert(){
+        builder= new AlertDialog.Builder(view.getContext());
+        builder.setMessage("Was soll hinzugefügt werden?");
+        builder.setTitle("Essen hinzufügen");
+        builder.setCancelable(true);
+
+        Spinner spinner =new Spinner(view.getContext());
+        ArrayList<String> list=new ArrayList<String>();
+        list.add("Gericht");
+        list.add("Essen");
+        list.add("Beilage");
+        list.add("Getränk");
+        arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,list);
+        spinner.setAdapter(arrayAdapterSpinner);
+        builder.setView(spinner);
+
+        builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Entscheiden in welches Fragment er geschickt wird
+                isSek=true;
+                String s=spinner.getSelectedItem().toString();
+                if(s.equals("Gericht")){
+                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAG);
+                }else if(s.equals("Essen")){
+                    Var.setFragEssenBeilage("Essen");
+                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAEB);
+                }else if(s.equals("Beilage")){
+                    Var.setFragEssenBeilage("Beilage");
+                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAEB);
+                }else if(s.equals("Getränk")){
+                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAGE);
+                }
+                dialog.cancel();
+            }
+        });
+        builder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alter = builder.create();
+        alter.show();
+    }
+     */
     private void dialogEditPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         int index = editPoint+1;
