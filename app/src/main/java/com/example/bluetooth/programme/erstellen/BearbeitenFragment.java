@@ -80,6 +80,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         connector=new Connector(view.getContext());
         fragmentErstellen=new ErstellenFragment();
         //Seekbars
+        //Seekbars
 
         axisSix = view.findViewById(R.id.AxisSix_Programme);
         axisFive = view.findViewById(R.id.AxisFive_Programme);
@@ -222,11 +223,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else{
                         pgNew=new PointG(pNew,getGeschwindigkeit(), delayNew);
                         dialogAddPunkt(pgNew);
-
-                        textViewDelay.setText("");
-                        disableInput();
-                        btnAddPointState=1;
-                        btnAddPoint.setText("Neuer Punkt");
                     }
                     break;
                 case 3: //geklickt auf "Änderungen übernehmen"
@@ -241,11 +237,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                     }else {
                         pgEdit = new PointG(pEdit, getGeschwindigkeit(), delayEdit);
                         dialogEditPunkt(pgEdit);
-
-                        textViewDelay.setText("");
-                        disableInput();
-                        btnAddPointState = 1;
-                        btnAddPoint.setText("Neuer Punkt");
                     }
                     break;
             }
@@ -357,6 +348,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
+    /*
     private void dialogAddPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         final int index=arrayList.size()+1;
@@ -382,6 +374,50 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
+     */
+    private void dialogAddPunkt(final PointG pg){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        final int index=arrayList.size()+1;
+        String pName=generatePointName(pg,index);
+        dialogBuilder.setMessage(pName+" hinzufügen?");
+        dialogBuilder.setTitle("Punkt hinzufügen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt hinzufügen
+                addListItem(pg);
+
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState=1;
+                btnAddPoint.setText("Neuer Punkt");
+
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState=1;
+                btnAddPoint.setText("Neuer Punkt");
+
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
     private void dialogEditPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         int index = editPoint+1;
@@ -390,15 +426,29 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialogBuilder.setTitle("Punkt ändern");
         dialogBuilder.setCancelable(true);
 
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //Punkt löschen
+                //Änderungen übernehmen
                 updateListItem(pg);
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState = 1;
+                btnAddPoint.setText("Neuer Punkt");
                 dialog.cancel();
             }
         });
-        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState = 1;
+                btnAddPoint.setText("Neuer Punkt");
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbruch", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 //nur schließen
                 dialog.cancel();
             }
@@ -417,31 +467,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                 dialog.cancel();
             }
         });
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogSaveProgramm(final int index) {
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("P" + (index + 1) + " löschen?");
-        dialogBuilder.setTitle("Punkt löschen");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Punkt löschen
-                arrayList.remove(index);
-                pointList.remove(index);
-                updateList();
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Abbruch", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
         dialog = dialogBuilder.create();
         dialog.show();
     }

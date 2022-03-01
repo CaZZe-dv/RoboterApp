@@ -117,7 +117,7 @@ public class BTConnector {
             Console.stopProgramm(programmName);
         }
     }
-    private static void playbackProgramm(final ArrayList<PointG> points, int size, int i,String programmName){
+    private static void playbackProgramm(final ArrayList<PointG> points, int size, int i, final String programmName){
         final CustomHandler handler = new CustomHandler(size,i,points);
         handler.postDelayed(new Runnable() {
             public void run() {
