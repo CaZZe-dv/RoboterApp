@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.robot.BTConnector;
+import com.example.bluetooth.programme.tcp.RPoint;
+import com.example.bluetooth.programme.tcp.TCP;
 
 public class EinstellungenFragment extends Fragment implements View.OnClickListener {
 
@@ -30,6 +33,11 @@ public class EinstellungenFragment extends Fragment implements View.OnClickListe
 
         btnKonsole=view.findViewById(R.id.btnKonsole);
         btnKonsole.setOnClickListener(this);
+
+        //TEST
+        TCP tcp = new TCP();
+        BTConnector.homePosition();
+        RPoint rPoint = tcp.getTCP(BTConnector.getCurPosition());
     }
 
     private void switchFrag(int identifier){
