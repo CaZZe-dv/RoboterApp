@@ -12,14 +12,13 @@ public class Axes {
     public DrawCanvas drawCanvas;
     //Im Konstruktor wird das DrawCanvas übergeben und
     //die Achsen auf ihre Länge eingestellt
-    public Axes(DrawCanvas drawCanvas){
+    public Axes(){
         this.axis1 = new Axis(0,null, 0,null);
         this.axis2 = new Axis(0,null,120,axis1);
         this.axis3 = new Axis(0,axis2,120,axis1);
         this.axis4 = new Axis(0,axis3,190,axis1);
         this.axis5 = new Axis(0,null,0,null);
         this.axis6 = new Axis(0,null,0,null);
-        this.drawCanvas = drawCanvas;
     }
     //Wenn sic hdie Achsen ändern werden sie mit dieser Methode verändert und nach
     //der Änderung wird das DrawCanvas neu gezeichnet
@@ -30,7 +29,6 @@ public class Axes {
         axis4.degree = d4;
         axis5.degree = d5;
         axis6.degree = d6;
-        drawCanvas.invalidate();
     }
     //Gibt den Weltpunkt des Woboters zurück
     public Vector3D getVectorWorld3D(){
@@ -39,7 +37,6 @@ public class Axes {
         int x = (int)(Math.cos(Math.toRadians(degree))*vectorWorld2D.x);
         int z = (int)(Math.sin(Math.toRadians(degree))*vectorWorld2D.x);
         int y = vectorWorld2D.y;
-
         return new Vector3D(x,y,z);
     }
 }

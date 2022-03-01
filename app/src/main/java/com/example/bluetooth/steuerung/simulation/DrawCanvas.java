@@ -11,10 +11,10 @@ public class DrawCanvas extends View {
     //Dann wurde ein Objekt Axes erstellt
     public Axes axes;
     //Dann erstellen wir einen Konstruktor mit einem Parameter für den Context
-    public DrawCanvas(Context context) {
+    public DrawCanvas(Context context,Axes axes) {
         super(context);
         paint.setColor(Color.BLACK);
-        axes = new Axes(this);
+        this.axes = axes;
     }
     //Dann wird die onDraw Methode der Überklasse View überschreiben
     @Override

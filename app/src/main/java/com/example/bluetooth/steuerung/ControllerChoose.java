@@ -90,7 +90,7 @@ public class ControllerChoose extends AppCompatActivity {
     }
     //Zum Controller XML-File wechseln
     public void switchToMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
     //Zum Programm XML-File wechseln

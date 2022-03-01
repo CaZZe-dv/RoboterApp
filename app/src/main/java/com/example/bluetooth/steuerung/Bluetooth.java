@@ -14,20 +14,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class BluetoothConnection {
+public class Bluetooth {
     public OutputStream outputStream;
     public InputStream inputStream;
     public BluetoothAdapter bluetoothAdapter;
-    public MainActivity mainActivity;
     public String deviceName;
-    public BluetoothConnection(MainActivity mainActivity,String deviceName){
-        this.mainActivity = mainActivity;
+    public Bluetooth(String deviceName){
         this.deviceName = deviceName;
-        connectBluetooth();
     }
     public void connectBluetooth() {
         try {
-            mainActivity.writeConsole("Verbindung mit Bluetooth aufbauen");
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
                 if (device.getName().equals(deviceName)) {
@@ -36,13 +32,13 @@ public class BluetoothConnection {
                     socket.connect();
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
-                    mainActivity.writeConsole("Verbindung mit Bluetooth erfolgreich");
+                    System.out.println("Verbindung mit Bluetooth erfolgreich");
                 }
             }
         }catch (SecurityException e){
-            mainActivity.writeConsole("Verbindung mit Bluetooth fehlgeschlagen");
+            System.out.println("Verbindung mit Bluetooth fehlgeschlagen");
         }catch (Exception e){
-            mainActivity.writeConsole("Verbindung mit Bluetooth fehlgeschlagen");
+            System.out.println("Verbindung mit Bluetooth fehlgeschlagen");
         }
     }
     public void sendMessage(String[] messages){
@@ -52,7 +48,7 @@ public class BluetoothConnection {
                 outputStream.write(message.getBytes());
             }
         } catch (Exception e) {
-            mainActivity.writeConsole("Senden der Nachricht hat nicht geklappt");
+            System.out.println("Senden der Nachricht hat nicht geklappt");
         }
     }
     public void sendMessage(String message){
@@ -60,7 +56,7 @@ public class BluetoothConnection {
             message += ".";
             outputStream.write(message.getBytes());
         } catch (Exception e) {
-            mainActivity.writeConsole("Senden der Nachricht hat nicht geklappt");
+            System.out.println("Senden der Nachricht hat nicht geklappt");
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -68,7 +64,7 @@ public class BluetoothConnection {
         try{
             return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readLine();
         }catch (Exception e){
-            mainActivity.writeConsole("Empfangen der Nachricht hat nicht geklappt");
+            System.out.println("Empfangen der Nachricht hat nicht geklappt");
         }
         return null;
     }

@@ -1,67 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <Switch
+            android:id="@+id/switchKontroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="In die Controlleransicht wechseln"
+            android:textSize="24sp" />
 
         <TextView
-                android:text="Greifer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Greifer"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisSix" android:max="70"
-                android:progress="60" android:indeterminate="false"
-                style="@style/Widget.AppCompat.SeekBar"/>
+            android:id="@+id/AxisSix"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="70"
+            android:progress="60" />
+
         <TextView
-                android:text="Achse 5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Achse 5"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisFive" android:max="180"
-                android:progress="0"/>
+            android:id="@+id/AxisFive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="180"
+            android:progress="0" />
+
         <TextView
-                android:text="Achse 4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Achse 4"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisFour" android:max="180"
-                android:progress="50" />
+            android:id="@+id/AxisFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="180"
+            android:progress="50" />
+
         <TextView
-                android:text="Achse 3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView2"/>
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Achse 3"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisThree"
-                android:progress="25" android:max="180"/>
+            android:id="@+id/AxisThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="180"
+            android:progress="25" />
+
         <TextView
-                android:text="Achse 2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView3"/>
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Achse 2"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisTwo"
-                android:progress="120" android:max="180"/>
+            android:id="@+id/AxisTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="180"
+            android:progress="120" />
+
         <TextView
-                android:text="Achse 1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="24sp"
-                android:gravity="left" android:textColor="#FFFFFF" android:id="@+id/textView4"/>
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Achse 1"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
         <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/AxisOne"
-                android:progress="90" android:max="180"/>
+            android:id="@+id/AxisOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="180"
+            android:progress="90" />
+
     </LinearLayout>
-</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativLayoutBewegen"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="1.0">
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
