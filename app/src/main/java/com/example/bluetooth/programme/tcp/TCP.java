@@ -35,6 +35,7 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         joint01=base.add(x,y,z);
+        System.out.println("JOINT01 - X: "+joint01.getX()+", Y: "+joint01.getY()+", Z: "+joint01.getZ());
     }
     private void calcJoint02(int axis1Degree, int axis3Degree){
         //Axis3Degree = derzeitge Grad der Achse 3
@@ -49,6 +50,7 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         joint02=joint01.add(x,y,z);
+        System.out.println("JOINT02 - X: "+joint02.getX()+", Y: "+joint02.getY()+", Z: "+joint02.getZ());
     }
     private void calcTCP(int axis1Degree, int axis4Degree){
         //Axis3Degree = derzeitge Grad der Achse 4
@@ -63,6 +65,7 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         tcp=joint02.add(x,y,z);
+        System.out.println("TCP - X: "+tcp.getX()+", Y: "+tcp.getY()+", Z: "+tcp.getZ());
     }
     public RPoint getTCP(Point point){
         int axis1Degree=point.getAxisOne();
@@ -80,6 +83,34 @@ public class TCP {
 
         return tcp;
     }
+    public Point calcAxes(RPoint rPoint){
+        //Schritt 1: axis1Degree ausrechnen, um dann den Rest als 2D sehen zu können#
+
+        /*von oben betrachtet
+         _________
+        |         |  ^ z
+        |    O    |  |
+        |_________|  |______> x
+        Vorderseite
+
+        Höhe = y-Koordinate
+
+         */
+        double x=rPoint.getX();
+        double y=rPoint.getY();
+        double z=rPoint.getZ();
+
+        double axis1Degree=Math.toDegrees(Math.atan(z/x));
+
+        double abstand=z/Math.sin(Math.toRadians(axis1Degree));
+        double hoehe = y;
+
+        System.out.println("Höhe: "+hoehe+", Abstand: "+abstand);
+
+        return null;
+    }
+
+
     private int calcRealAngle(int firstAxisDegree,int secondAxisDegree){
         int x=90+secondAxisDegree;
         int y1=firstAxisDegree;
@@ -87,6 +118,7 @@ public class TCP {
         int y2=y-y1;
         int x2=y2;
         int x1=x-x2;
+        System.out.println("Real Angle: "+x1);
         return x1;
     }
 }

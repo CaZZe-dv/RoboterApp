@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.erstellen.Point;
 import com.example.bluetooth.programme.robot.BTConnector;
 
 public class TCPFragment extends Fragment implements View.OnClickListener {
@@ -41,12 +42,12 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
         return view;
     }
     private void init(){
-        BTConnector.homePosition();
+        //BTConnector.homePosition();
         TCP tcp=new TCP();
-        curTCP=tcp.getTCP(BTConnector.getCurPosition());
+        //curTCP=tcp.getTCP(BTConnector.getCurPosition());
 
         textViewCurTCP=view.findViewById(R.id.tempTextViewCurTCP);
-        updateTCPTextView();
+        //updateTCPTextView();
 
         textViewXProgress=view.findViewById(R.id.tempTextViewXProgress);
         textViewYProgress=view.findViewById(R.id.tempTextViewYProgress);
@@ -65,6 +66,23 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
         btnYHigher.setOnClickListener(this);
         btnZLower.setOnClickListener(this);
         btnZHigher.setOnClickListener(this);
+
+        //TEST
+        Point curPos=new Point(90,125,0,0,0,60);
+        BTConnector.goTo(curPos,40);
+        tcp.getTCP(curPos);
+
+        /*
+        Point curPos1=new Point(90,90,90,90,0,90);
+        BTConnector.goTo(curPos1,40);
+        RPoint p1=tcp.getTCP(curPos1);
+        System.out.println("Achse2: "+curPos1.getAxisTwo()+", Achse3: "+curPos1.getAxisThree()+", Achse4: "+curPos1.getAxisFour());
+        System.out.println("curPos1: X: "+p1.getX()+", Y: "+p1.getY()+", Z: "+p1.getZ());
+
+         */
+
+
+        //tcp.calcAxes(new RPoint(50,100,70));
     }
 
 
