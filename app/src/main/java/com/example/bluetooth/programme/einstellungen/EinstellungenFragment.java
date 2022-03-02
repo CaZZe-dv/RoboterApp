@@ -14,6 +14,7 @@ import com.example.bluetooth.R;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.example.bluetooth.programme.tcp.RPoint;
 import com.example.bluetooth.programme.tcp.TCP;
+import com.example.bluetooth.programme.tcp.TCPFragment;
 
 public class EinstellungenFragment extends Fragment implements View.OnClickListener {
 
@@ -21,6 +22,7 @@ public class EinstellungenFragment extends Fragment implements View.OnClickListe
     Fragment[] fragArr;
 
     Button btnKonsole;
+    Button btnTemp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -29,15 +31,12 @@ public class EinstellungenFragment extends Fragment implements View.OnClickListe
         return view;
     }
     private void init(){
-        fragArr= new Fragment[]{new ConsoleFragment()};
+        fragArr= new Fragment[]{new ConsoleFragment(),new TCPFragment()};
 
         btnKonsole=view.findViewById(R.id.btnKonsole);
         btnKonsole.setOnClickListener(this);
-
-        //TEST
-        TCP tcp = new TCP();
-        BTConnector.homePosition();
-        RPoint rPoint = tcp.getTCP(BTConnector.getCurPosition());
+        btnTemp=view.findViewById(R.id.btnTempTCP);
+        btnTemp.setOnClickListener(this);
     }
 
     private void switchFrag(int identifier){
@@ -50,5 +49,7 @@ public class EinstellungenFragment extends Fragment implements View.OnClickListe
             //Konsole
             switchFrag(0);
         }
+        if(view.equals(btnTemp))
+            switchFrag(1);
     }
 }

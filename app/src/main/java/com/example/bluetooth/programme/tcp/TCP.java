@@ -35,7 +35,6 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         joint01=base.add(x,y,z);
-        System.out.println("Joint 01- X: "+joint01.getX()+", Y: "+joint01.getY()+", Z: "+joint01.getZ());
     }
     private void calcJoint02(int axis1Degree, int axis3Degree){
         //Axis3Degree = derzeitge Grad der Achse 3
@@ -50,7 +49,6 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         joint02=joint01.add(x,y,z);
-        System.out.println("Joint 02- X: "+joint02.getX()+", Y: "+joint02.getY()+", Z: "+joint02.getZ());
     }
     private void calcTCP(int axis1Degree, int axis4Degree){
         //Axis3Degree = derzeitge Grad der Achse 4
@@ -65,29 +63,30 @@ public class TCP {
         double x=Math.sin(Math.toRadians(axis1Degree))*tempHY;
 
         tcp=joint02.add(x,y,z);
-        System.out.println("Joint 02 Differences: X: "+x+", Y: "+y+", Z: "+z);
-        System.out.println("TCP- X: "+tcp.getX()+", Y: "+tcp.getY()+", Z: "+tcp.getZ());
     }
     public RPoint getTCP(Point point){
         int axis1Degree=point.getAxisOne();
         int axis2Degree=point.getAxisTwo();
-        int axis3Degree=point.getAxisThree()+90;
-        int a=180-axis3Degree;
-        int x=axis2Degree-a;
-        axis3Degree=x;
+        int axis3Degree=point.getAxisThree();
+        int axis4Degree=point.getAxisFour();
 
-        int axis4Degree=point.getAxisFour()+90;
-        a=180-axis4Degree;
-        x=axis3Degree-a;
-        axis4Degree=x;
-        System.out.println("axis1Degree: "+axis1Degree);
-        System.out.println("axis2Degree: "+axis2Degree);
-        System.out.println("axis3Degree: "+axis3Degree);
-        System.out.println("axis4Degree: "+axis4Degree);
+        //den wahren Winkel der achse zur Bodenplatte berechnen -> Zettel dienen zur genauen Angabe wie gerechnet wurde
+        axis3Degree = calcRealAngle(axis2Degree, axis3Degree);
+        axis4Degree = calcRealAngle(axis3Degree,axis4Degree);
+
         calcJoint01(axis1Degree,axis2Degree);
         calcJoint02(axis1Degree,axis3Degree);
         calcTCP(axis1Degree,axis4Degree);
 
         return tcp;
+    }
+    private int calcRealAngle(int firstAxisDegree,int secondAxisDegree){
+        int x=90+secondAxisDegree;
+        int y1=firstAxisDegree;
+        int y=180;
+        int y2=y-y1;
+        int x2=y2;
+        int x1=x-x2;
+        return x1;
     }
 }
