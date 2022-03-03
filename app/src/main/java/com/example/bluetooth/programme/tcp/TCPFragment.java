@@ -68,9 +68,14 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
         btnZHigher.setOnClickListener(this);
 
         BTConnector.homePosition();
-        tcp.getTCP(BTConnector.getCurPosition());
-        Point point=tcp.calcAxes(new RPoint(50,100,70));
+        RPoint rPoint= tcp.getTCP(BTConnector.getCurPosition());
+        //System.out.println("HomePos X:"+rPoint.getX()+", Y:"+rPoint.getY()+", Z:"+rPoint.getZ());
+        Point point=tcp.calcAxes(new RPoint(0,310,170));
         System.out.println("Achse1: "+point.getAxisOne()+", Achse2: "+point.getAxisTwo()+", Achse3: "+point.getAxisThree()+", Achse4: "+point.getAxisFour());
+        RPoint rPointNew=tcp.getTCP(point);
+        System.out.println("Neue Position X:"+rPointNew.getX()+", Y:"+rPointNew.getY()+", Z:"+rPointNew.getZ());
+
+
     }
 
 
