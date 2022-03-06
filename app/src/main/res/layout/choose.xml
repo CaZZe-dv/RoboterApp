@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.352">
+        app:layout_constraintVertical_bias="0.35000002">
 
         <RadioButton
             android:id="@+id/Programms"
@@ -57,18 +57,17 @@
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="392dp"
-        android:layout_height="71dp"
+        android:layout_width="0dp"
+        android:layout_height="61dp"
         android:gravity="center_horizontal"
         android:text="Wählen Sie einen Modus"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintVertical_bias="0.037" />
 
     <TextView
         android:id="@+id/Tooltip"

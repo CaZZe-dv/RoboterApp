@@ -33,8 +33,6 @@ public class FragmentBewegen extends Fragment implements SeekBar.OnSeekBarChange
     public SeekBar axisFive;
     public SeekBar axisSix;
     //
-    public Switch switchAnsicht;
-    //
     public RelativeLayout relativeLayout;
     //
     public DrawCanvas drawCanvas;
@@ -43,7 +41,7 @@ public class FragmentBewegen extends Fragment implements SeekBar.OnSeekBarChange
     public BluetoothSteuerung bluetoothSteuerung;
     //
     public Intent intent;
-    public FragmentBewegenKontroller fragmentBewegenKontroller;
+
     public FragmentBewegen(MainActivity mainActivity, BluetoothSteuerung bluetoothSteuerung, Axes axes){
         this.mainActivity = mainActivity;
         this.axes = axes;
@@ -54,7 +52,7 @@ public class FragmentBewegen extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view == null) {
-            view = inflater.inflate(R.layout.fragment_bewegen, container, false);
+            view = inflater.inflate(R.layout.fragment_steuern, container, false);
         }
         return view;
     }
@@ -72,8 +70,6 @@ public class FragmentBewegen extends Fragment implements SeekBar.OnSeekBarChange
         axisTwo = getView().findViewById(R.id.AxisTwo);
         axisOne = getView().findViewById(R.id.AxisOne);
 
-        switchAnsicht = getView().findViewById(R.id.switchKontroller);
-
         relativeLayout = getView().findViewById(R.id.relativLayoutBewegen);
         drawCanvas = new DrawCanvas(this.getContext(),axes);
         relativeLayout.addView(drawCanvas);
@@ -84,15 +80,6 @@ public class FragmentBewegen extends Fragment implements SeekBar.OnSeekBarChange
         axisFour.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
         axisSix.setOnSeekBarChangeListener(this);
-
-        switchAnsicht.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    mainActivity.switchToKontroller();
-                }
-            }
-        });
 
         mainActivity.bluetoothSteuerung.connectBluetooth();
     }

@@ -37,6 +37,15 @@ public class Axis {
         }
         return getRelativVector();
     }
+    //
+    public Vector3D getVectorWorld3D(){
+        int degree = axisOne.degree;
+        Vector2D vectorWorld2D = getVectorWorld2D();
+        int x = (int)(Math.cos(Math.toRadians(degree))*vectorWorld2D.x);
+        int z = (int)(Math.sin(Math.toRadians(degree))*vectorWorld2D.x);
+        int y = vectorWorld2D.y;
+        return new Vector3D(x,y,z);
+    }
     //Wird ebenfalls für die Simulation benötigt
     public double getDrawFactor(){
         return Math.cos(Math.toRadians(degree));

@@ -38,7 +38,7 @@ public class ControllerLogin extends AppCompatActivity {
         password.setText("admin");
 
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Benutzername oder Passwort sind falsch, bitte versuchen sie es erneut!");
+        builder.setMessage("Benutzername oder Passwort sind falsch, bitte versuchen Sie es erneut!");
         builder.setCancelable(true);
         builder.setTitle("Hinweis");
         builder.setPositiveButton("OK",null);

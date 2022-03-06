@@ -64,6 +64,8 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
     public boolean axisFourLeft = false;
     public boolean axisFourRight = false;
     //
+    public int delay = 100;
+    //
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +162,7 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
                 }
                 if(seekBar.getMax() == 80){
                     bluetoothSteuerung.sendMessage("d"+(seekBar.getProgress()+20));
+                    delay = seekBar.getProgress()+20;
                     mainActivity.fragmentKonsole.writeConsole("Delay auf "+(seekBar.getProgress()+20)+" ms");
                 }
             }
@@ -257,43 +260,49 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
                 if(axisOneLeft){
                     if(axes.axis1.degree < 180){
                         axes.axis1.degree++;
+                        bluetoothSteuerung.sendMessage("1"+axes.axis1.degree);
                     }
                 }else if(axisOneRight){
                     if(axes.axis1.degree > 0){
                         axes.axis1.degree--;
+                        bluetoothSteuerung.sendMessage("1"+axes.axis1.degree);
                     }
                 }
                 if(axisTwoLeft){
                     if(axes.axis2.degree < 180){
                         axes.axis2.degree++;
+                        bluetoothSteuerung.sendMessage("2"+axes.axis2.degree);
                     }
                 }else if(axisTwoRight){
                     if(axes.axis2.degree > 0){
                         axes.axis2.degree--;
+                        bluetoothSteuerung.sendMessage("2"+axes.axis2.degree);
                     }
                 }
                 if(axisThreeLeft){
                     if(axes.axis3.degree < 180){
                         axes.axis3.degree++;
+                        bluetoothSteuerung.sendMessage("3"+axes.axis3.degree);
                     }
                 }else if(axisThreeRight){
                     if(axes.axis3.degree > 0){
                         axes.axis3.degree--;
+                        bluetoothSteuerung.sendMessage("3"+axes.axis3.degree);
                     }
                 }
                 if(axisFourLeft){
                     if(axes.axis4.degree < 180){
                         axes.axis4.degree++;
+                        bluetoothSteuerung.sendMessage("4"+axes.axis4.degree);
                     }
                 }else if(axisFourRight){
                     if(axes.axis4.degree > 0){
                         axes.axis4.degree--;
+                        bluetoothSteuerung.sendMessage("4"+axes.axis4.degree);
                     }
                 }
                 drawCanvas.invalidate();
-                bluetoothSteuerung.sendMessage(new String[]{"1"+axes.axis1.degree,"2"+axes.axis2.degree,"3"+axes.axis3.degree,
-                                                            "4"+axes.axis4.degree,"5"+axes.axis5.degree,"6"+axes.axis6.degree});
-                Thread.sleep(100);
+                Thread.sleep(delay);
             }
         }catch (Exception e){
 

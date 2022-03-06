@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.fragment.app.Fragment;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.steuerung.simulation.Axes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 //Kümmert sich um alle Bestandteile für die Steuerung des Roboters
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static BluetoothSteuerung bluetoothSteuerung;
     public static Axes axes;
     public static MainActivity instance;
+    //
+    public FloatingActionButton buttonController;
     //Überschreiben der onCreate Methode der Überklasse
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         //BottomNAvigation einen setOnNAvigationItemSelectedListener hinzufügen
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        //
+        buttonController = findViewById(R.id.buttonController);
+        buttonController.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToController();
+            }
+        });
     }
 
     @Override
@@ -74,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-    public void switchToKontroller(){
+    public void switchToController(){
         Intent intent = new Intent(this,FragmentBewegenKontroller.class);
         startActivity(intent);
     }

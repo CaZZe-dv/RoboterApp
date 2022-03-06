@@ -28,7 +28,7 @@ public class DrawCanvas extends View {
         canvas.drawText("|Achse 4: "+axes.axis4.degree+"|Achse 5: "+axes.axis5.degree
                 +"|Achse 6: "+axes.axis6.degree+"|",0,100,paint);
         paint.setColor(Color.RED);
-        Vector3D vectorWorld = axes.getVectorWorld3D();
+        Vector3D vectorWorld = axes.axis4.getVectorWorld3D();
         canvas.drawText("(x: "+vectorWorld.x+" y: "+vectorWorld.y+" z: "+vectorWorld.z+")",0,150,paint);
         paint.setColor(Color.WHITE);
         canvas.translate(getWidth()/2,getHeight()-100);
