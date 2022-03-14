@@ -14,6 +14,8 @@ import com.example.bluetooth.R;
 import com.example.bluetooth.programme.erstellen.Point;
 import com.example.bluetooth.programme.robot.BTConnector;
 
+import java.util.Random;
+
 public class TCPFragment extends Fragment implements View.OnClickListener {
     View view;
 
@@ -33,6 +35,7 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
     ImageButton btnZHigher;
 
     RPoint curTCP;
+    TCP tcp;
 
 
     @Override
@@ -43,7 +46,7 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
     }
     private void init(){
         BTConnector.homePosition();
-        TCP tcp=new TCP();
+        tcp=new TCP();
         curTCP=tcp.getTCP(BTConnector.getCurPosition());
 
         textViewCurTCP=view.findViewById(R.id.tempTextViewCurTCP);
@@ -70,14 +73,12 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
         BTConnector.homePosition();
         RPoint rPoint= tcp.getTCP(BTConnector.getCurPosition());
         //System.out.println("HomePos X:"+rPoint.getX()+", Y:"+rPoint.getY()+", Z:"+rPoint.getZ());
-        Point point=tcp.calcAxes(new RPoint(0,310,170));
+        Point point=tcp.calcAxes(new RPoint(0,310,170),BTConnector.getCurPosition());
         System.out.println("Achse1: "+point.getAxisOne()+", Achse2: "+point.getAxisTwo()+", Achse3: "+point.getAxisThree()+", Achse4: "+point.getAxisFour());
         RPoint rPointNew=tcp.getTCP(point);
         System.out.println("Neue Position X:"+rPointNew.getX()+", Y:"+rPointNew.getY()+", Z:"+rPointNew.getZ());
 
-
     }
-
 
     @Override
     public void onClick(View v) {
@@ -95,6 +96,8 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
         }else if(v.equals(btnZHigher)){
             curTCP.setZ(curTCP.getZ()+5);
         }
+        Point p=tcp.calcAxes(curTCP,BTConnector.getCurPosition());
+        BTConnector.goTo(p,20);
         updateTCPTextView();
     }
     private void updateTCPTextView(){
