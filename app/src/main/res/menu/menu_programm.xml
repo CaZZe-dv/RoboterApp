@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_add"
         android:title="Erstellen" />
     <item
-        android:id="@+id/menuitem_einstellungen"
-        android:icon="@drawable/ic_settings"
-        android:title="Einstellungen" />
+        android:id="@+id/menuitem_konsole"
+        android:icon="@drawable/ic_code"
+        android:title="Konsole" />
 </menu>

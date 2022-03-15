@@ -1,5 +1,6 @@
 package com.example.bluetooth.programme.einstellungen;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.ProgrammActivity;
+import com.example.bluetooth.steuerung.ControllerChoose;
+
 public class ConsoleFragment extends Fragment implements View.OnClickListener {
 
     View view;
@@ -38,7 +42,11 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
-        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,einstellungenFragment).commit();
+
+    public void onClick(View v) {
+        if(v.equals(btnBack)){
+            Intent intent = new Intent(getActivity(), ControllerChoose.class);
+            startActivity(intent);
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.example.bluetooth.programme.tcp;
 
 import com.example.bluetooth.programme.erstellen.Point;
 
-import java.sql.SQLOutput;
 import java.util.Random;
 
 public class TCP {
@@ -15,7 +14,6 @@ public class TCP {
     private int axis2DegreeTCP;//axis2Degree des TCPs
     private int axis3DegreeTCP;//axis3Degree des TCPs
     private int axis4DegreeTCP;//axis4Degree des TCPs
-    private int axis1DegreeNew;
     private int axis2DegreeOriginal;
     private int axis3DegreeOriginal;
     private int axis4DegreeOriginal;
@@ -24,12 +22,9 @@ public class TCP {
     private double distanceJoint02_tcp;
 
     int reset;
-    int resetMax;
     RPoint rPointGesucht;
     Point returnPoint;
-    double sensitivity;//wie genau der TCP anfahren muss
-    double abstandSoll;
-    double hoeheSoll;
+
 
     private String achse;//welche achse grade dran ist
 
@@ -44,12 +39,11 @@ public class TCP {
         distanceJoint02_tcp=183.7;
 
         reset=0;
-        sensitivity=1.0;
-        resetMax=20;
     }
     private void calcJoint01(int axis1Degree,int axis2Degree){
         //Axis2Degree = derzeitge Grad der Achse 2
         //Achse 2 = Servomotoren an Base
+        axis1Degree-=90;
 
         //Y, welches quasi die Höhe dieses Punktes darstellt, ist von der Stellung von Achse 1 unabhängig, da die Höhe immer gleich ist.
         double y=Math.sin(Math.toRadians(axis2Degree))*distanceBase_joint01;
@@ -64,6 +58,7 @@ public class TCP {
     private void calcJoint02(int axis1Degree, int axis3Degree){
         //Axis3Degree = derzeitge Grad der Achse 3
         //Achse 3 = Servomotoren an Joint01
+        axis1Degree-=90;
 
         //Y, welches quasi die Höhe dieses Punktes darstellt, ist von der Stellung von Achse 1 unabhängig, da die Höhe an jeder Drehposition gleich ist.
         double y=Math.sin(Math.toRadians(axis3Degree))*distanceJoint01_joint02;
@@ -78,6 +73,7 @@ public class TCP {
     private void calcTCP(int axis1Degree, int axis4Degree){
         //Axis3Degree = derzeitge Grad der Achse 4
         //Achse 4 = Servomotoren an Joint02
+        axis1Degree-=90;
 
         //Y, welches quasi die Höhe dieses Punktes darstellt, ist von der Stellung von Achse 1 unabhängig, da die Höhe an jeder Drehposition gleich ist.
         double y=Math.sin(Math.toRadians(axis4Degree))*distanceJoint02_tcp;
@@ -90,7 +86,7 @@ public class TCP {
         //System.out.println("TCP - X: "+tcp.getX()+", Y: "+tcp.getY()+", Z: "+tcp.getZ());
     }
     public RPoint getTCP(Point point){
-        int axis1Degree=point.getAxisOne()-90;
+        int axis1Degree=point.getAxisOne();
         int axis2Degree=point.getAxisTwo();
         int axis3Degree=point.getAxisThree();
         int axis4Degree=point.getAxisFour();
@@ -111,114 +107,27 @@ public class TCP {
         return tcp;
     }
 
-    public Point calcAxes(RPoint rPoint, Point curPoint){
+    public Point calcAxes(RPoint rPoint){
         //Gibt einen Point mit den Achsengraden zurück, an denen der Roboter am rPoint steht
         double x=rPoint.getX();
         double y=rPoint.getY();
         double z=rPoint.getZ();
 
-        axis1DegreeNew= (int) Math.toDegrees(Math.atan(z/x));
+        int axis1Degree= (int) Math.toDegrees(Math.atan(z/x));
         rPointGesucht=rPoint;
-        axis1DegreeTCP=curPoint.getAxisOne();
-        axis2DegreeTCP=curPoint.getAxisTwo();
-        axis3DegreeTCP=curPoint.getAxisThree();
-        axis4DegreeTCP=curPoint.getAxisFour();
 
         axis2DegreeOriginal=axis2DegreeTCP;
         axis3DegreeOriginal=axis3DegreeTCP;
         axis4DegreeOriginal=axis4DegreeTCP;
 
-        //abstand und hoehe, die erzielt werden soll ausrechnen
-        abstandSoll=Math.sqrt((rPointGesucht.getZ()*rPointGesucht.getZ())+(rPointGesucht.getX()*rPointGesucht.getX()));
-        hoeheSoll = rPointGesucht.getY();
+        test(axis1Degree,axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,getTCP(new Point(axis1DegreeTCP,axis2DegreeTCP,axis3DegreeTCP,axis4DegreeTCP,0,0)));
 
-        test(axis1DegreeNew,axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,getTCP(new Point(axis1DegreeTCP,axis2DegreeTCP,axis3DegreeTCP,axis4DegreeTCP,0,0)));
+
 
         return returnPoint;
+
+
     }
-    /*
-    private void test(int axis2Degree,int axis3Degree, int axis4Degree,RPoint curRPoint){
-        System.out.println("Axis2Degree beim Aufruf: "+axis2Degree+", axis3Degree beim Aufruf: "+axis3Degree+", axis4Degree beim Aufruf: "+axis4Degree);
-        //derzeitige abstand und hoehe ausrechnen
-        double abstandIst = Math.sqrt((curRPoint.getZ()*curRPoint.getZ())+(curRPoint.getX()*curRPoint.getX()));
-        double hoeheIst = curRPoint.getY();
-
-        //Differenz des Soll und Ist Abstands und Höhe
-        double abstandDiff=abstandSoll-abstandIst;//Um soviel Abstand muss der TCP geändert werden
-        double hoeheDiff=hoeheSoll-hoeheIst;//Um soviel höhe muss der TCP geändert werden
-        double distanz=Math.sqrt((hoeheDiff*hoeheDiff)+(abstandDiff*abstandDiff));//Distanz zum derzeitigen TCP
-
-        //anhand dieser distanz wird nun im trial and error verfahren durchprobiert, welche achstenstellungen die distanz verringern
-        //Zufällige Achsenänerungen und schauen, wie sich diese Auswirken
-        Random rnd=new Random();
-        boolean[] bool=new boolean[]{rnd.nextBoolean(),rnd.nextBoolean(),rnd.nextBoolean()};
-        int axis2DegreeTemp=axis2Degree;
-        int axis3DegreeTemp=axis3Degree;
-        int axis4DegreeTemp=axis4Degree;
-        if(bool[0]){
-            axis2DegreeTemp++;
-        }else{
-            axis2DegreeTemp--;
-        }
-        if(bool[1]){
-            axis3DegreeTemp++;
-        }else{
-            axis3DegreeTemp--;
-        }
-        if(bool[2]){
-            axis4DegreeTemp++;
-        }else{
-            axis4DegreeTemp--;
-        }
-        RPoint tcpNew=getTCP(new Point(axis1DegreeNew,axis2DegreeTemp,axis3DegreeTemp,axis4DegreeTemp,0,0));
-
-        abstandIst=Math.sqrt((tcpNew.getZ()*tcpNew.getZ())+(tcpNew.getX()*tcpNew.getX()));
-        hoeheIst = tcpNew.getY();
-
-        abstandDiff=abstandSoll-abstandIst;//Um soviel Abstand muss der TCP geändert werden
-        hoeheDiff=hoeheSoll-hoeheIst;//Um soviel höhe muss der TCP geändert werden
-        System.out.println("abstandDiff: "+abstandDiff+", hoeheDiff: "+hoeheDiff);
-        double distanzNew=Math.sqrt((hoeheDiff*hoeheDiff)+(abstandDiff*abstandDiff));//Distanz zum gewünschten TCP
-        System.out.println("distanzNew: "+distanzNew+", distanz: "+distanz);
-        if(distanzNew<=sensitivity){
-            //System.out.println("PUNKT GEFUNDEN");
-            returnPoint= new Point(axis1DegreeNew,axis2DegreeTemp,axis3DegreeTemp,axis4DegreeTemp,0,0);
-            //System.out.println("Achse1: "+returnPoint.getAxisOne()+", Achse2: "+returnPoint.getAxisTwo()+", Achse3: "+returnPoint.getAxisThree()+", Achse4: "+returnPoint.getAxisFour());
-        }else if(axis2DegreeTemp>180||axis2DegreeTemp<0||axis3DegreeTemp>180||axis3DegreeTemp<0||axis4DegreeTemp>180||axis4DegreeTemp<0) {
-            reset = 0;
-            //System.out.println("AUFRUF0");
-            curRPoint=getTCP(new Point(axis1DegreeNew,axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,0,0));
-            test(axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,curRPoint);
-        }else{
-            if(distanzNew<distanz){
-                //Änderungen haben sich dem neuen Punkt angenähert
-                reset=0;
-                System.out.println("IST ANGENÄHERT: "+distanzNew);
-                //System.out.println("AUFRUF1");
-                test(axis2DegreeTemp,axis3DegreeTemp,axis4DegreeTemp,tcpNew);
-            }else{
-                reset++;
-                System.out.println("NICHT ANGENÄHERT: "+distanz+", reset wert ist auf "+reset);
-                //Änderungen haben nichts gebracht
-                //nun kann es sein, dass die änderungen nichts mehr bringen und eine komplett andere stellung benötigt wird.
-                //wenn nach 5 achsenÄnderungen die distanz nicht verringert wird, dann wird resetet
-                if(reset>=resetMax){
-                    //System.out.println("RESET");
-                    reset=0;
-                    curRPoint=getTCP(new Point(axis1DegreeNew,axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,0,0));
-                    //System.out.println("AUFRUF2");
-                    test(axis2DegreeOriginal,axis3DegreeOriginal,axis4DegreeOriginal,curRPoint);
-                }else{
-                    //System.out.println("AUFRUF3");
-                    test(axis2Degree,axis3Degree,axis4Degree,curRPoint);
-                }
-            }
-        }
-        //System.out.println("RETURN");
-    }
-
-     */
-
     private void test(int axis1Degree, int axis2Degree,int axis3Degree, int axis4Degree,RPoint curRPoint){
         double xSoll=rPointGesucht.getZ()/Math.sin(Math.toRadians(axis1Degree));
         double ySoll = rPointGesucht.getY();
@@ -298,6 +207,8 @@ public class TCP {
         }
         System.out.println("RETURN");
     }
+
+
     private int calcRealAngle(int firstAxisDegree,int secondAxisDegree){
         int x=90+secondAxisDegree;
 

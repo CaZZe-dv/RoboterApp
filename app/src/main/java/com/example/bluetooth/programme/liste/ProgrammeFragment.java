@@ -2,6 +2,7 @@ package com.example.bluetooth.programme.liste;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.bluetooth.R;
@@ -23,6 +26,7 @@ import com.example.bluetooth.programme.ProgrammActivity;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.erstellen.PointG;
 import com.example.bluetooth.programme.robot.BTConnector;
+import com.example.bluetooth.steuerung.ControllerChoose;
 import com.example.bluetooth.steuerung.MainActivity;
 
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 
-public class ProgrammeFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class ProgrammeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     View view;
 
@@ -39,6 +43,8 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
     AlertDialog dialog;
     AlertDialog.Builder dialogBuilder;
+
+    ImageButton btnBack;
 
     int delProgramm;
 
@@ -57,6 +63,9 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
     private void init(){
         //Connector
         connector=new Connector(view.getContext());
+        //Buttons
+        btnBack=view.findViewById(R.id.btnProgrammeBack);
+        btnBack.setOnClickListener(this);
         //ListView
         initListView();
         updateListView();
@@ -149,5 +158,13 @@ public class ProgrammeFragment extends Fragment implements AdapterView.OnItemCli
 
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.equals(btnBack)){
+            Intent intent = new Intent(getActivity(), ControllerChoose.class);
+            startActivity(intent);
+        }
     }
 }

@@ -6,13 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".programme.erstellen.ErstellenFragment" >
 
+    <ImageButton
+        android:id="@+id/btnErstellenBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?android:selectableItemBackground"
+        android:src="?attr/homeAsUpIndicator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="25dp"
+        android:layout_height="0dp"
         android:text="Neues Programm erstellen"
+        app:layout_constraintBottom_toTopOf="@+id/textViewProgrammname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnErstellenBack"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -26,7 +36,7 @@
         android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/btnErstellenBack" />
 
     <EditText
         android:id="@+id/textViewProgrammBeschreibung"

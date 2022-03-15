@@ -2,6 +2,7 @@ package com.example.bluetooth.programme.erstellen;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,11 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
+import com.example.bluetooth.steuerung.ControllerChoose;
 
 import java.util.ArrayList;
 
@@ -34,6 +37,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     AlertDialog dialog;
     AlertDialog.Builder dialogBuilder;
 
+    ImageButton btnBack;
     Button btnAddProgramm;
     int btnAddProgrammState;
     int editProgramm;
@@ -59,7 +63,9 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         //Buttons
         btnAddProgramm = view.findViewById(R.id.btnAddProgramm);
         btnAddProgrammState=1;
+        btnBack=view.findViewById(R.id.btnErstellenBack);
 
+        btnBack.setOnClickListener(this);
         btnAddProgramm.setOnClickListener(this);
         //TextView
         textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
@@ -133,6 +139,9 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
                 btnAddProgramm.setText("Hinzufügen");
             }
 
+        }else if(view.equals(btnBack)){
+            Intent intent = new Intent(getActivity(), ControllerChoose.class);
+            startActivity(intent);
         }
     }
     //Liste Listeners

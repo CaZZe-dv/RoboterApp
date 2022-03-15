@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.einstellungen.Console;
+import com.example.bluetooth.programme.einstellungen.ConsoleFragment;
 import com.example.bluetooth.programme.einstellungen.EinstellungenFragment;
 import com.example.bluetooth.programme.erstellen.ErstellenFragment;
 import com.example.bluetooth.programme.liste.ProgrammeFragment;
@@ -23,7 +24,7 @@ public class ProgrammActivity extends AppCompatActivity {
 
     public ProgrammeFragment fragmentProgramme;
     public ErstellenFragment fragmentErstellen;
-    public EinstellungenFragment fragmentEinstellungen;
+    public ConsoleFragment fragmentKonsole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +33,10 @@ public class ProgrammActivity extends AppCompatActivity {
 
         fragmentProgramme = new ProgrammeFragment();
         fragmentErstellen = new ErstellenFragment();
-        fragmentEinstellungen = new EinstellungenFragment();
+        fragmentKonsole = new ConsoleFragment();
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentEinstellungen).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentKonsole).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentErstellen).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentProgramme).commit();
 
@@ -53,8 +54,8 @@ public class ProgrammActivity extends AppCompatActivity {
                     case R.id.menuitem_erstellen:
                         fragment = fragmentErstellen;
                         break;
-                    case R.id.menuitem_einstellungen:
-                        fragment = fragmentEinstellungen;
+                    case R.id.menuitem_konsole:
+                        fragment = fragmentKonsole;
                         break;
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragment).commit();
