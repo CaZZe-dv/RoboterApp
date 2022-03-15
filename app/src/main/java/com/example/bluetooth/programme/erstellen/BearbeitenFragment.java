@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,7 @@ import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.einstellungen.Console;
 import com.example.bluetooth.programme.robot.BTConnector;
+import com.example.bluetooth.steuerung.ControllerChoose;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
@@ -64,6 +66,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     ImageButton btnBack;
     ImageButton btnHome;
     ImageButton btnSleep;
+    ImageButton btnSwitch;
 
     TextView textViewName;
     EditText textViewDelay;
@@ -108,12 +111,14 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         btnBack = view.findViewById(R.id.btnBearbeitenBack);
         btnHome = view.findViewById(R.id.btnBearbeitenHome);
         btnSleep = view.findViewById(R.id.btnBearbeitenSleep);
+        btnSwitch = view.findViewById(R.id.btnBearbeitenSwitch);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
         btnBack.setOnClickListener(this);
         btnHome.setOnClickListener(this);
         btnSleep.setOnClickListener(this);
+        btnSwitch.setOnClickListener(this);
         //TextView
         textViewDelay = view.findViewById(R.id.textViewDelay);
         textViewName = view.findViewById(R.id.textViewBearbeitenName);
@@ -254,6 +259,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         }else if(view.equals(btnSleep)){
             BTConnector.sleepPosition();
             applyCurrentState();
+        }else if(view.equals(btnSwitch)){
+            Intent intent = new Intent(getActivity(), BearbeitenActivity.class);
+            startActivity(intent);
         }
     }
     //Liste Listeners
@@ -352,33 +360,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
-    /*
-    private void dialogAddPunkt(final PointG pg){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        final int index=arrayList.size()+1;
-        String pName=generatePointName(pg,index);
-        dialogBuilder.setMessage(pName+" hinzufügen?");
-        dialogBuilder.setTitle("Punkt hinzufügen");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Punkt hinzufügen
-                addListItem(pg);
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-     */
     private void dialogAddPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage("Punkt hinzufügen?"+"\n\n"+"Nach welchem Punkt soll die neue Position hinzugefügt werden?");
@@ -433,52 +414,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialog = dialogBuilder.create();
         dialog.show();
     }
-    /*
-    private void openAddAlert(){
-        builder= new AlertDialog.Builder(view.getContext());
-        builder.setMessage("Was soll hinzugefügt werden?");
-        builder.setTitle("Essen hinzufügen");
-        builder.setCancelable(true);
-
-        Spinner spinner =new Spinner(view.getContext());
-        ArrayList<String> list=new ArrayList<String>();
-        list.add("Gericht");
-        list.add("Essen");
-        list.add("Beilage");
-        list.add("Getränk");
-        arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,list);
-        spinner.setAdapter(arrayAdapterSpinner);
-        builder.setView(spinner);
-
-        builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Entscheiden in welches Fragment er geschickt wird
-                isSek=true;
-                String s=spinner.getSelectedItem().toString();
-                if(s.equals("Gericht")){
-                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAG);
-                }else if(s.equals("Essen")){
-                    Var.setFragEssenBeilage("Essen");
-                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAEB);
-                }else if(s.equals("Beilage")){
-                    Var.setFragEssenBeilage("Beilage");
-                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAEB);
-                }else if(s.equals("Getränk")){
-                    Navigation.findNavController(view).navigate(R.id.ES_to_ESAGE);
-                }
-                dialog.cancel();
-            }
-        });
-        builder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-
-        AlertDialog alter = builder.create();
-        alter.show();
-    }
-     */
     private void dialogEditPunkt(final PointG pg){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         int index = editPoint+1;
