@@ -2,87 +2,275 @@ package com.example.bluetooth.programme.erstellen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.BitmapFactory;
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import com.example.bluetooth.R;
-import android.os.Bundle;
-import android.app.Activity;
+import com.example.bluetooth.programme.database.Connector;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 
-public class BearbeitenActivity extends AppCompatActivity {
 
-    RelativeLayout layout_joystick;
+public class BearbeitenActivity extends AppCompatActivity implements OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+
+    Connector connector;
+
+    ErstellenFragment fragmentErstellen;
+    int idProgramm;//ID von zu bearbeitendem Programm
+    String nameProgramm;//Name des Programms
+
+    SeekBar axisGeschwindigkeit;
+
+    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder;
+
+    Button btnAddPoint;
+    int btnAddPointState;
+    int editPoint;
+    FloatingActionButton btnSaveProgramm;
+    ImageButton btnBack;
+    ImageButton btnHome;
+    ImageButton btnSleep;
+    ImageButton btnSwitch;
+
+    TextView textViewName;
+    EditText textViewDelay;
+
+    ListView listView;
+    ArrayList<String> arrayList;
+    ArrayList<PointG> pointList;
+    ArrayAdapter<String> arrayAdapter;
+
+    RelativeLayout joystickRechts;
+    RelativeLayout joystickLinks;
     ImageView image_joystick, image_border;
-    TextView textView1, textView2, textView3, textView4, textView5;
 
-    JoyStickClass js;
+    JoyStickClass jsRechts;
+    JoyStickClass jsLinks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bearbeiten);
-        textView1 = (TextView)findViewById(R.id.txt1);
-        textView2 = (TextView)findViewById(R.id.txt2);
-        textView3 = (TextView)findViewById(R.id.txt3);
-        textView4 = (TextView)findViewById(R.id.txt4);
-        textView5 = (TextView)findViewById(R.id.txt5);
+        init();
 
-        layout_joystick = (RelativeLayout)findViewById(R.id.layout_joystick);
 
-        js = new JoyStickClass(getApplicationContext(), layout_joystick, R.drawable.ic_add);
-        js.setStickSize(150, 150);
-        js.setLayoutSize(500, 500);
-        js.setLayoutAlpha(150);
-        js.setStickAlpha(100);
-        js.setOffset(90);
-        js.setMinimumDistance(50);
+    }
+    private void init(){
+        connector=new Connector(getApplicationContext());
+        fragmentErstellen=new ErstellenFragment();
+        //Seekbars
+        axisGeschwindigkeit = findViewById(R.id.axisGeschwindigkeit_ProgrammeActivity);
+        axisGeschwindigkeit.setOnSeekBarChangeListener(this);
 
-        layout_joystick.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                js.drawStick(arg1);
-                if(arg1.getAction() == MotionEvent.ACTION_DOWN
-                        || arg1.getAction() == MotionEvent.ACTION_MOVE) {
-                    textView1.setText("X : " + String.valueOf(js.getX()));
-                    textView2.setText("Y : " + String.valueOf(js.getY()));
-                    textView3.setText("Angle : " + String.valueOf(js.getAngle()));
-                    textView4.setText("Distance : " + String.valueOf(js.getDistance()));
+        //Buttons
+        btnAddPoint = findViewById(R.id.btnAddPunktActivity);
+        btnAddPointState=1;
+        btnSaveProgramm = findViewById(R.id.btnSaveProgrammActivity);
+        btnBack = findViewById(R.id.btnBearbeitenBackActivity);
+        btnHome = findViewById(R.id.btnBearbeitenHomeActivity);
+        btnSleep = findViewById(R.id.btnBearbeitenSleepActivity);
+        btnSwitch = findViewById(R.id.btnBearbeitenSwitchActivity);
 
-                    int direction = js.get8Direction();
-                    if(direction == JoyStickClass.STICK_UP) {
-                        textView5.setText("Direction : Up");
-                    } else if(direction == JoyStickClass.STICK_UPRIGHT) {
-                        textView5.setText("Direction : Up Right");
-                    } else if(direction == JoyStickClass.STICK_RIGHT) {
-                        textView5.setText("Direction : Right");
-                    } else if(direction == JoyStickClass.STICK_DOWNRIGHT) {
-                        textView5.setText("Direction : Down Right");
-                    } else if(direction == JoyStickClass.STICK_DOWN) {
-                        textView5.setText("Direction : Down");
-                    } else if(direction == JoyStickClass.STICK_DOWNLEFT) {
-                        textView5.setText("Direction : Down Left");
-                    } else if(direction == JoyStickClass.STICK_LEFT) {
-                        textView5.setText("Direction : Left");
-                    } else if(direction == JoyStickClass.STICK_UPLEFT) {
-                        textView5.setText("Direction : Up Left");
-                    } else if(direction == JoyStickClass.STICK_NONE) {
-                        textView5.setText("Direction : Center");
-                    }
-                } else if(arg1.getAction() == MotionEvent.ACTION_UP) {
-                    textView1.setText("X :");
-                    textView2.setText("Y :");
-                    textView3.setText("Angle :");
-                    textView4.setText("Distance :");
-                    textView5.setText("Direction :");
+        btnAddPoint.setOnClickListener(this);
+        btnSaveProgramm.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        btnHome.setOnClickListener(this);
+        btnSleep.setOnClickListener(this);
+        btnSwitch.setOnClickListener(this);
+        //TextView
+        textViewDelay = findViewById(R.id.textViewDelayActivity);
+        textViewName = findViewById(R.id.textViewBearbeitenNameActivity);
+        textViewName.setText(nameProgramm);
+
+        disableInput();
+
+        //Liste
+        listView=(ListView)findViewById(R.id.listViewPunkteActivity);
+        listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
+
+        pointList=connector.getPoints(idProgramm);
+        arrayList=new ArrayList<>();
+        for(int i=0;i<pointList.size();i++){
+            PointG pg=pointList.get(i);
+            int index=i+1;
+            String pName=generatePointName(pg,index);
+            arrayList.add(pName);
+        }
+        arrayAdapter=new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,arrayList);
+        listView.setAdapter(arrayAdapter);
+        updateList();
+
+        applyCurrentState();
+
+
+        initJoystick();
+    }
+    private void initJoystick(){
+        joystickRechts = (RelativeLayout)findViewById(R.id.joystickRechts);
+        joystickLinks = (RelativeLayout)findViewById(R.id.joystickLinks);
+
+        jsRechts = new JoyStickClass(getApplicationContext(), joystickRechts, R.drawable.ic_add);
+        //jsRechts.setStickSize(150, 150);
+        //jsRechts.setLayoutSize(500, 500);
+        jsRechts.setLayoutAlpha(150);
+        jsRechts.setStickAlpha(100);
+        jsRechts.setOffset(90);
+        jsRechts.setMinimumDistance(50);
+
+        jsLinks = new JoyStickClass(getApplicationContext(), joystickLinks, R.drawable.ic_add);
+        //jsLinks.setStickSize(150, 150);
+        //jsLinks.setLayoutSize(500, 500);
+        jsLinks.setLayoutAlpha(150);
+        jsLinks.setStickAlpha(100);
+        jsLinks.setOffset(90);
+        jsLinks.setMinimumDistance(50);
+
+
+        joystickRechts.setOnTouchListener(this);
+        joystickLinks.setOnTouchListener(this);
+    }
+
+    public void setId(int id){
+        this.idProgramm=id;
+    }
+    public void setProgrammName(String programmName){
+        this.nameProgramm=programmName;
+    }
+
+    //Listen
+    private void updateList(){
+        arrayList=new ArrayList<>();
+        for(int i=0;i<pointList.size();i++){
+            PointG pg=pointList.get(i);
+            int index=i+1;
+            String pName=generatePointName(pg,index);
+            arrayList.add(pName);
+        }
+        arrayAdapter=new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,arrayList);
+        listView.setAdapter(arrayAdapter);
+    }
+    private void addListItem(PointG pg, int index){
+        if(index==pointList.size()){
+            pointList.add(pg);
+        }else{
+            pointList.add(index,pg);
+        }
+        updateList();
+    }
+    private void updateListItem(PointG pg){
+        int index=editPoint;
+        pointList.set(index,pg);
+        updateList();
+    }
+
+
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent motionEvent) {
+        if(v.equals(joystickLinks)){
+            jsLinks.drawStick(motionEvent);
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+
+                int direction = jsLinks.get8Direction();
+                if(direction == JoyStickClass.STICK_UP) {
+
+                } else if(direction == JoyStickClass.STICK_UPRIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_RIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_DOWNRIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_DOWN) {
+
+                } else if(direction == JoyStickClass.STICK_DOWNLEFT) {
+
+                } else if(direction == JoyStickClass.STICK_LEFT) {
+
+                } else if(direction == JoyStickClass.STICK_UPLEFT) {
+
+                } else if(direction == JoyStickClass.STICK_NONE) {
+
                 }
-                return true;
+            } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                //Joystick wird nicht mehr berührt
             }
-        });
+            return true;
+        }else if(v.equals(joystickRechts)){
+            jsRechts.drawStick(motionEvent);
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+
+                int direction = jsRechts.get8Direction();
+                if(direction == JoyStickClass.STICK_UP) {
+
+                } else if(direction == JoyStickClass.STICK_UPRIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_RIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_DOWNRIGHT) {
+
+                } else if(direction == JoyStickClass.STICK_DOWN) {
+
+                } else if(direction == JoyStickClass.STICK_DOWNLEFT) {
+
+                } else if(direction == JoyStickClass.STICK_LEFT) {
+
+                } else if(direction == JoyStickClass.STICK_UPLEFT) {
+
+                } else if(direction == JoyStickClass.STICK_NONE) {
+
+                }
+            } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                //Joystick wird nicht mehr berührt
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
     }
 }

@@ -1,16 +1,20 @@
 package com.example.bluetooth.programme.erstellen;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
 import com.example.bluetooth.R;
+import com.example.bluetooth.programme.ProgrammActivity;
 
 public class JoyStickClass {
     public static final int STICK_NONE = 0;
@@ -44,7 +48,10 @@ public class JoyStickClass {
     public JoyStickClass (Context context, ViewGroup layout, int stick_res_id) {
         mContext = context;
 
-        stick = BitmapFactory.decodeResource(mContext.getResources(), stick_res_id);
+        Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_add);
+        stick = drawableToBitmap(drawable);
+
+        //stick = BitmapFactory.decodeResource(mContext.getResources(), stick_res_id);
 
         stick_width = stick.getWidth();
         stick_height = stick.getHeight();
@@ -272,5 +279,19 @@ public class JoyStickClass {
             x = pos_x - (stick_width / 2);
             y = pos_y - (stick_height / 2);
         }
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 }
