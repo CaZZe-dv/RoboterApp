@@ -12,8 +12,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".programme.erstellen.BearbeitenActivity" android:screenOrientation="landscape" />
-        <activity android:name=".programme.ProgrammActivity" />
+        <activity android:name=".programme.ProgrammActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name=".steuerung.ControllerChoose" />
         <activity android:name=".steuerung.MainActivity" />
         <activity

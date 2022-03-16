@@ -27,6 +27,11 @@ public class ProgrammActivity extends AppCompatActivity {
     public ConsoleFragment fragmentKonsole;
 
     @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_programm);

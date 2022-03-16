@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -45,8 +46,10 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     Connector connector;
 
     ErstellenFragment fragmentErstellen;
+    BearbeitenFragmentJoystick fragmentBearbeitenJoystick;
     int idProgramm;//ID von zu bearbeitendem Programm
     String nameProgramm;//Name des Programms
+    ArrayList<PointG> pointListOriginal;
 
     SeekBar axisSix;
     SeekBar axisFive;
@@ -85,6 +88,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     private void init(){
         connector=new Connector(view.getContext());
         fragmentErstellen=new ErstellenFragment();
+        fragmentBearbeitenJoystick=new BearbeitenFragmentJoystick();
         //Seekbars
         //Seekbars
 
@@ -150,6 +154,9 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     public void setProgrammName(String programmName){
         this.nameProgramm=programmName;
+    }
+    public void setPointListOriginal(ArrayList<PointG> pointList){
+        this.pointListOriginal=pointList;
     }
 
     //Listen
@@ -252,16 +259,27 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         }else if(view.equals(btnSaveProgramm)){
             dialogSaveProgramm();
         }else if(view.equals(btnBack)){
+            connector.addPoints(pointListOriginal,idProgramm);
             getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
         }else if(view.equals(btnHome)){
             BTConnector.homePosition();
             applyCurrentState();
         }else if(view.equals(btnSleep)){
+            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,new BearbeitenFragmentJoystick()).commit();
+
             BTConnector.sleepPosition();
             applyCurrentState();
         }else if(view.equals(btnSwitch)){
-            Intent intent = new Intent(getActivity(), BearbeitenActivity.class);
-            startActivity(intent);
+            //Zum Joystick wechseln
+            //Alte Activity
+            //Intent intent = new Intent(getActivity(), BearbeitenActivity.class);
+            //startActivity(intent);
+            fragmentBearbeitenJoystick.setId(idProgramm);
+            fragmentBearbeitenJoystick.setProgrammName(nameProgramm);
+            fragmentBearbeitenJoystick.setPointListOriginal(pointListOriginal);
+            //Programm speicher damit die neu hinzugefügten/gelöschten Punkte im Joystick Modus auch angezeigt werden
+            connector.addPoints(pointList,idProgramm);
+            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeitenJoystick).commit();
         }
     }
     //Liste Listeners
@@ -483,6 +501,8 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //Programm nicht speichern
+                //ursprünglichen Status wiederherstellen
+                connector.addPoints(pointListOriginal,idProgramm);
                 getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
                 dialog.cancel();
             }

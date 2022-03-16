@@ -3,6 +3,7 @@ package com.example.bluetooth.programme.erstellen;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -164,6 +165,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
         fragmentBearbeiten.setId(id);
         fragmentBearbeiten.setProgrammName(connector.getProgrammName(id));
+        fragmentBearbeiten.setPointListOriginal(connector.getPoints(id));
     }
     private void changeName(){
         int id=idList.get(editProgramm);

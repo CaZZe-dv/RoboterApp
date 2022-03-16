@@ -1,23 +1,17 @@
 package com.example.bluetooth.programme.erstellen;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
-import com.example.bluetooth.R;
-import com.example.bluetooth.programme.database.Connector;
-import com.example.bluetooth.programme.robot.BTConnector;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,15 +24,24 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.bluetooth.R;
+import com.example.bluetooth.programme.database.Connector;
+import com.example.bluetooth.programme.robot.BTConnector;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
+public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
-public class BearbeitenActivity extends AppCompatActivity implements OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
-
+    View view;
     Connector connector;
+
+    ErstellenFragment fragmentErstellen;
+    BearbeitenFragment fragmentBearbeiten;
 
     int idProgramm;//ID von zu bearbeitendem Programm
     String nameProgramm;//Name des Programms
+    ArrayList<PointG> pointListOriginal;
 
     int axisOneProgress;
     int axisTwoProgress;
@@ -77,31 +80,31 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
     JoyStickClass jsLinks;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bearbeiten);
-        //TopBar verstecken
-        getSupportActionBar().hide();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        view = inflater.inflate(R.layout.fragment_bearbeiten_joystick, container, false);
         init();
-
-
+        return view;
     }
     private void init(){
-        connector=new Connector(this);
+        connector=new Connector(view.getContext());
+        fragmentErstellen=new ErstellenFragment();
+        fragmentBearbeiten=new BearbeitenFragment();
         //Seekbars
-        axisGeschwindigkeit = findViewById(R.id.axisGeschwindigkeit_ProgrammeActivity);
+        axisGeschwindigkeit = view.findViewById(R.id.axisGeschwindigkeit_ProgrammeJoystick);
         axisGeschwindigkeit.setOnSeekBarChangeListener(this);
         //Achsen auf die Werte setzen, die derzeit im BTConnector sind
         syncAxes();
 
         //Buttons
-        btnAddPoint = findViewById(R.id.btnAddPunktActivity);
+        btnAddPoint = view.findViewById(R.id.btnAddPunktJoystick);
         btnAddPointState=1;
-        btnSaveProgramm = findViewById(R.id.btnSaveProgrammActivity);
-        btnBack = findViewById(R.id.btnBearbeitenBackActivity);
-        btnHome = findViewById(R.id.btnBearbeitenHomeActivity);
-        btnSleep = findViewById(R.id.btnBearbeitenSleepActivity);
-        btnSwitch = findViewById(R.id.btnBearbeitenSwitchActivity);
+        btnSaveProgramm = view.findViewById(R.id.btnSaveProgrammJoystick);
+        btnBack = view.findViewById(R.id.btnBearbeitenBackJoystick);
+        btnHome = view.findViewById(R.id.btnBearbeitenHomeJoystick);
+        btnSleep = view.findViewById(R.id.btnBearbeitenSleepJoystick);
+        btnSwitch = view.findViewById(R.id.btnBearbeitenSwitchJoystick);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
@@ -110,14 +113,14 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         btnSleep.setOnClickListener(this);
         btnSwitch.setOnClickListener(this);
         //TextView
-        textViewDelay = findViewById(R.id.textViewDelayActivity);
-        textViewName = findViewById(R.id.textViewBearbeitenNameActivity);
+        textViewDelay = view.findViewById(R.id.textViewDelayJoystick);
+        textViewName = view.findViewById(R.id.textViewBearbeitenNameJoystick);
         textViewName.setText(nameProgramm);
 
         disableInput();
 
         //Liste
-        listView=(ListView)findViewById(R.id.listViewPunkteActivity);
+        listView=(ListView)view.findViewById(R.id.listViewPunkteJoystick);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
@@ -129,7 +132,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
             String pName=generatePointName(pg,index);
             arrayList.add(pName);
         }
-        arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayList);
+        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
         updateList();
 
@@ -139,24 +142,14 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         initJoystick();
     }
     private void initJoystick(){
-        joystickRechts = (RelativeLayout)findViewById(R.id.joystickRechts);
-        joystickLinks = (RelativeLayout)findViewById(R.id.joystickLinks);
+        joystickRechts = (RelativeLayout)view.findViewById(R.id.joystickRechts);
+        joystickLinks = (RelativeLayout)view.findViewById(R.id.joystickLinks);
 
-        jsRechts = new JoyStickClass(this, joystickRechts, R.drawable.ic_add);
-        //jsRechts.setStickSize(150, 150);
-        //jsRechts.setLayoutSize(500, 500);
-        jsRechts.setLayoutAlpha(150);
-        jsRechts.setStickAlpha(100);
-        jsRechts.setOffset(90);
-        jsRechts.setMinimumDistance(50);
+        jsRechts = new JoyStickClass(view.getContext(), joystickRechts);
 
-        jsLinks = new JoyStickClass(this, joystickLinks, R.drawable.ic_add);
-        //jsLinks.setStickSize(150, 150);
-        //jsLinks.setLayoutSize(500, 500);
-        jsLinks.setLayoutAlpha(150);
-        jsLinks.setStickAlpha(100);
-        jsLinks.setOffset(90);
-        jsLinks.setMinimumDistance(50);
+
+        jsLinks = new JoyStickClass(view.getContext(), joystickLinks);
+
 
 
         joystickRechts.setOnTouchListener(this);
@@ -172,7 +165,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
 
     //Axes
     private void syncAxes(){
-        Point p=BTConnector.getCurPosition();
+        Point p= BTConnector.getCurPosition();
         axisOneProgress=p.getAxisOne();
         axisTwoProgress=p.getAxisTwo();
         axisThreeProgress=p.getAxisThree();
@@ -193,7 +186,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
             String pName=generatePointName(pg,index);
             arrayList.add(pName);
         }
-        arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,arrayList);
+        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
     }
     private void addListItem(PointG pg, int index){
@@ -220,23 +213,25 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
                 int direction = jsLinks.get8Direction();
-                if(direction == JoyStickClass.STICK_UP) {
+                if(direction == JoyStickClass.conUp) {
+                    System.out.println("OBEN");
 
-                } else if(direction == JoyStickClass.STICK_UPRIGHT) {
+                } else if(direction == JoyStickClass.conUpRight) {
+                    System.out.println("OBENRECHTS");
 
-                } else if(direction == JoyStickClass.STICK_RIGHT) {
+                } else if(direction == JoyStickClass.conRight) {
 
-                } else if(direction == JoyStickClass.STICK_DOWNRIGHT) {
+                } else if(direction == JoyStickClass.conDownRight) {
 
-                } else if(direction == JoyStickClass.STICK_DOWN) {
+                } else if(direction == JoyStickClass.conDown) {
 
-                } else if(direction == JoyStickClass.STICK_DOWNLEFT) {
+                } else if(direction == JoyStickClass.conDownLeft) {
 
-                } else if(direction == JoyStickClass.STICK_LEFT) {
+                } else if(direction == JoyStickClass.conLeft) {
 
-                } else if(direction == JoyStickClass.STICK_UPLEFT) {
+                } else if(direction == JoyStickClass.conUpLeft) {
 
-                } else if(direction == JoyStickClass.STICK_NONE) {
+                } else if(direction == JoyStickClass.conNone) {
 
                 }
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -248,23 +243,23 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
                 int direction = jsRechts.get8Direction();
-                if(direction == JoyStickClass.STICK_UP) {
+                if(direction == JoyStickClass.conUp) {
 
-                } else if(direction == JoyStickClass.STICK_UPRIGHT) {
+                } else if(direction == JoyStickClass.conUpRight) {
 
-                } else if(direction == JoyStickClass.STICK_RIGHT) {
+                } else if(direction == JoyStickClass.conRight) {
 
-                } else if(direction == JoyStickClass.STICK_DOWNRIGHT) {
+                } else if(direction == JoyStickClass.conDownRight) {
 
-                } else if(direction == JoyStickClass.STICK_DOWN) {
+                } else if(direction == JoyStickClass.conDown) {
 
-                } else if(direction == JoyStickClass.STICK_DOWNLEFT) {
+                } else if(direction == JoyStickClass.conDownLeft) {
 
-                } else if(direction == JoyStickClass.STICK_LEFT) {
+                } else if(direction == JoyStickClass.conLeft) {
 
-                } else if(direction == JoyStickClass.STICK_UPLEFT) {
+                } else if(direction == JoyStickClass.conUpLeft) {
 
-                } else if(direction == JoyStickClass.STICK_NONE) {
+                } else if(direction == JoyStickClass.conNone) {
 
                 }
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -319,6 +314,8 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         }else if(view.equals(btnSaveProgramm)){
             dialogSaveProgramm();
         }else if(view.equals(btnBack)){
+            //ursprünglichen Status wiederherstellen
+            connector.addPoints(pointListOriginal,idProgramm);
             switchToErstellen();
             //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
         }else if(view.equals(btnHome)){
@@ -328,8 +325,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
             BTConnector.sleepPosition();
             applyCurrentState();
         }else if(view.equals(btnSwitch)){
-            Intent intent = new Intent(BearbeitenActivity.this, BearbeitenFragment.class);
-            startActivity(intent);
+            switchBack();
         }
     }
 
@@ -412,7 +408,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
 
     //AlertDialogs
     private void dialogDeletePunkt(final int index){
-        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage("P"+(index+1)+" löschen?");
         dialogBuilder.setTitle("Punkt löschen");
         dialogBuilder.setCancelable(true);
@@ -437,18 +433,18 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialog.show();
     }
     private void dialogAddPunkt(final PointG pg){
-        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage("Punkt hinzufügen?"+"\n\n"+"Nach welchem Punkt soll die neue Position hinzugefügt werden?");
         dialogBuilder.setTitle("Punkt hinzufügen");
         dialogBuilder.setCancelable(true);
 
-        Spinner spinner =new Spinner(this);
+        Spinner spinner =new Spinner(view.getContext());
         ArrayList<String> spinnerList=new ArrayList<String>();
         spinnerList.add("an erster Stelle");
         for(int i=0;i<arrayList.size();i++){
             spinnerList.add("P"+(i+1));
         }
-        ArrayAdapter arrayAdapterSpinner=new ArrayAdapter(this,android.R.layout.simple_list_item_1,spinnerList);
+        ArrayAdapter arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,spinnerList);
         spinner.setAdapter(arrayAdapterSpinner);
         spinner.setSelection(spinnerList.size()-1);
 
@@ -491,7 +487,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialog.show();
     }
     private void dialogEditPunkt(final PointG pg){
-        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
         int index = editPoint+1;
         String pName=generatePointName(pg,index);
         dialogBuilder.setMessage("Änderungen für "+pName+" übernehmen?");
@@ -529,7 +525,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialog.show();
     }
     private void dialogError(String errorMessage){
-        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setTitle("Fehler");
         dialogBuilder.setCancelable(true);
@@ -543,7 +539,7 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialog.show();
     }
     private void dialogSaveProgramm(){
-        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage("Programm speichern?");
         dialogBuilder.setTitle("Programm speichern");
         dialogBuilder.setCancelable(true);
@@ -560,6 +556,8 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //Programm nicht speichern
+                //ursprünglichen Status wiederherstellen
+                connector.addPoints(pointListOriginal,idProgramm);
                 switchToErstellen();
                 //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
                 dialog.cancel();
@@ -575,11 +573,26 @@ public class BearbeitenActivity extends AppCompatActivity implements OnTouchList
         dialog = dialogBuilder.create();
         dialog.show();
     }
+    private void switchBack(){
+        fragmentBearbeiten.setId(idProgramm);
+        fragmentBearbeiten.setProgrammName(nameProgramm);
+        fragmentBearbeiten.setPointListOriginal(pointListOriginal);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //Programm speichern, damit es mit id im anderen Modus wieder aufgerufen werden kann
+        connector.addPoints(pointList,idProgramm);
+        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
+        //SupportActionBar wieder anzeigen
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
     private void switchToErstellen(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, new ErstellenFragment()).commit();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+        //SupportActionBar wieder anzeigen
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
 
-
-        //Intent i = new Intent(this,ErstellenFragment.class);
-        //startActivity(i);
+    public void setPointListOriginal(ArrayList<PointG> pointList) {
+        this.pointListOriginal = pointList;
     }
 }

@@ -17,15 +17,15 @@ import com.example.bluetooth.R;
 import com.example.bluetooth.programme.ProgrammActivity;
 
 public class JoyStickClass {
-    public static final int STICK_NONE = 0;
-    public static final int STICK_UP = 1;
-    public static final int STICK_UPRIGHT = 2;
-    public static final int STICK_RIGHT = 3;
-    public static final int STICK_DOWNRIGHT = 4;
-    public static final int STICK_DOWN = 5;
-    public static final int STICK_DOWNLEFT = 6;
-    public static final int STICK_LEFT = 7;
-    public static final int STICK_UPLEFT = 8;
+    public static final int conNone = 0;
+    public static final int conUp = 1;
+    public static final int conUpRight = 2;
+    public static final int conRight = 3;
+    public static final int conDownRight = 4;
+    public static final int conDown = 5;
+    public static final int conDownLeft = 6;
+    public static final int conLeft = 7;
+    public static final int conUpLeft = 8;
 
     private int STICK_ALPHA = 200;
     private int LAYOUT_ALPHA = 200;
@@ -45,10 +45,10 @@ public class JoyStickClass {
 
     private boolean touch_state = false;
 
-    public JoyStickClass (Context context, ViewGroup layout, int stick_res_id) {
+    public JoyStickClass (Context context, ViewGroup layout) {
         mContext = context;
 
-        Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_add);
+        Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_joystick_controller);
         stick = drawableToBitmap(drawable);
 
         //stick = BitmapFactory.decodeResource(mContext.getResources(), stick_res_id);
@@ -60,6 +60,14 @@ public class JoyStickClass {
         paint = new Paint();
         mLayout = layout;
         params = mLayout.getLayoutParams();
+
+        setStickSize(90, 90);
+        setLayoutSize(300, 300);
+        setLayoutAlpha(150);
+        setStickAlpha(100);
+        setOffset(50);
+        setMinimumDistance(30);
+
     }
 
     public void drawStick(MotionEvent arg1) {
@@ -143,24 +151,24 @@ public class JoyStickClass {
     public int get8Direction() {
         if(distance > min_distance && touch_state) {
             if(angle >= 247.5 && angle < 292.5 ) {
-                return STICK_UP;
+                return conUp;
             } else if(angle >= 292.5 && angle < 337.5 ) {
-                return STICK_UPRIGHT;
+                return conUpRight;
             } else if(angle >= 337.5 || angle < 22.5 ) {
-                return STICK_RIGHT;
+                return conRight;
             } else if(angle >= 22.5 && angle < 67.5 ) {
-                return STICK_DOWNRIGHT;
+                return conDownRight;
             } else if(angle >= 67.5 && angle < 112.5 ) {
-                return STICK_DOWN;
+                return conDown;
             } else if(angle >= 112.5 && angle < 157.5 ) {
-                return STICK_DOWNLEFT;
+                return conDownLeft;
             } else if(angle >= 157.5 && angle < 202.5 ) {
-                return STICK_LEFT;
+                return conLeft;
             } else if(angle >= 202.5 && angle < 247.5 ) {
-                return STICK_UPLEFT;
+                return conUpLeft;
             }
         } else if(distance <= min_distance && touch_state) {
-            return STICK_NONE;
+            return conNone;
         }
         return 0;
     }
@@ -168,16 +176,16 @@ public class JoyStickClass {
     public int get4Direction() {
         if(distance > min_distance && touch_state) {
             if(angle >= 225 && angle < 315 ) {
-                return STICK_UP;
+                return conUp;
             } else if(angle >= 315 || angle < 45 ) {
-                return STICK_RIGHT;
+                return conRight;
             } else if(angle >= 45 && angle < 135 ) {
-                return STICK_DOWN;
+                return conDown;
             } else if(angle >= 135 && angle < 225 ) {
-                return STICK_LEFT;
+                return conLeft;
             }
         } else if(distance <= min_distance && touch_state) {
-            return STICK_NONE;
+            return conNone;
         }
         return 0;
     }

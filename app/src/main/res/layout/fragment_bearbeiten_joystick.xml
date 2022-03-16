@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".programme.erstellen.BearbeitenFragmentJoystick" >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSaveProgrammActivity"
+        android:id="@+id/btnSaveProgrammJoystick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
@@ -15,11 +16,11 @@
         android:layout_marginBottom="20dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_save"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddPunktActivity"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/joystickLinks"
+        app:layout_constraintEnd_toEndOf="@+id/joystickLinks" />
 
     <SeekBar
-        android:id="@+id/axisGeschwindigkeit_ProgrammeActivity"
+        android:id="@+id/axisGeschwindigkeit_ProgrammeJoystick"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -30,62 +31,62 @@
         app:layout_constraintStart_toEndOf="@+id/joystickLinks" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenBackActivity"
+        android:id="@+id/btnBearbeitenBackJoystick"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="?attr/homeAsUpIndicator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSwitchActivity"
+        android:id="@+id/btnBearbeitenSwitchJoystick"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#00FFFFFF"
+        android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_reset"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenBackActivity" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenBackJoystick" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenHomeActivity"
+        android:id="@+id/btnBearbeitenHomeJoystick"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#00FFFFFF"
+        android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_home"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenSwitchActivity" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenSwitchJoystick" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSleepActivity"
+        android:id="@+id/btnBearbeitenSleepJoystick"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#00FFFFFF"
+        android:background="?android:selectableItemBackground"
         android:src="@android:drawable/ic_menu_more"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenHomeActivity" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenHomeJoystick" />
 
     <TextView
-        android:id="@+id/textViewBearbeitenNameActivity"
+        android:id="@+id/textViewBearbeitenNameJoystick"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/btnBearbeitenBackActivity"
-        app:layout_constraintEnd_toStartOf="@+id/listViewPunkteActivity"
-        app:layout_constraintStart_toEndOf="@+id/btnBearbeitenBackActivity"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBearbeitenBackJoystick"
+        app:layout_constraintEnd_toStartOf="@+id/listViewPunkteJoystick"
+        app:layout_constraintStart_toEndOf="@+id/btnBearbeitenBackJoystick"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnAddPunktActivity"
+        android:id="@+id/btnAddPunktJoystick"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Neuer Punkt"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDelayActivity"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDelayJoystick"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listViewPunkteActivity" />
+        app:layout_constraintStart_toEndOf="@+id/listViewPunkteJoystick" />
 
     <EditText
-        android:id="@+id/textViewDelayActivity"
+        android:id="@+id/textViewDelayJoystick"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:ems="10"
@@ -95,16 +96,16 @@
         android:saveEnabled="false"
         app:layout_constraintBottom_toTopOf="@+id/joystickRechts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listViewPunkteActivity" />
+        app:layout_constraintStart_toEndOf="@+id/listViewPunkteJoystick" />
 
     <RelativeLayout
         android:id="@+id/joystickRechts"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/ic_add"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/ic_joystick_center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"></RelativeLayout>
 
@@ -112,30 +113,29 @@
         android:id="@+id/joystickLinks"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/ic_add"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/ic_joystick_center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"></RelativeLayout>
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/textView16"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Geschwindigkeit"
-        app:layout_constraintBottom_toTopOf="@+id/axisGeschwindigkeit_ProgrammeActivity"
+        app:layout_constraintBottom_toTopOf="@+id/axisGeschwindigkeit_ProgrammeJoystick"
         app:layout_constraintEnd_toStartOf="@+id/joystickRechts"
         app:layout_constraintStart_toEndOf="@+id/joystickLinks"
         tools:text="Geschwindigkeit" />
 
     <ListView
-        android:id="@+id/listViewPunkteActivity"
+        android:id="@+id/listViewPunkteJoystick"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView17"
+        app:layout_constraintBottom_toTopOf="@+id/textView16"
         app:layout_constraintEnd_toStartOf="@+id/joystickRechts"
         app:layout_constraintStart_toEndOf="@+id/joystickLinks"
         app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
