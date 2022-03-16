@@ -213,4 +213,11 @@ public class BTConnector {
         return curPosition;
     }
 
+    public static int getCurSpeed() {
+        return curSpeed;
+    }
+
+    public static void setCurSpeed(int curSpeed) {
+        BTConnector.curSpeed = curSpeed;
+    }
 }
