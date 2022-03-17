@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/conLayout_erstellen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".programme.erstellen.ErstellenFragment" >
+    tools:context=".programme.erstellen.ErstellenFragment">
 
     <ImageButton
-        android:id="@+id/btnErstellenBack"
+        android:id="@+id/btn_erstellen_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
@@ -16,17 +17,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txt_erstellen_titel"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="Neues Programm erstellen"
-        app:layout_constraintBottom_toTopOf="@+id/textViewProgrammname"
+        app:layout_constraintBottom_toTopOf="@+id/txt_erstellen_programmName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnErstellenBack"
+        app:layout_constraintStart_toEndOf="@+id/btn_erstellen_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/textViewProgrammname"
+        android:id="@+id/txt_erstellen_programmName"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -36,10 +37,10 @@
         android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnErstellenBack" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_erstellen_back" />
 
     <EditText
-        android:id="@+id/textViewProgrammBeschreibung"
+        android:id="@+id/txt_erstellen_programmBeschreibung"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -49,34 +50,34 @@
         android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewProgrammname" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_erstellen_programmName" />
 
     <Button
-        android:id="@+id/btnAddProgramm"
+        android:id="@+id/btn_erstellen_addProgramm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hinzufügen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewProgrammBeschreibung" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_erstellen_programmBeschreibung" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/txt_erstellen_programmBearbeiten"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Programm bearbeiten"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddProgramm" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_erstellen_addProgramm" />
 
     <ListView
-        android:id="@+id/listViewProgramme"
+        android:id="@+id/listView_erstellen_programme"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" >
+        app:layout_constraintTop_toBottomOf="@+id/txt_erstellen_programmBearbeiten">
 
     </ListView>
 

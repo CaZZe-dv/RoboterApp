@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
+    android:id="@+id/conLayout_bearbeitenBars"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".programme.erstellen.BearbeitenFragment" >
 
     <ImageButton
-        android:id="@+id/btnBearbeitenBack"
+        android:id="@+id/btn_bearbeitenBars_Back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
@@ -17,36 +17,36 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewBearbeitenName"
+        android:id="@+id/txt_bearbeitenBars_programmName"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/btnBearbeitenSwitch"
-        app:layout_constraintStart_toEndOf="@+id/btnBearbeitenBack"
+        app:layout_constraintBottom_toTopOf="@+id/linLayout_bearbeitenBars"
+        app:layout_constraintEnd_toStartOf="@+id/btn_bearbeitenBars_SwitchMode"
+        app:layout_constraintStart_toEndOf="@+id/btn_bearbeitenBars_Back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSwitch"
+        android:id="@+id/btn_bearbeitenBars_SwitchMode"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_reset"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/btnBearbeitenHome"
+        app:layout_constraintBottom_toTopOf="@+id/linLayout_bearbeitenBars"
+        app:layout_constraintEnd_toStartOf="@+id/btn_bearbeitenBars_home"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenHome"
+        android:id="@+id/btn_bearbeitenBars_home"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_home"
-        app:layout_constraintEnd_toStartOf="@+id/btnBearbeitenSleep"
+        app:layout_constraintEnd_toStartOf="@+id/btn_bearbeitenBars_sleep"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSleep"
+        android:id="@+id/btn_bearbeitenBars_sleep"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
@@ -55,13 +55,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linLayout_bearbeitenBars"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenBack">
+        app:layout_constraintTop_toBottomOf="@+id/btn_bearbeitenBars_Back">
 
         <TextView
+            android:id="@+id/txt_bearbeitenBars_achseGreifer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -70,7 +71,7 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisSix_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseGreifer"
             style="@style/Widget.AppCompat.SeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,6 +80,7 @@
             android:progress="60" />
 
         <TextView
+            android:id="@+id/txt_bearbeitenBars_achseFuenf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -87,13 +89,14 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisFive_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseFuenf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="0" />
 
         <TextView
+            android:id="@+id/txt_bearbeitenBars_achseVier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -102,14 +105,14 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisFour_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseVier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="50" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txt_bearbeitenBars_achseDrei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -118,14 +121,14 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisThree_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseDrei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="25" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txt_bearbeitenBars_achseZwei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -134,14 +137,14 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisTwo_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseZwei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="120" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/txt_bearbeitenBars_achseEins"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -150,14 +153,14 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisOne_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_achseEins"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="180"
             android:progress="90" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/txt_bearbeitenBars_geschwindigkeit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -166,7 +169,7 @@
             android:textSize="24sp" />
 
         <SeekBar
-            android:id="@+id/AxisGeschwindigkeit_Programme"
+            android:id="@+id/seekBar_bearbeitenBars_geschwindigkeit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="30"
@@ -175,27 +178,41 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnAddPunkt"
+        android:id="@+id/btn_bearbeitenBars_addPunkt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Neuer Punkt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linLayout_bearbeitenBars" />
+
+    <EditText
+        android:id="@+id/txt_bearbeitenBars_delay"
+        android:layout_width="107dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:hint="Delay(ms)"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:saveEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_bearbeitenBars_addPunkt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_bearbeitenBars_addPunkt"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
-        android:id="@+id/listViewPunkte"
+        android:id="@+id/listView_bearbeitenBars_punkte"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddPunkt"
+        app:layout_constraintTop_toBottomOf="@+id/btn_bearbeitenBars_addPunkt"
         app:layout_constraintVertical_bias="0.0" >
 
     </ListView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSaveProgramm"
+        android:id="@+id/btn_bearbeitenBars_saveProgramm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
@@ -205,19 +222,5 @@
         android:src="@android:drawable/ic_menu_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/textViewDelay"
-        android:layout_width="107dp"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:hint="Delay(ms)"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:saveEnabled="false"
-        app:layout_constraintBottom_toBottomOf="@+id/btnAddPunkt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnAddPunkt"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

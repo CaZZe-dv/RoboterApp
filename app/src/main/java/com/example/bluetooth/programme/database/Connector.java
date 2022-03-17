@@ -7,10 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.bluetooth.programme.erstellen.PointG;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Connector {
     DBHelper dbHelper;

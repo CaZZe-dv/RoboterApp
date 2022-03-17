@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
+    android:id="@+id/relLayout_bearbeitenJoystick"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".programme.erstellen.BearbeitenFragmentJoystick" >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSaveProgrammJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_saveProgramm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
@@ -16,22 +16,32 @@
         android:layout_marginBottom="20dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_save"
-        app:layout_constraintBottom_toTopOf="@+id/joystickLinks"
-        app:layout_constraintEnd_toEndOf="@+id/joystickLinks" />
+        app:layout_constraintBottom_toTopOf="@+id/relLayout_bearbeitenJoystick_joystickLinks"
+        app:layout_constraintEnd_toEndOf="@+id/relLayout_bearbeitenJoystick_joystickLinks" />
+
+    <TextView
+        android:id="@+id/txt_bearbeitenJoystick_Geschwindigkeit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Geschwindigkeit"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar_bearbeitenJoystick_Geschwindigkeit"
+        app:layout_constraintEnd_toStartOf="@+id/relLayout_bearbeitenJoystick_joystickRechts"
+        app:layout_constraintStart_toEndOf="@+id/relLayout_bearbeitenJoystick_joystickLinks"
+        tools:text="Geschwindigkeit" />
 
     <SeekBar
-        android:id="@+id/axisGeschwindigkeit_ProgrammeJoystick"
+        android:id="@+id/seekBar_bearbeitenJoystick_Geschwindigkeit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:max="30"
         android:progress="10"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/joystickRechts"
-        app:layout_constraintStart_toEndOf="@+id/joystickLinks" />
+        app:layout_constraintEnd_toStartOf="@+id/relLayout_bearbeitenJoystick_joystickRechts"
+        app:layout_constraintStart_toEndOf="@+id/relLayout_bearbeitenJoystick_joystickLinks" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenBackJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
@@ -41,52 +51,52 @@
         android:contentDescription="TODO" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSwitchJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_switchMode"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_reset"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenBackJoystick" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_bearbeitenJoystick_back" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenHomeJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_home"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_home"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenSwitchJoystick" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_bearbeitenJoystick_switchMode" />
 
     <ImageButton
-        android:id="@+id/btnBearbeitenSleepJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_sleep"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
         android:src="@android:drawable/ic_menu_more"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBearbeitenHomeJoystick" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_bearbeitenJoystick_home" />
 
     <TextView
-        android:id="@+id/textViewBearbeitenNameJoystick"
+        android:id="@+id/txt_bearbeitenJoystick_programmName"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnBearbeitenBackJoystick"
-        app:layout_constraintEnd_toStartOf="@+id/listViewPunkteJoystick"
-        app:layout_constraintStart_toEndOf="@+id/btnBearbeitenBackJoystick"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_bearbeitenJoystick_back"
+        app:layout_constraintEnd_toStartOf="@+id/listView_bearbeitenJoystick_punkte"
+        app:layout_constraintStart_toEndOf="@+id/btn_bearbeitenJoystick_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnAddPunktJoystick"
+        android:id="@+id/btn_bearbeitenJoystick_addPunkt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Neuer Punkt"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDelayJoystick"
+        app:layout_constraintBottom_toTopOf="@+id/txt_bearbeitenJoystick_Delay"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listViewPunkteJoystick" />
+        app:layout_constraintStart_toEndOf="@+id/listView_bearbeitenJoystick_punkte" />
 
     <EditText
-        android:id="@+id/textViewDelayJoystick"
+        android:id="@+id/txt_bearbeitenJoystick_Delay"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:ems="10"
@@ -94,12 +104,12 @@
         android:imeOptions="actionDone"
         android:inputType="number"
         android:saveEnabled="false"
-        app:layout_constraintBottom_toTopOf="@+id/joystickRechts"
+        app:layout_constraintBottom_toTopOf="@+id/relLayout_bearbeitenJoystick_joystickRechts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listViewPunkteJoystick" />
+        app:layout_constraintStart_toEndOf="@+id/listView_bearbeitenJoystick_punkte" />
 
     <RelativeLayout
-        android:id="@+id/joystickRechts"
+        android:id="@+id/relLayout_bearbeitenJoystick_joystickRechts"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginEnd="30dp"
@@ -110,7 +120,7 @@
         app:layout_constraintEnd_toEndOf="parent"></RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/joystickLinks"
+        android:id="@+id/relLayout_bearbeitenJoystick_joystickLinks"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="30dp"
@@ -120,22 +130,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"></RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Geschwindigkeit"
-        app:layout_constraintBottom_toTopOf="@+id/axisGeschwindigkeit_ProgrammeJoystick"
-        app:layout_constraintEnd_toStartOf="@+id/joystickRechts"
-        app:layout_constraintStart_toEndOf="@+id/joystickLinks"
-        tools:text="Geschwindigkeit" />
-
     <ListView
-        android:id="@+id/listViewPunkteJoystick"
+        android:id="@+id/listView_bearbeitenJoystick_punkte"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView16"
-        app:layout_constraintEnd_toStartOf="@+id/joystickRechts"
-        app:layout_constraintStart_toEndOf="@+id/joystickLinks"
+        app:layout_constraintBottom_toTopOf="@+id/txt_bearbeitenJoystick_Geschwindigkeit"
+        app:layout_constraintEnd_toStartOf="@+id/relLayout_bearbeitenJoystick_joystickRechts"
+        app:layout_constraintStart_toEndOf="@+id/relLayout_bearbeitenJoystick_joystickLinks"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switch_bearbeiten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="-90"
+        app:layout_constraintBottom_toBottomOf="@+id/relLayout_bearbeitenJoystick_joystickLinks"
+        app:layout_constraintEnd_toStartOf="@+id/relLayout_bearbeitenJoystick_joystickLinks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/relLayout_bearbeitenJoystick_joystickLinks" />
 </androidx.constraintlayout.widget.ConstraintLayout>

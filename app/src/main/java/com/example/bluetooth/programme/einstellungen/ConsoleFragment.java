@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
-import com.example.bluetooth.programme.ProgrammActivity;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.example.bluetooth.steuerung.ControllerChoose;
 
@@ -35,20 +34,20 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_console, container, false);
+        view =  inflater.inflate(R.layout.fragment_prog_konsole, container, false);
         init();
         return view;
     }
     private void init(){
         einstellungenFragment=new EinstellungenFragment();
 
-        textViewKonsole=view.findViewById(R.id.textViewBearbeitenKonsole);
+        textViewKonsole=view.findViewById(R.id.txt_konsole_konsole);
         textViewKonsole.setText(Console.getConsoleText());
-        textViewBluetooth=view.findViewById(R.id.textViewConsoleBluetooth);
+        textViewBluetooth=view.findViewById(R.id.txt_konsole_bluetoothStatus);
 
-        btnBack=view.findViewById(R.id.btnConsoleBack);
+        btnBack=view.findViewById(R.id.btn_konsole_back);
         btnBack.setOnClickListener(this);
-        btnReconnectBT=view.findViewById(R.id.btnReconnectBluetooth);
+        btnReconnectBT=view.findViewById(R.id.btn_konsole_reconnectBluetooth);
         btnReconnectBT.setOnClickListener(this);
 
         if(BTConnector.isConnected()){

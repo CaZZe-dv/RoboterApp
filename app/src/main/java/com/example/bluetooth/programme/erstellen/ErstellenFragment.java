@@ -3,7 +3,6 @@ package com.example.bluetooth.programme.erstellen;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -53,7 +52,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_erstellen, container, false);
+        view = inflater.inflate(R.layout.fragment_prog_erstellen, container, false);
         init();
         return view;
     }
@@ -62,20 +61,20 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         fragmentBearbeiten=new BearbeitenFragment();
 
         //Buttons
-        btnAddProgramm = view.findViewById(R.id.btnAddProgramm);
+        btnAddProgramm = view.findViewById(R.id.btn_erstellen_addProgramm);
         btnAddProgrammState=1;
-        btnBack=view.findViewById(R.id.btnErstellenBack);
+        btnBack=view.findViewById(R.id.btn_erstellen_back);
 
         btnBack.setOnClickListener(this);
         btnAddProgramm.setOnClickListener(this);
         //TextView
-        textViewProgrammName = view.findViewById(R.id.textViewProgrammname);
-        textViewBeschreibung = view.findViewById(R.id.textViewProgrammBeschreibung);
+        textViewProgrammName = view.findViewById(R.id.txt_erstellen_programmName);
+        textViewBeschreibung = view.findViewById(R.id.txt_erstellen_programmBeschreibung);
         textViewProgrammName.setText("");
         textViewBeschreibung.setText("");
 
         //Liste
-        listView=(ListView)view.findViewById(R.id.listViewProgramme);
+        listView=(ListView)view.findViewById(R.id.listView_erstellen_programme);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 

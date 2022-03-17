@@ -67,7 +67,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_bearbeiten, container, false);
+        view = inflater.inflate(R.layout.fragment_prog_bearbeiten_bars, container, false);
         init();
         return view;
     }
@@ -78,13 +78,13 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         //Seekbars
         //Seekbars
 
-        axisSix = view.findViewById(R.id.AxisSix_Programme);
-        axisFive = view.findViewById(R.id.AxisFive_Programme);
-        axisFour = view.findViewById(R.id.AxisFour_Programme);
-        axisThree = view.findViewById(R.id.AxisThree_Programme);
-        axisTwo = view.findViewById(R.id.AxisTwo_Programme);
-        axisOne = view.findViewById(R.id.AxisOne_Programme);
-        axisGeschwindigkeit = view.findViewById(R.id.AxisGeschwindigkeit_Programme);
+        axisSix = view.findViewById(R.id.seekBar_bearbeitenBars_achseGreifer);
+        axisFive = view.findViewById(R.id.seekBar_bearbeitenBars_achseFuenf);
+        axisFour = view.findViewById(R.id.seekBar_bearbeitenBars_achseVier);
+        axisThree = view.findViewById(R.id.seekBar_bearbeitenBars_achseDrei);
+        axisTwo = view.findViewById(R.id.seekBar_bearbeitenBars_achseZwei);
+        axisOne = view.findViewById(R.id.seekBar_bearbeitenBars_achseEins);
+        axisGeschwindigkeit = view.findViewById(R.id.seekBar_bearbeitenBars_geschwindigkeit);
 
         axisSix.setOnSeekBarChangeListener(this);
         axisFive.setOnSeekBarChangeListener(this);
@@ -95,13 +95,13 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         axisGeschwindigkeit.setOnSeekBarChangeListener(this);
 
         //Buttons
-        btnAddPoint = view.findViewById(R.id.btnAddPunkt);
+        btnAddPoint = view.findViewById(R.id.btn_bearbeitenBars_addPunkt);
         btnAddPointState=1;
-        btnSaveProgramm = view.findViewById(R.id.btnSaveProgramm);
-        btnBack = view.findViewById(R.id.btnBearbeitenBack);
-        btnHome = view.findViewById(R.id.btnBearbeitenHome);
-        btnSleep = view.findViewById(R.id.btnBearbeitenSleep);
-        btnSwitch = view.findViewById(R.id.btnBearbeitenSwitch);
+        btnSaveProgramm = view.findViewById(R.id.btn_bearbeitenBars_saveProgramm);
+        btnBack = view.findViewById(R.id.btn_bearbeitenBars_Back);
+        btnHome = view.findViewById(R.id.btn_bearbeitenBars_home);
+        btnSleep = view.findViewById(R.id.btn_bearbeitenBars_sleep);
+        btnSwitch = view.findViewById(R.id.btn_bearbeitenBars_SwitchMode);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
@@ -110,14 +110,14 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
         btnSleep.setOnClickListener(this);
         btnSwitch.setOnClickListener(this);
         //TextView
-        textViewDelay = view.findViewById(R.id.textViewDelay);
-        textViewName = view.findViewById(R.id.textViewBearbeitenName);
+        textViewDelay = view.findViewById(R.id.txt_bearbeitenBars_delay);
+        textViewName = view.findViewById(R.id.txt_bearbeitenBars_programmName);
         textViewName.setText(nameProgramm);
 
         disableInput();
 
         //Liste
-        listView=(ListView)view.findViewById(R.id.listViewPunkte);
+        listView=(ListView)view.findViewById(R.id.listView_bearbeitenBars_punkte);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
@@ -251,8 +251,6 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
             BTConnector.homePosition();
             applyCurrentState();
         }else if(view.equals(btnSleep)){
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,new BearbeitenFragmentJoystick()).commit();
-
             BTConnector.sleepPosition();
             applyCurrentState();
         }else if(view.equals(btnSwitch)){

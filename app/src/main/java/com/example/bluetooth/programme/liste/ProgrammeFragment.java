@@ -3,36 +3,27 @@ package com.example.bluetooth.programme.liste;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.bluetooth.R;
-import com.example.bluetooth.programme.ProgrammActivity;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.erstellen.PointG;
 import com.example.bluetooth.programme.robot.BTConnector;
 import com.example.bluetooth.steuerung.ControllerChoose;
-import com.example.bluetooth.steuerung.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 
 public class ProgrammeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
@@ -56,7 +47,7 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_programme, container, false);
+        view = inflater.inflate(R.layout.fragment_prog_programme, container, false);
         init();
         return view;
     }
@@ -64,7 +55,7 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
         //Connector
         connector=new Connector(view.getContext());
         //Buttons
-        btnBack=view.findViewById(R.id.btnProgrammeBack);
+        btnBack=view.findViewById(R.id.btn_programme_back);
         btnBack.setOnClickListener(this);
         //ListView
         initListView();
@@ -72,7 +63,7 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
     }
     private void initListView(){
         //Da kein Programmname doppelt verwendet werden kann, kann einfach der Name der Tabelle verwendet werden.
-        listView=(ListView)view.findViewById(R.id.listview_programme);
+        listView=(ListView)view.findViewById(R.id.listView_programme);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 

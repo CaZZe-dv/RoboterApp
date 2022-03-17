@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout2"
+    android:id="@+id/conLayout_konsole"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".programme.einstellungen.ConsoleFragment" >
 
     <ImageButton
-        android:id="@+id/btnConsoleBack"
+        android:id="@+id/btn_konsole_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?android:selectableItemBackground"
@@ -17,44 +17,44 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/txt_konsole_titel"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="Konsole"
-        app:layout_constraintBottom_toBottomOf="@+id/btnConsoleBack"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_konsole_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toEndOf="@+id/btnConsoleBack"
+        app:layout_constraintStart_toEndOf="@+id/btn_konsole_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewConsoleBluetooth"
+        android:id="@+id/txt_konsole_bluetoothStatus"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnReconnectBluetooth"
-        app:layout_constraintEnd_toStartOf="@+id/btnReconnectBluetooth"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_konsole_reconnectBluetooth"
+        app:layout_constraintEnd_toStartOf="@+id/btn_konsole_reconnectBluetooth"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_konsole_titel" />
 
     <Button
-        android:id="@+id/btnReconnectBluetooth"
+        android:id="@+id/btn_konsole_reconnectBluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Neu verbinden"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_konsole_titel" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView_konsole"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnReconnectBluetooth">
+        app:layout_constraintTop_toBottomOf="@+id/btn_konsole_reconnectBluetooth">
 
         <TextView
-            android:id="@+id/textViewBearbeitenKonsole"
+            android:id="@+id/txt_konsole_konsole"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>

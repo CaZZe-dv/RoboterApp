@@ -37,7 +37,7 @@ public class TCPFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_tcp, container, false);
+        view =  inflater.inflate(R.layout.fragment_prog_tcp, container, false);
         init();
         return view;
     }

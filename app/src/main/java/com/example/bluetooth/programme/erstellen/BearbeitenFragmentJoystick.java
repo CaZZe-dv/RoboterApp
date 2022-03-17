@@ -15,13 +15,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.bluetooth.R;
@@ -31,7 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, Runnable{
+public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, Runnable, CompoundButton.OnCheckedChangeListener {
 
     View view;
     Connector connector;
@@ -51,6 +54,20 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     int axisFiveProgress;
     int axisSixProgress;
 
+    boolean axisOneUp;
+    boolean axisOneDown;
+    boolean axisTwoUp;
+    boolean axisTwoDown;
+    boolean axisThreeUp;
+    boolean axisThreeDown;
+    boolean axisFourUp;
+    boolean axisFourDown;
+    boolean axisFiveUp;
+    boolean axisFiveDown;
+    boolean axisGreiferUp;
+    boolean axisGreiferDown;
+    Point curPoint;
+
     SeekBar axisGeschwindigkeit;
     int speed;
 
@@ -65,6 +82,9 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     ImageButton btnHome;
     ImageButton btnSleep;
     ImageButton btnSwitch;
+
+    Switch switchJoystickMode;
+    boolean joystickMode;
 
     TextView textViewName;
     EditText textViewDelay;
@@ -85,7 +105,7 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        view = inflater.inflate(R.layout.fragment_bearbeiten_joystick, container, false);
+        view = inflater.inflate(R.layout.fragment_prog_bearbeiten_joystick, container, false);
         init();
         return view;
     }
@@ -94,19 +114,19 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         fragmentErstellen=new ErstellenFragment();
         fragmentBearbeiten=new BearbeitenFragment();
         //Seekbars
-        axisGeschwindigkeit = view.findViewById(R.id.axisGeschwindigkeit_ProgrammeJoystick);
+        axisGeschwindigkeit = view.findViewById(R.id.seekBar_bearbeitenJoystick_Geschwindigkeit);
         axisGeschwindigkeit.setOnSeekBarChangeListener(this);
         //Achsen auf die Werte setzen, die derzeit im BTConnector sind
         syncAxes();
 
         //Buttons
-        btnAddPoint = view.findViewById(R.id.btnAddPunktJoystick);
+        btnAddPoint = view.findViewById(R.id.btn_bearbeitenJoystick_addPunkt);
         btnAddPointState=1;
-        btnSaveProgramm = view.findViewById(R.id.btnSaveProgrammJoystick);
-        btnBack = view.findViewById(R.id.btnBearbeitenBackJoystick);
-        btnHome = view.findViewById(R.id.btnBearbeitenHomeJoystick);
-        btnSleep = view.findViewById(R.id.btnBearbeitenSleepJoystick);
-        btnSwitch = view.findViewById(R.id.btnBearbeitenSwitchJoystick);
+        btnSaveProgramm = view.findViewById(R.id.btn_bearbeitenJoystick_saveProgramm);
+        btnBack = view.findViewById(R.id.btn_bearbeitenJoystick_back);
+        btnHome = view.findViewById(R.id.btn_bearbeitenJoystick_home);
+        btnSleep = view.findViewById(R.id.btn_bearbeitenJoystick_sleep);
+        btnSwitch = view.findViewById(R.id.btn_bearbeitenJoystick_switchMode);
 
         btnAddPoint.setOnClickListener(this);
         btnSaveProgramm.setOnClickListener(this);
@@ -114,15 +134,19 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         btnHome.setOnClickListener(this);
         btnSleep.setOnClickListener(this);
         btnSwitch.setOnClickListener(this);
+
+        //Switch
+        switchJoystickMode=view.findViewById(R.id.switch_bearbeiten);
+        switchJoystickMode.setOnCheckedChangeListener(this);
         //TextView
-        textViewDelay = view.findViewById(R.id.textViewDelayJoystick);
-        textViewName = view.findViewById(R.id.textViewBearbeitenNameJoystick);
+        textViewDelay = view.findViewById(R.id.txt_bearbeitenJoystick_Delay);
+        textViewName = view.findViewById(R.id.txt_bearbeitenJoystick_programmName);
         textViewName.setText(nameProgramm);
 
         disableInput();
 
         //Liste
-        listView=(ListView)view.findViewById(R.id.listViewPunkteJoystick);
+        listView=(ListView)view.findViewById(R.id.listView_bearbeitenJoystick_punkte);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
@@ -141,11 +165,13 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         applyCurrentState();
         initJoystick();
 
+        curPoint=BTConnector.getCurPosition();
+
         startThread();
     }
     private void initJoystick(){
-        joystickRechts = (RelativeLayout)view.findViewById(R.id.joystickRechts);
-        joystickLinks = (RelativeLayout)view.findViewById(R.id.joystickLinks);
+        joystickRechts = (RelativeLayout)view.findViewById(R.id.relLayout_bearbeitenJoystick_joystickRechts);
+        joystickLinks = (RelativeLayout)view.findViewById(R.id.relLayout_bearbeitenJoystick_joystickLinks);
 
         jsRechts = new JoyStickClass(view.getContext(), joystickRechts);
 
@@ -213,7 +239,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         if(v.equals(joystickLinks)){
             jsLinks.drawStick(motionEvent);
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-
                 int direction = jsLinks.get8Direction();
                 if(direction == JoyStickClass.conUp) {
 
@@ -610,10 +635,100 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
             while (true) {
                 speed=axisGeschwindigkeit.getProgress()+10;
 
+                //Linker Joystick -> Bewegungs Modus
+                if(!joystickMode){
+                    //axisOne
+                    if(axisOneUp){
+                        int axisOne=curPoint.getAxisOne();
+                        if(axisOne < 180 && axisOne>0){
+                            curPoint.setAxisOne(axisOne++);
+                        }
+                    }else if(axisOneDown){
+                        int axisOne=curPoint.getAxisOne();
+                        if(axisOne < 180 && axisOne>0){
+                            curPoint.setAxisOne(axisOne--);
+                        }
+                    }
+                    //axisTwo
+                    if(axisTwoUp){
+                        int axisTwo=curPoint.getAxisTwo();
+                        if(axisTwo < 180 && axisTwo>0){
+                            curPoint.setAxisTwo(axisTwo++);
+                        }
+                    }else if(axisTwoDown){
+                        int axisTwo=curPoint.getAxisTwo();
+                        if(axisTwo < 180 && axisTwo>0){
+                            curPoint.setAxisTwo(axisTwo--);
+                        }
+                    }
+                }else if(joystickMode){//Linker Joystick -> Greifer Modus
+                    //axisFive
+                    if(axisFiveUp){
+                        int axisFive=curPoint.getAxisFive();
+                        if(axisFive < 180 && axisFive>0){
+                            curPoint.setAxisFive(axisFive++);
+                        }
+                    }else if(axisFiveDown){
+                        int axisFive=curPoint.getAxisFive();
+                        if(axisFive < 180 && axisFive>0){
+                            curPoint.setAxisFive(axisFive--);
+                        }
+                    }
+                    //axisGreifer
+                    if(axisGreiferUp){
+                        int axisGreifer=curPoint.getAxisSix();
+                        if(axisGreifer < 180 && axisGreifer>0){
+                            curPoint.setAxisSix(axisGreifer++);
+                        }
+                    }else if(axisGreiferDown){
+                        int axisGreifer=curPoint.getAxisSix();
+                        if(axisGreifer < 180 && axisGreifer>0){
+                            curPoint.setAxisSix(axisGreifer--);
+                        }
+                    }
+                }
+                //Rechter Joystick
+                //axisThree
+                if(axisThreeUp){
+                    int axisThree=curPoint.getAxisThree();
+                    if(axisThree < 180 && axisThree>0){
+                        curPoint.setAxisThree(axisThree++);
+                    }
+                }else if(axisThreeDown){
+                    int axisThree=curPoint.getAxisThree();
+                    if(axisThree < 180 && axisThree>0){
+                        curPoint.setAxisThree(axisThree--);
+                    }
+                }
+                //axisFour
+                if(axisFourUp){
+                    int axisFour=curPoint.getAxisFour();
+                    if(axisFour < 180 && axisFour>0){
+                        curPoint.setAxisFour(axisFour++);
+                    }
+                }else if(axisFourDown){
+                    int axisFour=curPoint.getAxisFour();
+                    if(axisFour < 180 && axisFour>0){
+                        curPoint.setAxisFour(axisFour--);
+                    }
+                }
+                BTConnector.goTo(curPoint,speed);
+
                 Thread.sleep(speed);
             }
         }catch (Exception e){
 
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            //Linker Joystick ändert auf GreiferModus
+            joystickMode=true;
+        }else{
+            //Linker Joystick ändert auf Bewegungsmodus
+            joystickMode=false;
         }
     }
 }
