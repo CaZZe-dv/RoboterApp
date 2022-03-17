@@ -26,6 +26,8 @@ public class BTConnector {
     private static int curSpeed;
     private static int defaultSpeed = 20;
 
+    private static boolean connected=false;
+
     public static void init(){
         //connectBluetooth();
         curPosition=new Point();
@@ -43,11 +45,18 @@ public class BTConnector {
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
                     Console.addBluetoothSuccess();
+                    connected=true;
                 }
             }
         }catch (Exception e){
+            connected=false;
             Console.addBluetoothNoSuccess();
         }
+    }
+    public static void reconnect(){
+        //public Methode um die Bluetooth Verbindung wiederherzustellen
+        connectBluetooth();
+        System.out.println("BTReconnected");
     }
     public static void sendMessage(String axis,String message){
         //curPosition updaten
@@ -219,5 +228,13 @@ public class BTConnector {
 
     public static void setCurSpeed(int curSpeed) {
         BTConnector.curSpeed = curSpeed;
+    }
+
+    public static boolean isConnected() {
+        return connected;
+    }
+
+    public static void setConnected(boolean connected) {
+        BTConnector.connected = connected;
     }
 }

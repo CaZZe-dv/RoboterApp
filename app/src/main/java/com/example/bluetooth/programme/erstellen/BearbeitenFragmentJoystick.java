@@ -31,10 +31,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, Runnable{
 
     View view;
     Connector connector;
+    public Thread thread;
 
     ErstellenFragment fragmentErstellen;
     BearbeitenFragment fragmentBearbeiten;
@@ -51,6 +52,7 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     int axisSixProgress;
 
     SeekBar axisGeschwindigkeit;
+    int speed;
 
     AlertDialog dialog;
     AlertDialog.Builder dialogBuilder;
@@ -137,9 +139,9 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         updateList();
 
         applyCurrentState();
-
-
         initJoystick();
+
+        startThread();
     }
     private void initJoystick(){
         joystickRechts = (RelativeLayout)view.findViewById(R.id.joystickRechts);
@@ -214,10 +216,8 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
                 int direction = jsLinks.get8Direction();
                 if(direction == JoyStickClass.conUp) {
-                    System.out.println("OBEN");
 
                 } else if(direction == JoyStickClass.conUpRight) {
-                    System.out.println("OBENRECHTS");
 
                 } else if(direction == JoyStickClass.conRight) {
 
@@ -594,5 +594,26 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
     public void setPointListOriginal(ArrayList<PointG> pointList) {
         this.pointListOriginal = pointList;
+    }
+
+    public void startThread(){
+        thread = new Thread(this);
+        thread.start();
+    }
+    public void stopThread(){
+        thread = null;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                speed=axisGeschwindigkeit.getProgress()+10;
+
+                Thread.sleep(speed);
+            }
+        }catch (Exception e){
+
+        }
     }
 }
