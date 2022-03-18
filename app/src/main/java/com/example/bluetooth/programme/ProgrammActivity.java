@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -63,6 +64,8 @@ public class ProgrammActivity extends AppCompatActivity {
                         fragment = fragmentKonsole;
                         break;
                 }
+                getSupportActionBar().show();
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragment).commit();
                 return true;
             }

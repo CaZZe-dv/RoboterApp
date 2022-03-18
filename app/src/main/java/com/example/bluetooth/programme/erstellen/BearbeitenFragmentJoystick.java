@@ -77,7 +77,7 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     Button btnAddPoint;
     int btnAddPointState;
     int editPoint;
-    FloatingActionButton btnSaveProgramm;
+    ImageButton btnSaveProgramm;
     ImageButton btnBack;
     ImageButton btnHome;
     ImageButton btnSleep;
@@ -96,7 +96,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
     RelativeLayout joystickRechts;
     RelativeLayout joystickLinks;
-    ImageView image_joystick, image_border;
 
     JoyStickClass jsRechts;
     JoyStickClass jsLinks;
@@ -236,31 +235,95 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
+        //Linker Joystick
         if(v.equals(joystickLinks)){
             jsLinks.drawStick(motionEvent);
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                 int direction = jsLinks.get8Direction();
-                if(direction == JoyStickClass.conUp) {
+                if(joystickMode==false){//->Bewegungsmodus
+                    axisOneUp=false;
+                    axisOneDown=false;
+                    axisTwoUp=false;
+                    axisTwoDown=false;
+                    if(direction == JoyStickClass.conUp) {
+                        axisTwoUp=true;
 
-                } else if(direction == JoyStickClass.conUpRight) {
+                    } else if(direction == JoyStickClass.conUpRight) {
+                        axisTwoUp=true;
+                        axisOneUp=true;
 
-                } else if(direction == JoyStickClass.conRight) {
+                    } else if(direction == JoyStickClass.conRight) {
+                        axisOneUp=true;
 
-                } else if(direction == JoyStickClass.conDownRight) {
+                    } else if(direction == JoyStickClass.conDownRight) {
+                        axisOneUp=true;
+                        axisTwoDown=true;
 
-                } else if(direction == JoyStickClass.conDown) {
+                    } else if(direction == JoyStickClass.conDown) {
+                        axisTwoDown=true;
 
-                } else if(direction == JoyStickClass.conDownLeft) {
+                    } else if(direction == JoyStickClass.conDownLeft) {
+                        axisTwoDown=true;
+                        axisOneDown=true;
 
-                } else if(direction == JoyStickClass.conLeft) {
+                    } else if(direction == JoyStickClass.conLeft) {
+                        axisOneDown=true;
 
-                } else if(direction == JoyStickClass.conUpLeft) {
+                    } else if(direction == JoyStickClass.conUpLeft) {
+                        axisOneDown=true;
+                        axisTwoUp=true;
 
-                } else if(direction == JoyStickClass.conNone) {
+                    } else if(direction == JoyStickClass.conNone) {
 
+                    }
+                }else{//->Greifermodus
+                    axisFiveUp=false;
+                    axisFiveDown=false;
+                    axisGreiferUp=false;
+                    axisGreiferDown=false;
+                    if(direction == JoyStickClass.conUp) {
+                        axisFiveUp=true;
+                    } else if(direction == JoyStickClass.conUpRight) {
+                        axisFiveUp=true;
+                        axisGreiferDown=true;
+
+                    } else if(direction == JoyStickClass.conRight) {
+                        axisGreiferDown=true;
+
+                    } else if(direction == JoyStickClass.conDownRight) {
+                        axisGreiferDown=true;
+                        axisFiveDown=true;
+
+                    } else if(direction == JoyStickClass.conDown) {
+                        axisFiveDown=true;
+
+                    } else if(direction == JoyStickClass.conDownLeft) {
+                        axisFiveDown=true;
+                        axisGreiferUp=true;
+
+                    } else if(direction == JoyStickClass.conLeft) {
+                        axisGreiferUp=true;
+
+                    } else if(direction == JoyStickClass.conUpLeft) {
+                        axisGreiferUp=true;
+                        axisFiveUp=true;
+
+                    } else if(direction == JoyStickClass.conNone) {
+
+                    }
                 }
+
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                //Joystick wird nicht mehr berührt
+                //Linker Joystick wird nicht mehr berührt
+                axisOneUp=false;
+                axisOneDown=false;
+                axisTwoUp=false;
+                axisTwoDown=false;
+
+                axisFiveUp=false;
+                axisFiveDown=false;
+                axisGreiferUp=false;
+                axisGreiferDown=false;
             }
             return true;
         }else if(v.equals(joystickRechts)){
@@ -268,27 +331,47 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
                 int direction = jsRechts.get8Direction();
+                axisThreeUp=false;
+                axisThreeDown=false;
+                axisFourUp=false;
+                axisFourDown=false;
                 if(direction == JoyStickClass.conUp) {
+                    axisFourUp=true;
 
                 } else if(direction == JoyStickClass.conUpRight) {
+                    axisFourUp=true;
+                    axisThreeUp=true;
 
                 } else if(direction == JoyStickClass.conRight) {
+                    axisThreeUp=true;
 
                 } else if(direction == JoyStickClass.conDownRight) {
+                    axisThreeUp=true;
+                    axisFourDown=true;
 
                 } else if(direction == JoyStickClass.conDown) {
+                    axisFourDown=true;
 
                 } else if(direction == JoyStickClass.conDownLeft) {
+                    axisFourDown=true;
+                    axisThreeDown=true;
 
                 } else if(direction == JoyStickClass.conLeft) {
+                    axisThreeDown=true;
 
                 } else if(direction == JoyStickClass.conUpLeft) {
+                    axisThreeDown=true;
+                    axisFourUp=true;
 
                 } else if(direction == JoyStickClass.conNone) {
 
                 }
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                //Joystick wird nicht mehr berührt
+                //Rechter Joystick wird nicht mehr berührt
+                axisThreeUp=false;
+                axisThreeDown=false;
+                axisFourUp=false;
+                axisFourDown=false;
             }
             return true;
         }
@@ -636,55 +719,52 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
                 speed=axisGeschwindigkeit.getProgress()+10;
 
                 //Linker Joystick -> Bewegungs Modus
-                if(!joystickMode){
-                    //axisOne
-                    if(axisOneUp){
-                        int axisOne=curPoint.getAxisOne();
-                        if(axisOne < 180 && axisOne>0){
-                            curPoint.setAxisOne(axisOne++);
-                        }
-                    }else if(axisOneDown){
-                        int axisOne=curPoint.getAxisOne();
-                        if(axisOne < 180 && axisOne>0){
-                            curPoint.setAxisOne(axisOne--);
-                        }
+                //axisOne
+                if(axisOneUp){
+                    int axisOne=curPoint.getAxisOne();
+                    if(axisOne < 180 && axisOne>0){
+                        curPoint.setAxisOne(axisOne++);
                     }
-                    //axisTwo
-                    if(axisTwoUp){
-                        int axisTwo=curPoint.getAxisTwo();
-                        if(axisTwo < 180 && axisTwo>0){
-                            curPoint.setAxisTwo(axisTwo++);
-                        }
-                    }else if(axisTwoDown){
-                        int axisTwo=curPoint.getAxisTwo();
-                        if(axisTwo < 180 && axisTwo>0){
-                            curPoint.setAxisTwo(axisTwo--);
-                        }
+                }else if(axisOneDown){
+                    int axisOne=curPoint.getAxisOne();
+                    if(axisOne < 180 && axisOne>0){
+                        curPoint.setAxisOne(axisOne--);
                     }
-                }else if(joystickMode){//Linker Joystick -> Greifer Modus
-                    //axisFive
-                    if(axisFiveUp){
-                        int axisFive=curPoint.getAxisFive();
-                        if(axisFive < 180 && axisFive>0){
-                            curPoint.setAxisFive(axisFive++);
-                        }
-                    }else if(axisFiveDown){
-                        int axisFive=curPoint.getAxisFive();
-                        if(axisFive < 180 && axisFive>0){
-                            curPoint.setAxisFive(axisFive--);
-                        }
+                }
+                //axisTwo
+                if(axisTwoUp){
+                    int axisTwo=curPoint.getAxisTwo();
+                    if(axisTwo < 180 && axisTwo>0){
+                        curPoint.setAxisTwo(axisTwo++);
                     }
-                    //axisGreifer
-                    if(axisGreiferUp){
-                        int axisGreifer=curPoint.getAxisSix();
-                        if(axisGreifer < 180 && axisGreifer>0){
-                            curPoint.setAxisSix(axisGreifer++);
-                        }
-                    }else if(axisGreiferDown){
-                        int axisGreifer=curPoint.getAxisSix();
-                        if(axisGreifer < 180 && axisGreifer>0){
-                            curPoint.setAxisSix(axisGreifer--);
-                        }
+                }else if(axisTwoDown){
+                    int axisTwo=curPoint.getAxisTwo();
+                    if(axisTwo < 180 && axisTwo>0){
+                        curPoint.setAxisTwo(axisTwo--);
+                    }
+                }
+                //axisFive
+                if(axisFiveUp){
+                    int axisFive=curPoint.getAxisFive();
+                    if(axisFive < 180 && axisFive>0){
+                        curPoint.setAxisFive(axisFive++);
+                    }
+                }else if(axisFiveDown){
+                    int axisFive=curPoint.getAxisFive();
+                    if(axisFive < 180 && axisFive>0){
+                        curPoint.setAxisFive(axisFive--);
+                    }
+                }
+                //axisGreifer
+                if(axisGreiferUp){
+                    int axisGreifer=curPoint.getAxisSix();
+                    if(axisGreifer < 180 && axisGreifer>0){
+                        curPoint.setAxisSix(axisGreifer++);
+                    }
+                }else if(axisGreiferDown){
+                    int axisGreifer=curPoint.getAxisSix();
+                    if(axisGreifer < 180 && axisGreifer>0){
+                        curPoint.setAxisSix(axisGreifer--);
                     }
                 }
                 //Rechter Joystick

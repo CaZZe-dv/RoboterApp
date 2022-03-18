@@ -51,7 +51,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     Button btnAddPoint;
     int btnAddPointState;
     int editPoint;
-    FloatingActionButton btnSaveProgramm;
+    ImageButton btnSaveProgramm;
     ImageButton btnBack;
     ImageButton btnHome;
     ImageButton btnSleep;
