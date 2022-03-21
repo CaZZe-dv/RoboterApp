@@ -78,6 +78,8 @@
         android:id="@+id/txt_bearbeitenJoystick_programmName"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_bearbeitenJoystick_back"
         app:layout_constraintEnd_toStartOf="@+id/listView_bearbeitenJoystick_punkte"
         app:layout_constraintStart_toEndOf="@+id/btn_bearbeitenJoystick_back"

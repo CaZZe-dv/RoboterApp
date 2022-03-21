@@ -18,9 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -30,75 +28,74 @@ import android.widget.TextView;
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, Runnable, CompoundButton.OnCheckedChangeListener {
 
-    View view;
-    Connector connector;
-    public Thread thread;
+    private View view;
+    private Connector connector;
+    private Thread thread;
 
-    ErstellenFragment fragmentErstellen;
-    BearbeitenFragment fragmentBearbeiten;
+    private ErstellenFragment fragmentErstellen;
+    private BearbeitenFragment fragmentBearbeiten;
 
-    int idProgramm;//ID von zu bearbeitendem Programm
-    String nameProgramm;//Name des Programms
-    ArrayList<PointG> pointListOriginal;
+    private int idProgramm;//ID von zu bearbeitendem Programm
+    private String nameProgramm;//Name des Programms
+    private ArrayList<PointG> pointListOriginal;
 
-    int axisOneProgress;
-    int axisTwoProgress;
-    int axisThreeProgress;
-    int axisFourProgress;
-    int axisFiveProgress;
-    int axisSixProgress;
+    private int axisOneProgress;
+    private int axisTwoProgress;
+    private int axisThreeProgress;
+    private int axisFourProgress;
+    private int axisFiveProgress;
+    private int axisSixProgress;
 
-    boolean axisOneUp;
-    boolean axisOneDown;
-    boolean axisTwoUp;
-    boolean axisTwoDown;
-    boolean axisThreeUp;
-    boolean axisThreeDown;
-    boolean axisFourUp;
-    boolean axisFourDown;
-    boolean axisFiveUp;
-    boolean axisFiveDown;
-    boolean axisGreiferUp;
-    boolean axisGreiferDown;
-    Point curPoint;
+    private boolean axisOneUp;
+    private boolean axisOneDown;
+    private boolean axisTwoUp;
+    private boolean axisTwoDown;
+    private boolean axisThreeUp;
+    private boolean axisThreeDown;
+    private boolean axisFourUp;
+    private boolean axisFourDown;
+    private boolean axisFiveUp;
+    private boolean axisFiveDown;
+    private boolean axisGreiferUp;
+    private boolean axisGreiferDown;
+    private Point curPoint;
 
-    SeekBar axisGeschwindigkeit;
-    int speed;
+    private SeekBar axisGeschwindigkeit;
+    private int speed;
 
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
-    Button btnAddPoint;
-    int btnAddPointState;
-    int editPoint;
-    ImageButton btnSaveProgramm;
-    ImageButton btnBack;
-    ImageButton btnHome;
-    ImageButton btnSleep;
-    ImageButton btnSwitch;
+    private Button btnAddPoint;
+    private int btnAddPointState;
+    private int editPoint;
+    private ImageButton btnSaveProgramm;
+    private ImageButton btnBack;
+    private ImageButton btnHome;
+    private ImageButton btnSleep;
+    private ImageButton btnSwitch;
 
-    Switch switchJoystickMode;
-    boolean joystickMode;
+    private Switch switchJoystickMode;
+    private boolean joystickMode;
 
-    TextView textViewName;
-    EditText textViewDelay;
+    private TextView textViewName;
+    private EditText textViewDelay;
 
-    ListView listView;
-    ArrayList<String> arrayList;
-    ArrayList<PointG> pointList;
-    ArrayAdapter<String> arrayAdapter;
+    private ListView listView;
+    private ArrayList<String> arrayList;
+    private ArrayList<PointG> pointList;
+    private ArrayAdapter<String> arrayAdapter;
 
-    RelativeLayout joystickRechts;
-    RelativeLayout joystickLinks;
+    private RelativeLayout joystickRechts;
+    private RelativeLayout joystickLinks;
 
-    JoyStickClass jsRechts;
-    JoyStickClass jsLinks;
+    private JoyStickClass jsRechts;
+    private JoyStickClass jsLinks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -689,13 +686,13 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //Programm speichern, damit es mit id im anderen Modus wieder aufgerufen werden kann
         connector.addPoints(pointList,idProgramm);
-        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
         //SupportActionBar wieder anzeigen
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
     private void switchToErstellen(){
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
         //SupportActionBar wieder anzeigen
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }

@@ -22,48 +22,47 @@ import android.widget.TextView;
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.database.Connector;
 import com.example.bluetooth.programme.robot.BTConnector;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
-    View view;
-    Connector connector;
+    private  View view;
+    private Connector connector;
 
-    ErstellenFragment fragmentErstellen;
-    BearbeitenFragmentJoystick fragmentBearbeitenJoystick;
-    int idProgramm;//ID von zu bearbeitendem Programm
-    String nameProgramm;//Name des Programms
-    ArrayList<PointG> pointListOriginal;
+    private ErstellenFragment fragmentErstellen;
+    private BearbeitenFragmentJoystick fragmentBearbeitenJoystick;
+    private int idProgramm;//ID von zu bearbeitendem Programm
+    private String nameProgramm;//Name des Programms
+    private ArrayList<PointG> pointListOriginal;
 
-    SeekBar axisSix;
-    SeekBar axisFive;
-    SeekBar axisFour;
-    SeekBar axisThree;
-    SeekBar axisTwo;
-    SeekBar axisOne;
-    SeekBar axisGeschwindigkeit;
+    private SeekBar axisSix;
+    private SeekBar axisFive;
+    private SeekBar axisFour;
+    private SeekBar axisThree;
+    private SeekBar axisTwo;
+    private SeekBar axisOne;
+    private SeekBar axisGeschwindigkeit;
 
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
-    Button btnAddPoint;
-    int btnAddPointState;
-    int editPoint;
-    ImageButton btnSaveProgramm;
-    ImageButton btnBack;
-    ImageButton btnHome;
-    ImageButton btnSleep;
-    ImageButton btnSwitch;
+    private Button btnAddPoint;
+    private int btnAddPointState;
+    private int editPoint;
+    private ImageButton btnSaveProgramm;
+    private ImageButton btnBack;
+    private ImageButton btnHome;
+    private ImageButton btnSleep;
+    private ImageButton btnSwitch;
 
-    TextView textViewName;
-    EditText textViewDelay;
+    private TextView textViewName;
+    private EditText textViewDelay;
 
-    ListView listView;
-    ArrayList<String> arrayList;
-    ArrayList<PointG> pointList;
-    ArrayAdapter<String> arrayAdapter;
+    private ListView listView;
+    private ArrayList<String> arrayList;
+    private ArrayList<PointG> pointList;
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -246,7 +245,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
             dialogSaveProgramm();
         }else if(view.equals(btnBack)){
             connector.addPoints(pointListOriginal,idProgramm);
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
         }else if(view.equals(btnHome)){
             BTConnector.homePosition();
             applyCurrentState();
@@ -263,7 +262,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
             fragmentBearbeitenJoystick.setPointListOriginal(pointListOriginal);
             //Programm speicher damit die neu hinzugefügten/gelöschten Punkte im Joystick Modus auch angezeigt werden
             connector.addPoints(pointList,idProgramm);
-            getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeitenJoystick).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeitenJoystick).commit();
         }
     }
     //Liste Listeners
@@ -478,7 +477,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
             public void onClick(DialogInterface dialog, int id) {
                 //Programm speichern
                 connector.addPoints(pointList,idProgramm);
-                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
                 dialog.cancel();
             }
         });
@@ -487,7 +486,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
                 //Programm nicht speichern
                 //ursprünglichen Status wiederherstellen
                 connector.addPoints(pointListOriginal,idProgramm);
-                getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
                 dialog.cancel();
             }
         });

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Connector {
 
-    //DBHelper um die les- und schreibbare Datenbank zu bekommen
     private final DBHelper dbHelper;
     //beschreibbare Datenbank
     private final SQLiteDatabase dbWrite;
@@ -30,7 +29,51 @@ public class Connector {
         values=new ContentValues();
     }
 
-    //Programme in Liste anzeigen
+    //Gibt den Namen eines einzelnen Programms zurück
+    public String getProgrammName(int id){
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+
+        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
+        cursor.moveToFirst();
+        String name=cursor.getString(cursor.getColumnIndexOrThrow("programmName"));
+        return name;
+    }
+
+    //Gibt die Beschreibung eines einzelnen Programms zurück
+    public String getProgrammBeschreibung(int id){
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+
+        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
+        cursor.moveToFirst();
+        String beschreibung=cursor.getString(cursor.getColumnIndexOrThrow("beschreibung"));
+        return beschreibung;
+    }
+
+    //Ändert den Namen eines Programmes
+    public void alterProgrammName(int id, String name){
+        values.clear();
+        values.put("programmName", name);
+
+        selection="id = ?";
+        selectionArgs=new String[]{String.valueOf(id)};
+
+        dbWrite.update("programmData",values,selection,selectionArgs);
+    }
+
+    //Ändert die Beschreibung eines Programmes
+    public void alterProgrammBeschreibung(int id, String beschreibung){
+        values.clear();
+        values.put("beschreibung", beschreibung);
+
+        String selection="id = ?";
+        String[] selectionArgs={String.valueOf(id)};
+
+        dbWrite.update("programmData",values,selection,selectionArgs);
+    }
+
+    //Gibt eine ArrayList mit allen Programmnamen zurück
     public ArrayList<String> getProgrammListe(){
         columns=new String[]{"programmName"};
 
@@ -44,6 +87,8 @@ public class Connector {
         }
         return arrayList;
     }
+
+    //Gibt eine ArrayList mit allen Programmbeschreibungen zurück
     public ArrayList<String> getBeschreibungListe(){
         columns=new String[]{"beschreibung"};
 
@@ -57,6 +102,8 @@ public class Connector {
         }
         return arrayList;
     }
+
+    //Gibt eine ArrayList mit allen Programmids zurück
     public ArrayList<Integer> getIDListe(){
         columns=new String[]{"id"};
 
@@ -71,16 +118,17 @@ public class Connector {
         return arrayList;
     }
 
-
-
+    //neues Programm einfügen
     public void newProgramm(String name,String beschreibung){
         values.clear();
         values.put("programmName", name);
         values.put("beschreibung",beschreibung);
         dbWrite.insert("programmData", null,values);
     }
+
+    //Fügt neue (und löscht dabei die alten) Punkte zur id eines Programmes hinzu
     public void addPoints(ArrayList<PointG> arrayList, int id){
-        //Zuerst alle Punkte mit dieser ID löschen
+        //Zuerst alle Punkte mit dieser id löschen
         selection = "pid = ?";
         selectionArgs=new String[]{String.valueOf(id)};
         dbWrite.delete("pointData", selection, selectionArgs);
@@ -99,6 +147,8 @@ public class Connector {
             dbWrite.insert("pointData", null,values);
         }
     }
+
+    //Gibte eine Arraylist mit allen Punkten eines Programms zurück
     public ArrayList<PointG> getPoints(int id){
         columns=new String[]{"geschwindigkeit","achse1","achse2","achse3","achse4","achse5","achse6","delay"};
         selection="pid = ?";
@@ -124,42 +174,8 @@ public class Connector {
         }
         return arrayList;
     }
-    public String getProgrammName(int id){
-        selection="id = ?";
-        selectionArgs=new String[]{String.valueOf(id)};
 
-        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
-        cursor.moveToFirst();
-        String name=cursor.getString(cursor.getColumnIndexOrThrow("programmName"));
-        return name;
-    }
-    public String getProgrammBeschreibung(int id){
-        selection="id = ?";
-        selectionArgs=new String[]{String.valueOf(id)};
-
-        cursor = dbRead.query("programmData ", null, selection, selectionArgs, null, null,null);
-        cursor.moveToFirst();
-        String beschreibung=cursor.getString(cursor.getColumnIndexOrThrow("beschreibung"));
-        return beschreibung;
-    }
-    public void alterProgrammName(int id, String name){
-        values.clear();
-        values.put("programmName", name);
-
-        selection="id = ?";
-        selectionArgs=new String[]{String.valueOf(id)};
-
-        dbWrite.update("programmData",values,selection,selectionArgs);
-    }
-    public void alterProgrammBeschreibung(int id, String beschreibung){
-        values.clear();
-        values.put("beschreibung", beschreibung);
-
-        String selection="id = ?";
-        String[] selectionArgs={String.valueOf(id)};
-
-        dbWrite.update("programmData",values,selection,selectionArgs);
-    }
+    //Löscht ein Programm (und alle Punkte dieses Programmes)
     public void deleteProgramm(int id){
         //Aus programmDate löschen
         selection="id = ?";

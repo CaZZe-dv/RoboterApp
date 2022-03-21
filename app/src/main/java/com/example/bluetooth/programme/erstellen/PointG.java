@@ -1,8 +1,8 @@
 package com.example.bluetooth.programme.erstellen;
 
 public class PointG extends Point{
-    int geschwindigkeit;
-    int delay;
+    private int geschwindigkeit;
+    private int delay;
     public PointG(int axisOne, int axisTwo, int axisThree, int axisFour, int axisFive, int axisSix, int geschwindigkeit, int delay){
         super(axisOne,axisTwo,axisThree,axisFour,axisFive,axisSix);
         this.geschwindigkeit=geschwindigkeit;

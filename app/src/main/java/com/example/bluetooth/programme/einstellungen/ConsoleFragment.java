@@ -20,17 +20,17 @@ import com.example.bluetooth.steuerung.ControllerChoose;
 
 public class ConsoleFragment extends Fragment implements View.OnClickListener {
 
-    View view;
-    EinstellungenFragment einstellungenFragment;
+    private View view;
+    private EinstellungenFragment einstellungenFragment;
 
-    TextView textViewKonsole;
-    TextView textViewBluetooth;
+    private TextView textViewKonsole;
+    private TextView textViewBluetooth;
 
-    ImageButton btnBack;
-    Button btnReconnectBT;
+    private ImageButton btnBack;
+    private Button btnReconnectBT;
 
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -41,15 +41,18 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
     private void init(){
         einstellungenFragment=new EinstellungenFragment();
 
+        //TextView
         textViewKonsole=view.findViewById(R.id.txt_konsole_konsole);
         textViewKonsole.setText(Console.getConsoleText());
         textViewBluetooth=view.findViewById(R.id.txt_konsole_bluetoothStatus);
 
+        //Buttons
         btnBack=view.findViewById(R.id.btn_konsole_back);
         btnBack.setOnClickListener(this);
         btnReconnectBT=view.findViewById(R.id.btn_konsole_reconnectBluetooth);
         btnReconnectBT.setOnClickListener(this);
 
+        //Status der Bluetoothverbindung
         if(BTConnector.isConnected()){
             textViewBluetooth.setText("Bluetoothverbindung erfolgreich");
             btnReconnectBT.setEnabled(false);
@@ -57,26 +60,9 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
             textViewBluetooth.setText("Bluetoothverbindung fehlgeschlagen");
             btnReconnectBT.setEnabled(true);
         }
-
     }
 
-    @Override
-
-    public void onClick(View v) {
-        if(v.equals(btnBack)){
-            Intent intent = new Intent(getActivity(), ControllerChoose.class);
-            startActivity(intent);
-        }else if(v.equals(btnReconnectBT)){
-            BTConnector.reconnect();
-            if(BTConnector.isConnected()){
-                dialogBluetooth("Bluetoothverbindung erfolgreich!");
-                textViewBluetooth.setText("Bluetoothverbindung erfolgreich");
-                btnReconnectBT.setEnabled(false);
-            }else{
-                dialogBluetooth("Bluetoothverbindung fehlgeschlagen!");
-            }
-        }
-    }
+    //Dialog für Bluetooth Verbindung
     private void dialogBluetooth(String message){
         dialogBuilder = new android.app.AlertDialog.Builder(view.getContext());
         dialogBuilder.setMessage(message);
@@ -90,5 +76,24 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
         });
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.equals(btnBack)){
+            //Zurück zur Auswahl
+            Intent intent = new Intent(getActivity(), ControllerChoose.class);
+            startActivity(intent);
+        }else if(v.equals(btnReconnectBT)){
+            //Bluetooth erneut verbinden
+            BTConnector.reconnect();
+            if(BTConnector.isConnected()){
+                dialogBluetooth("Bluetoothverbindung erfolgreich!");
+                textViewBluetooth.setText("Bluetoothverbindung erfolgreich");
+                btnReconnectBT.setEnabled(false);
+            }else{
+                dialogBluetooth("Bluetoothverbindung fehlgeschlagen!");
+            }
+        }
     }
 }

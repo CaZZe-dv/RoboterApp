@@ -28,27 +28,27 @@ import java.util.ArrayList;
 
 public class ErstellenFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
-    View view;
+    private View view;
 
-    BearbeitenFragment fragmentBearbeiten;
+    private BearbeitenFragment fragmentBearbeiten;
 
-    Connector connector;
+    private Connector connector;
 
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
-    ImageButton btnBack;
-    Button btnAddProgramm;
-    int btnAddProgrammState;
-    int editProgramm;
+    private ImageButton btnBack;
+    private Button btnAddProgramm;
+    private int btnAddProgrammState;
+    private int editProgramm;
 
-    EditText textViewProgrammName;
-    EditText textViewBeschreibung;
+    private EditText textViewProgrammName;
+    private EditText textViewBeschreibung;
 
-    ListView listView;
-    ArrayList<SpannableString> arrayList;
-    ArrayList<Integer> idList;
-    ArrayAdapter<SpannableString> arrayAdapter;
+    private ListView listView;
+    private ArrayList<SpannableString> arrayList;
+    private ArrayList<Integer> idList;
+    private ArrayAdapter<SpannableString> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -161,7 +161,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         //Bei halten kann das Item gelöscht werden
     }
     private void switchFrag(int id){
-        getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentBearbeiten).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
         fragmentBearbeiten.setId(id);
         fragmentBearbeiten.setProgrammName(connector.getProgrammName(id));
         fragmentBearbeiten.setPointListOriginal(connector.getPoints(id));

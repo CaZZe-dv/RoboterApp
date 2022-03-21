@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.einstellungen.Console;
 import com.example.bluetooth.programme.einstellungen.ConsoleFragment;
-import com.example.bluetooth.programme.einstellungen.EinstellungenFragment;
 import com.example.bluetooth.programme.erstellen.ErstellenFragment;
 import com.example.bluetooth.programme.liste.ProgrammeFragment;
 import com.example.bluetooth.programme.robot.BTConnector;
@@ -42,11 +41,11 @@ public class ProgrammActivity extends AppCompatActivity {
         fragmentKonsole = new ConsoleFragment();
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentKonsole).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentErstellen).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragmentProgramme).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm, fragmentKonsole).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm, fragmentErstellen).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm, fragmentProgramme).commit();
 
-        bottomNavigationView = findViewById(R.id.bottomNavigation_Programm);
+        bottomNavigationView = findViewById(R.id.botNav_prog_programm);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -66,7 +65,7 @@ public class ProgrammActivity extends AppCompatActivity {
                 }
                 getSupportActionBar().show();
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm, fragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm, fragment).commit();
                 return true;
             }
         });

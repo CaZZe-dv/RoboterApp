@@ -28,22 +28,22 @@ import java.util.ArrayList;
 
 public class ProgrammeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
-    View view;
+    private View view;
 
-    Connector connector;
+    private Connector connector;
 
-    AlertDialog dialog;
-    AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
-    ImageButton btnBack;
+    private ImageButton btnBack;
 
-    int delProgramm;
+    private int delProgramm;
 
     //Liste
-    ListView listView;
-    ArrayList<SpannableString> arrayList;
-    ArrayList<Integer> idList;
-    ArrayAdapter<SpannableString> arrayAdapter;
+    private ListView listView;
+    private ArrayList<SpannableString> arrayList;
+    private ArrayList<Integer> idList;
+    private ArrayAdapter<SpannableString> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
