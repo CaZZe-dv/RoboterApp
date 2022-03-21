@@ -10,14 +10,18 @@ import com.example.bluetooth.programme.erstellen.PointG;
 import java.util.ArrayList;
 
 public class Connector {
-    DBHelper dbHelper;
-    SQLiteDatabase dbWrite;
-    SQLiteDatabase dbRead;
-    ContentValues values;
-    Cursor cursor;
-    String selection;
-    String[] selectionArgs;
-    String[] columns;
+
+    //DBHelper um die les- und schreibbare Datenbank zu bekommen
+    private final DBHelper dbHelper;
+    //beschreibbare Datenbank
+    private final SQLiteDatabase dbWrite;
+    //lesbare Datenbank
+    private final SQLiteDatabase dbRead;
+    private final ContentValues values;
+    private Cursor cursor;
+    private String selection;
+    private String[] selectionArgs;
+    private String[] columns;
 
     public Connector(Context context){
         dbHelper=new DBHelper(context);
