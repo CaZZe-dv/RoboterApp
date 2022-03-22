@@ -15,24 +15,25 @@ import com.example.bluetooth.programme.erstellen.Point;
 import com.example.bluetooth.programme.robot.BTConnector;
 
 public class TCPFragment extends Fragment implements View.OnClickListener {
-    View view;
 
-    TextView textViewCurTCP;
+    private View view;
+
+    private TextView textViewCurTCP;
 
     //X
-    TextView textViewXProgress;
-    ImageButton btnXLower;
-    ImageButton btnXHigher;
+    private TextView textViewXProgress;
+    private ImageButton btnXLower;
+    private ImageButton btnXHigher;
     //Y
-    TextView textViewYProgress;
-    ImageButton btnYLower;
-    ImageButton btnYHigher;
+    private TextView textViewYProgress;
+    private ImageButton btnYLower;
+    private ImageButton btnYHigher;
     //Z
-    TextView textViewZProgress;
-    ImageButton btnZLower;
-    ImageButton btnZHigher;
+    private TextView textViewZProgress;
+    private ImageButton btnZLower;
+    private ImageButton btnZHigher;
 
-    RPoint curTCP;
+    private RPoint curTCP;
 
 
     @Override

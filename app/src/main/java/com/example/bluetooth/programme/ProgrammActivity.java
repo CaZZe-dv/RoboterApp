@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgrammActivity extends AppCompatActivity {
 
-    public BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
 
-    public ProgrammeFragment fragmentProgramme;
-    public ErstellenFragment fragmentErstellen;
-    public ConsoleFragment fragmentKonsole;
+    private ProgrammeFragment fragmentProgramme;
+    private ErstellenFragment fragmentErstellen;
+    private ConsoleFragment fragmentKonsole;
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {

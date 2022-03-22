@@ -22,8 +22,8 @@ public class TCP {
     private double distanceJoint02_tcp;
 
     int reset;
-    RPoint rPointGesucht;
-    Point returnPoint;
+    private RPoint rPointGesucht;
+    private Point returnPoint;
 
 
     private String achse;//welche achse grade dran ist
