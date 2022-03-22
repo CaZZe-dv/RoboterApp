@@ -91,25 +91,6 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
         listView.setAdapter(arrayAdapter);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ArrayList<PointG>points = connector.getPoints(idList.get(i));
-        if(points.isEmpty()){
-            dialogError("Programm enthält keinen Punkt");
-        }else{
-            BTConnector.playbackProgramm(points,connector.getProgrammName(idList.get(i)));
-        }
-
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        delProgramm=idList.get(i);
-        dialogDeleteProgramm();
-        return true;
-    }
-
-
     //AlertDialogs
     private void dialogError(String errorMessage){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
@@ -125,7 +106,7 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
         dialog = dialogBuilder.create();
         dialog.show();
     }
-    //AlertDialogs
+
     private void dialogDeleteProgramm(){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
         String name=connector.getProgrammName(delProgramm);
@@ -157,5 +138,23 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
             Intent intent = new Intent(getActivity(), ControllerChoose.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        ArrayList<PointG>points = connector.getPoints(idList.get(i));
+        if(points.isEmpty()){
+            dialogError("Programm enthält keinen Punkt");
+        }else{
+            BTConnector.playbackProgramm(points,connector.getProgrammName(idList.get(i)));
+        }
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        delProgramm=idList.get(i);
+        dialogDeleteProgramm();
+        return true;
     }
 }

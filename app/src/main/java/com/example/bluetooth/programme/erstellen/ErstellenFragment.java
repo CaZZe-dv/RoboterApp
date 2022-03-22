@@ -105,6 +105,62 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         listView.setAdapter(arrayAdapter);
     }
 
+
+    private void switchFrag(int id){
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
+        fragmentBearbeiten.setId(id);
+        fragmentBearbeiten.setProgrammName(connector.getProgrammName(id));
+        fragmentBearbeiten.setPointListOriginal(connector.getPoints(id));
+    }
+    private void changeName(){
+        int id=idList.get(editProgramm);
+        String name=connector.getProgrammName(id);
+        String beschreibung = connector.getProgrammBeschreibung(id);
+        textViewProgrammName.setText(name);
+        textViewBeschreibung.setText(beschreibung);
+
+        btnAddProgramm.setText("Änderungen übernehmen");
+        btnAddProgrammState=2;
+    }
+
+    //AlertDialogs
+    private void dialogChangeName(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("Name und Beschreibung ändern?");
+        dialogBuilder.setTitle("Programm ändern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                changeName();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogError(String errorMessage){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setTitle("Fehler");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
     //Button Listeners
     @Override
     public void onClick(View view) {
@@ -159,59 +215,5 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         editProgramm=i;
         return true;
         //Bei halten kann das Item gelöscht werden
-    }
-    private void switchFrag(int id){
-        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
-        fragmentBearbeiten.setId(id);
-        fragmentBearbeiten.setProgrammName(connector.getProgrammName(id));
-        fragmentBearbeiten.setPointListOriginal(connector.getPoints(id));
-    }
-    private void changeName(){
-        int id=idList.get(editProgramm);
-        String name=connector.getProgrammName(id);
-        String beschreibung = connector.getProgrammBeschreibung(id);
-        textViewProgrammName.setText(name);
-        textViewBeschreibung.setText(beschreibung);
-
-        btnAddProgramm.setText("Änderungen übernehmen");
-        btnAddProgrammState=2;
-    }
-
-    //AlertDialogs
-    private void dialogChangeName(){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("Name und Beschreibung ändern?");
-        dialogBuilder.setTitle("Programm ändern");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                changeName();
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogError(String errorMessage){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setTitle("Fehler");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        dialog = dialogBuilder.create();
-        dialog.show();
     }
 }
