@@ -180,8 +180,8 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
     //AlertDialogs
     private void dialogChangeName(){
         dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("Programm und Beschreibung ändern?");
-        dialogBuilder.setTitle("Name ändern");
+        dialogBuilder.setMessage("Name und Beschreibung ändern?");
+        dialogBuilder.setTitle("Programm ändern");
         dialogBuilder.setCancelable(true);
 
         dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
