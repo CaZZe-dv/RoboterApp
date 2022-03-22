@@ -62,7 +62,6 @@ public class ProgrammeFragment extends Fragment implements View.OnClickListener,
         updateListView();
     }
     private void initListView(){
-        //Da kein Programmname doppelt verwendet werden kann, kann einfach der Name der Tabelle verwendet werden.
         listView=(ListView)view.findViewById(R.id.listView_programme);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);

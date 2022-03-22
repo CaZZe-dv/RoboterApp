@@ -74,6 +74,12 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         textViewBeschreibung.setText("");
 
         //Liste
+        initListView();
+        updateList();
+    }
+
+    //Listen
+    private void initListView(){
         listView=(ListView)view.findViewById(R.id.listView_erstellen_programme);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
@@ -82,10 +88,7 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         idList=new ArrayList<Integer>();
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
-        updateList();
     }
-
-    //Listen
     private void updateList(){
         ArrayList<String> nameList=connector.getProgrammListe();
         ArrayList<String> beschreibungList=connector.getBeschreibungListe();
