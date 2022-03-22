@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     //aktuelle Version der Datenbank
-    public static final int version=3;
+    private static final int version=3;
     //Name der Datenbank
-    public static final String name="Programme.db";
+    private static final String name="Programme.db";
 
     public DBHelper(Context context){
         //Datenbank erstellen
@@ -18,8 +18,19 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //Erstellen der einzelnen Tabellen
-        db.execSQL("CREATE TABLE IF NOT EXISTS programmData (id INTEGER PRIMARY KEY, programmName TEXT, beschreibung TEXT)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS pointData (id INTEGER PRIMARY KEY, pid INTEGER, geschwindigkeit INTEGER, achse1 INTEGER, achse2 INTEGER, achse3 INTEGER, achse4 INTEGER, achse5 INTEGER, achse6 INTEGER, delay INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS programmData (id INTEGER PRIMARY KEY, " +
+                "programmName TEXT, " +
+                "beschreibung TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS pointData (id INTEGER PRIMARY KEY, " +
+                "pid INTEGER, " +
+                "geschwindigkeit INTEGER, " +
+                "achse1 INTEGER, " +
+                "achse2 INTEGER, " +
+                "achse3 INTEGER, " +
+                "achse4 INTEGER, " +
+                "achse5 INTEGER, " +
+                "achse6 INTEGER, " +
+                "delay INTEGER)");
     }
 
     @Override
@@ -29,6 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS pointData");
         //und die onCreate Methode aufgerufen, um die Tabellen neu zu erstellen
         onCreate(db);
+
     }
 
     @Override
