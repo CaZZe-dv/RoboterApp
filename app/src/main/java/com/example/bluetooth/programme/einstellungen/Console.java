@@ -55,7 +55,7 @@ public class Console {
     }
     //Gibt die derzeitige Zeit zurück, die am Anfang jeder Consolenausgabe steht
     private static String getCurTime(){
-        Format f = new SimpleDateFormat("HH.mm.ss");
+        Format f = new SimpleDateFormat("HH:mm:ss");
         return "["+f.format(new Date())+"] ";
     }
 }

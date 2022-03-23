@@ -21,7 +21,6 @@ import com.example.bluetooth.steuerung.ControllerChoose;
 public class ConsoleFragment extends Fragment implements View.OnClickListener {
 
     private View view;
-    private EinstellungenFragment einstellungenFragment;
 
     private TextView textViewKonsole;
     private TextView textViewBluetooth;
@@ -39,7 +38,6 @@ public class ConsoleFragment extends Fragment implements View.OnClickListener {
         return view;
     }
     private void init(){
-        einstellungenFragment=new EinstellungenFragment();
 
         //TextView
         textViewKonsole=view.findViewById(R.id.txt_konsole_konsole);

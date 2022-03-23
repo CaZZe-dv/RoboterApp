@@ -141,7 +141,19 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
         disableInput();
 
-        //Liste
+        initList();
+        updateList();
+
+        applyCurrentState();
+        initJoystick();
+
+        curPoint=BTConnector.getCurPosition();
+
+        startThread();
+    }
+
+    //Listen
+    private void initList(){
         listView=(ListView)view.findViewById(R.id.listView_bearbeitenJoystick_punkte);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
@@ -156,36 +168,31 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         }
         arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
         listView.setAdapter(arrayAdapter);
-        updateList();
-
-        applyCurrentState();
-        initJoystick();
-
-        curPoint=BTConnector.getCurPosition();
-
-        startThread();
     }
+    private void updateList(){
+        arrayList=new ArrayList<>();
+        for(int i=0;i<pointList.size();i++){
+            PointG pg=pointList.get(i);
+            int index=i+1;
+            String pName=generatePointName(pg,index);
+            arrayList.add(pName);
+        }
+        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
+        listView.setAdapter(arrayAdapter);
+    }
+
     private void initJoystick(){
         joystickRechts = (RelativeLayout)view.findViewById(R.id.relLayout_bearbeitenJoystick_joystickRechts);
         joystickLinks = (RelativeLayout)view.findViewById(R.id.relLayout_bearbeitenJoystick_joystickLinks);
 
         jsRechts = new JoyStickClass(view.getContext(), joystickRechts);
 
-
         jsLinks = new JoyStickClass(view.getContext(), joystickLinks);
-
-
 
         joystickRechts.setOnTouchListener(this);
         joystickLinks.setOnTouchListener(this);
     }
 
-    public void setId(int id){
-        this.idProgramm=id;
-    }
-    public void setProgrammName(String programmName){
-        this.nameProgramm=programmName;
-    }
 
     //Axes
     private void syncAxes(){
@@ -201,18 +208,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         axisGeschwindigkeit.setProgress(geschw);
     }
 
-    //Listen
-    private void updateList(){
-        arrayList=new ArrayList<>();
-        for(int i=0;i<pointList.size();i++){
-            PointG pg=pointList.get(i);
-            int index=i+1;
-            String pName=generatePointName(pg,index);
-            arrayList.add(pName);
-        }
-        arrayAdapter=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,arrayList);
-        listView.setAdapter(arrayAdapter);
-    }
     private void addListItem(PointG pg, int index){
         if(index==pointList.size()){
             pointList.add(pg);
@@ -227,8 +222,239 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         updateList();
     }
 
+    private void applyCurrentState(){
+        //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
+        Point curPosition=BTConnector.getCurPosition();
+        axisOneProgress=curPosition.getAxisOne();
+        axisTwoProgress=curPosition.getAxisTwo();
+        axisThreeProgress=curPosition.getAxisThree();
+        axisFourProgress=curPosition.getAxisFour();
+        axisFiveProgress=curPosition.getAxisFive();
+        axisSixProgress=curPosition.getAxisSix();
+    }
+    private void enableInput(){
+        //TODO: Joysticks enablen
+        axisGeschwindigkeit.setEnabled(true);
+        textViewDelay.setEnabled(true);
+    }
+    private void disableInput(){
+        //TODO: Joysticks disabeln
+        axisGeschwindigkeit.setEnabled(false);
+        textViewDelay.setEnabled(false);
+    }
+
+    private String generatePointName(PointG pg, int index){
+        String pName="P"+index+ " ["+"A1:"+pg.getAxisOne()+", A2:"+pg.getAxisTwo()+", A3:"+pg.getAxisThree()+", A4:"+pg.getAxisFour()+", A5:"+pg.getAxisFive()+", AGreifer:"+pg.getAxisSix()+"] Speed:"+pg.getGeschwindigkeit()+", Delay:"+pg.getDelay();
+        return pName;
+    }
+    private int getGeschwindigkeit(){
+        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
+        int speed=axisGeschwindigkeit.getProgress()+10;
+        return speed;
+    }
+
+    private void switchBack(){
+        fragmentBearbeiten.setId(idProgramm);
+        fragmentBearbeiten.setProgrammName(nameProgramm);
+        fragmentBearbeiten.setPointListOriginal(pointListOriginal);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //Programm speichern, damit es mit id im anderen Modus wieder aufgerufen werden kann
+        connector.addPoints(pointList,idProgramm);
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
+        //SupportActionBar wieder anzeigen
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+    private void switchToErstellen(){
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
+        //SupportActionBar wieder anzeigen
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+
+    //AlertDialogs
+    private void dialogDeletePunkt(final int index){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("P"+(index+1)+" löschen?");
+        dialogBuilder.setTitle("Punkt löschen");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt löschen
+                arrayList.remove(index);
+                pointList.remove(index);
+                updateList();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogAddPunkt(final PointG pg){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("Punkt hinzufügen?"+"\n\n"+"Nach welchem Punkt soll die neue Position hinzugefügt werden?");
+        dialogBuilder.setTitle("Punkt hinzufügen");
+        dialogBuilder.setCancelable(true);
+
+        Spinner spinner =new Spinner(view.getContext());
+        ArrayList<String> spinnerList=new ArrayList<String>();
+        spinnerList.add("an erster Stelle");
+        for(int i=0;i<arrayList.size();i++){
+            spinnerList.add("P"+(i+1));
+        }
+        ArrayAdapter arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,spinnerList);
+        spinner.setAdapter(arrayAdapterSpinner);
+        spinner.setSelection(spinnerList.size()-1);
+
+        dialogBuilder.setView(spinner);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Punkt hinzufügen
+                int index=spinner.getSelectedItemPosition(); //Position ist äuqivilent zu index, an dem es eingefügt werden soll
+                addListItem(pg,index);
+
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState=1;
+                btnAddPoint.setText("Neuer Punkt");
+
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState=1;
+                btnAddPoint.setText("Neuer Punkt");
+
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogEditPunkt(final PointG pg){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        int index = editPoint+1;
+        String pName=generatePointName(pg,index);
+        dialogBuilder.setMessage("Änderungen für "+pName+" übernehmen?");
+        dialogBuilder.setTitle("Punkt ändern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Änderungen übernehmen
+                updateListItem(pg);
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState = 1;
+                btnAddPoint.setText("Neuer Punkt");
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                textViewDelay.setText("");
+                disableInput();
+                btnAddPointState = 1;
+                btnAddPoint.setText("Neuer Punkt");
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbruch", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogError(String errorMessage){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setTitle("Fehler");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
+    private void dialogSaveProgramm(){
+        dialogBuilder = new AlertDialog.Builder(view.getContext());
+        dialogBuilder.setMessage("Programm speichern?");
+        dialogBuilder.setTitle("Programm speichern");
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm speichern
+                connector.addPoints(pointList,idProgramm);
+                switchToErstellen();
+                //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Programm nicht speichern
+                //ursprünglichen Status wiederherstellen
+                connector.addPoints(pointListOriginal,idProgramm);
+                switchToErstellen();
+                //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //nur schließen
+                dialog.cancel();
+            }
+        });
+
+        dialog = dialogBuilder.create();
+        dialog.show();
+    }
 
 
+
+
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            //Linker Joystick ändert auf GreiferModus
+            joystickMode=true;
+        }else{
+            //Linker Joystick ändert auf Bewegungsmodus
+            joystickMode=false;
+        }
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
@@ -480,235 +706,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         }
     }
 
-    private void applyCurrentState(){
-        //Seekbars auf den Wert setzen, auf den die Servos tatsächlich sind
-        Point curPosition=BTConnector.getCurPosition();
-        axisOneProgress=curPosition.getAxisOne();
-        axisTwoProgress=curPosition.getAxisTwo();
-        axisThreeProgress=curPosition.getAxisThree();
-        axisFourProgress=curPosition.getAxisFour();
-        axisFiveProgress=curPosition.getAxisFive();
-        axisSixProgress=curPosition.getAxisSix();
-    }
-    private void enableInput(){
-        //TODO: Joysticks enablen
-        axisGeschwindigkeit.setEnabled(true);
-        textViewDelay.setEnabled(true);
-    }
-    private void disableInput(){
-        //TODO: Joysticks disabeln
-        axisGeschwindigkeit.setEnabled(false);
-        textViewDelay.setEnabled(false);
-    }
-
-    private String generatePointName(PointG pg, int index){
-        String pName="P"+index+ " ["+"A1:"+pg.getAxisOne()+", A2:"+pg.getAxisTwo()+", A3:"+pg.getAxisThree()+", A4:"+pg.getAxisFour()+", A5:"+pg.getAxisFive()+", AGreifer:"+pg.getAxisSix()+"] Speed:"+pg.getGeschwindigkeit()+", Delay:"+pg.getDelay();
-        return pName;
-    }
-    private int getGeschwindigkeit(){
-        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
-        int speed=axisGeschwindigkeit.getProgress()+10;
-        return speed;
-    }
-
-    //AlertDialogs
-    private void dialogDeletePunkt(final int index){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("P"+(index+1)+" löschen?");
-        dialogBuilder.setTitle("Punkt löschen");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Punkt löschen
-                arrayList.remove(index);
-                pointList.remove(index);
-                updateList();
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogAddPunkt(final PointG pg){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("Punkt hinzufügen?"+"\n\n"+"Nach welchem Punkt soll die neue Position hinzugefügt werden?");
-        dialogBuilder.setTitle("Punkt hinzufügen");
-        dialogBuilder.setCancelable(true);
-
-        Spinner spinner =new Spinner(view.getContext());
-        ArrayList<String> spinnerList=new ArrayList<String>();
-        spinnerList.add("an erster Stelle");
-        for(int i=0;i<arrayList.size();i++){
-            spinnerList.add("P"+(i+1));
-        }
-        ArrayAdapter arrayAdapterSpinner=new ArrayAdapter(view.getContext(),android.R.layout.simple_list_item_1,spinnerList);
-        spinner.setAdapter(arrayAdapterSpinner);
-        spinner.setSelection(spinnerList.size()-1);
-
-        dialogBuilder.setView(spinner);
-
-        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Punkt hinzufügen
-                int index=spinner.getSelectedItemPosition(); //Position ist äuqivilent zu index, an dem es eingefügt werden soll
-                addListItem(pg,index);
-
-                textViewDelay.setText("");
-                disableInput();
-                btnAddPointState=1;
-                btnAddPoint.setText("Neuer Punkt");
-
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-                textViewDelay.setText("");
-                disableInput();
-                btnAddPointState=1;
-                btnAddPoint.setText("Neuer Punkt");
-
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogEditPunkt(final PointG pg){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        int index = editPoint+1;
-        String pName=generatePointName(pg,index);
-        dialogBuilder.setMessage("Änderungen für "+pName+" übernehmen?");
-        dialogBuilder.setTitle("Punkt ändern");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Änderungen übernehmen
-                updateListItem(pg);
-                textViewDelay.setText("");
-                disableInput();
-                btnAddPointState = 1;
-                btnAddPoint.setText("Neuer Punkt");
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                textViewDelay.setText("");
-                disableInput();
-                btnAddPointState = 1;
-                btnAddPoint.setText("Neuer Punkt");
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNeutralButton("Abbruch", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogError(String errorMessage){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setTitle("Fehler");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void dialogSaveProgramm(){
-        dialogBuilder = new AlertDialog.Builder(view.getContext());
-        dialogBuilder.setMessage("Programm speichern?");
-        dialogBuilder.setTitle("Programm speichern");
-        dialogBuilder.setCancelable(true);
-
-        dialogBuilder.setPositiveButton("Ja",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Programm speichern
-                connector.addPoints(pointList,idProgramm);
-                switchToErstellen();
-                //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNegativeButton("Nein",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Programm nicht speichern
-                //ursprünglichen Status wiederherstellen
-                connector.addPoints(pointListOriginal,idProgramm);
-                switchToErstellen();
-                //getFragmentManager().beginTransaction().replace(R.id.fragmentLayout_programm,fragmentErstellen).commit();
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setNeutralButton("Abbruch",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //nur schließen
-                dialog.cancel();
-            }
-        });
-
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-    private void switchBack(){
-        fragmentBearbeiten.setId(idProgramm);
-        fragmentBearbeiten.setProgrammName(nameProgramm);
-        fragmentBearbeiten.setPointListOriginal(pointListOriginal);
-
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //Programm speichern, damit es mit id im anderen Modus wieder aufgerufen werden kann
-        connector.addPoints(pointList,idProgramm);
-        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
-        //SupportActionBar wieder anzeigen
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-    }
-    private void switchToErstellen(){
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentErstellen).commit();
-        //SupportActionBar wieder anzeigen
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-    }
-
-    public void setPointListOriginal(ArrayList<PointG> pointList) {
-        this.pointListOriginal = pointList;
-    }
-
-    public void startThread(){
-        thread = new Thread(this);
-        thread.start();
-    }
-    public void stopThread(){
-        thread = null;
-    }
-
     @Override
     public void run() {
         try {
@@ -798,14 +795,22 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         }
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(isChecked){
-            //Linker Joystick ändert auf GreiferModus
-            joystickMode=true;
-        }else{
-            //Linker Joystick ändert auf Bewegungsmodus
-            joystickMode=false;
-        }
+    public void startThread(){
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public void stopThread(){
+        thread = null;
+    }
+
+    public void setPointListOriginal(ArrayList<PointG> pointList) {
+        this.pointListOriginal = pointList;
+    }
+    public void setId(int id){
+        this.idProgramm=id;
+    }
+    public void setProgrammName(String programmName){
+        this.nameProgramm=programmName;
     }
 }
