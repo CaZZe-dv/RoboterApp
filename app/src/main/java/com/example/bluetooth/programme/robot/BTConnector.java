@@ -115,7 +115,9 @@ public class BTConnector {
     }
     public static void playbackProgramm(ArrayList<PointG> points,String programmName){
         Console.startProgramm(programmName);
+        System.out.println("DELAY 1 VORHER: "+ points.get(0).getDelay());
         calculateDelay(points);
+        System.out.println("DELAY 1 NACHER: "+ points.get(0).getDelay());
         PointG point=points.get(0);
         Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
         goTo(p,point.getGeschwindigkeit());
@@ -148,9 +150,8 @@ public class BTConnector {
             }
         }, points.get(i-1).getDelay());
     }
+
     private static void calculateDelay(ArrayList<PointG> points){
-        //Größten Abstand finden
-        //von derzeitigem Stand zu 1. Punkt
         int[] axisOld=curPosition.getAxis();
         int[] axisNew=points.get(0).getAxis();
         int diff;

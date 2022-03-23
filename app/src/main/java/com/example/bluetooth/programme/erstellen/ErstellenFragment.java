@@ -108,7 +108,6 @@ public class ErstellenFragment extends Fragment implements View.OnClickListener,
         listView.setAdapter(arrayAdapter);
     }
 
-
     private void switchFrag(int id){
         getFragmentManager().beginTransaction().replace(R.id.fragLayout_activity_programm,fragmentBearbeiten).commit();
         fragmentBearbeiten.setId(id);
