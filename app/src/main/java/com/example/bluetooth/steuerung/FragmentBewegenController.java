@@ -1,79 +1,100 @@
 package com.example.bluetooth.steuerung;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import com.example.bluetooth.R;
 import com.example.bluetooth.steuerung.simulation.Axes;
 import com.example.bluetooth.steuerung.simulation.DrawCanvas;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
-import org.jetbrains.annotations.NotNull;
-
-public class FragmentBewegenKontroller extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener, Runnable{
-    //Linkes Gamepad
+/**
+ * @author Matthias Fichtinger
+ * @version 11.03.2022
+ * Diese Klasse kümmert sic hebenfalls um die Steuerung des Roboterarms
+ */
+public class FragmentBewegenController extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener, Runnable{
+    /**
+     * Diese Buttons sind für das linke GAmepad zuständig
+     */
     public FloatingActionButton buttonUpLeft;
     public FloatingActionButton buttonLeftLeft;
     public FloatingActionButton buttonRightLeft;
     public FloatingActionButton buttonDownLeft;
-    //Rechtes Gamepad
+    /**
+     * Diese Buttons sind für das rechte Gamepad zuständig
+     */
     public FloatingActionButton buttonUpRight;
     public FloatingActionButton buttonLeftRight;
     public FloatingActionButton buttonRightRight;
     public FloatingActionButton buttonDownRight;
-    //Simulation
+    /**
+     * RelativLayout, DrawCanvas und Axes werden für die Simulation
+     * des Robterarms benötigt
+     */
     public RelativeLayout relativeLayout;
     public DrawCanvas drawCanvas;
     public Axes axes;
-    //Home Button
+    /**
+     * Dieser Button ist für das Anfahren der Homeposition zuständig
+     */
     public FloatingActionButton buttonHome;
-    //SleepButton
+    /**
+     * Dieser Button ist für das Anfahren der Schlafposition zuständig
+     */
     public FloatingActionButton buttonSleep;
-    //Seekbar für die Geschwindigkeit
+    /**
+     * Diese Seekbar würd für die Funktionen des TabLayouts benötigt
+     */
     public SeekBar seekbar;
-    //
+    /**
+     * Wird für den Greifer und das Delay benötigt
+     */
     public TabLayout tabLayout;
-    //
+    /**
+     * Referenz zur MainActivity
+     */
     public MainActivity mainActivity;
-    //
+    /**
+     * Referenz zur Bluetooth Schnittstelle
+     */
     public BluetoothSteuerung bluetoothSteuerung;
-    //
+    /**
+     * Der Thread wird für Gamepads benötigt
+     */
     public Thread runner;
-    //
+    /**
+     * Zwischenspeichern welcher Button aktiv ist
+     */
     public boolean axisOneLeft = false;
     public boolean axisOneRight = false;
-    //
     public boolean axisTwoLeft = false;
     public boolean axisTwoRight = false;
-    //
     public boolean axisThreeLeft = false;
     public boolean axisThreeRight = false;
-    //
     public boolean axisFourLeft = false;
     public boolean axisFourRight = false;
-    //
+    /**
+     * Varibale für das Zwischenspeichern des Delays
+     */
     public int delay = 100;
-    //
+
+    /**
+     * @param savedInstanceState
+     * Deklarierte Eigenschaften werden initisiert und Events wenn nötig hinzugefügt
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_bewegen_kontroller);
+        setContentView(R.layout.fragment_bewegen_controller);
         //
         axes = MainActivity.axes;
         bluetoothSteuerung = MainActivity.bluetoothSteuerung;
-        mainActivity = MainActivity.instance;
+        mainActivity = MainActivity.instanz;
         //Linkes Gamepad initialisieren
         buttonUpLeft = findViewById(R.id.buttonUpLeft);
         buttonLeftLeft = findViewById(R.id.buttonLeftLeft);
@@ -118,6 +139,11 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
         seekbar = findViewById(R.id.seekbar);
         //
         tabLayout = findViewById(R.id.tabLayout);
+        /**
+         * Dem TabLayout wird ein Listener hinzugefügt. Wenn ein neuer Tab ausgewählt wurde wird diese
+         * Methode aufgerufen. Dann wird Verglichen welcher Tab aktiv ist und der maximale Wert der Seekbar
+         * wird fetsgelegt.
+         */
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -138,7 +164,11 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
+        /**
+         * Der Seekbar wurde ebenfalls ein Listener hinzugefügt. Wenn sich der WErt ändert, werden
+         * diese Methoden aufgerufen. Verglichen wird dann welchen maximalen WErt die Seekbar haben kann.
+         * Darauf aufgebaut weiß man dann welcher Wert an den Roboter gschickt werden muss.
+         */
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -171,6 +201,14 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
         startThread();
     }
 
+    /**
+     * @param v
+     * Wenn einer der FloatinActionButtons angeklickt wird, wird diese Methode aufgerufen.
+     * Weil das Event erst ausgeführt wird, wenn der BEnutzer den Button geklickt und wieder
+     * losgelassen hat, weiß man das der Button nicht mehr aktiv ist. Deswegen wird der Zustand
+     * auf false gesetzt. Wenn der Button für die Home- oder Schlafposition angelickt wurde, wird
+     * die festgelegte Position an den Roboter übermittelt.
+     */
     @Override
     public void onClick(View v) {
         FloatingActionButton f = (FloatingActionButton)v;
@@ -200,7 +238,7 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
         if(f.equals(buttonRightRight)){
             axisFourRight = false;
         }
-        //Home und Sleep Button
+        //Home- und Sleepbutton
         if(f.equals(buttonHome)){
             drawCanvas.axes.changePosition(90, 120, 25, 50, 0, 60);
             drawCanvas.invalidate();
@@ -215,6 +253,14 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
         }
     }
 
+    /**
+     * @param v
+     * @param event
+     * @return
+     * Wenn einer der FloatingActionButtons berührt wird, wird diese Methode ausgeführt.
+     * Dann wird kontrolliert welcher Button berührt wurde und der zuständige boolean wird
+     * auf true gesetzt.
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         FloatingActionButton f = (FloatingActionButton)v;
@@ -246,13 +292,29 @@ public class FragmentBewegenKontroller extends AppCompatActivity implements View
         }
         return false;
     }
+
+    /**
+     * Methode für das Starten des Threads, dabei wird der Thread initilaisiert und
+     * diese Klasse mit this übergeben. Anschließend wird der Thread mit der Methode start
+     * gestartet.
+     */
     public void startThread(){
         runner = new Thread(this);
         runner.start();
     }
+
+    /**
+     * Gestoppt werden kann der Thread, indem man dieses null setzt.
+     */
     public void stopThread(){
         runner = null;
     }
+    /**
+     * Für den Thread wurde diese Methode aus dem Interface Runnable implementiert.
+     * Wenn der jetzige Thread dem erstelten Thread entspricht wird die Schleife ausgeführt.
+     * Dann wird je nach dem welche Achse bewegt werden soll der Wert bei jedem Durchgang um eins
+     * erhöht bzw verrigert.
+     */
     @Override
     public void run() {
         try {
