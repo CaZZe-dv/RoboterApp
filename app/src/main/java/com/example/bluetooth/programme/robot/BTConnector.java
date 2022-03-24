@@ -24,12 +24,11 @@ public class BTConnector {
 
     private static Point curPosition;
     private static int curSpeed;
-    private static int defaultSpeed = 20;
 
     private static boolean connected=false;
 
     public static void init(){
-        //connectBluetooth();
+        connectBluetooth();
         curPosition=new Point();
         homePosition();
     }
