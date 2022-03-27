@@ -462,7 +462,7 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         if(v.equals(joystickLinks)){
             jsLinks.drawStick(motionEvent);
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                int direction = jsLinks.get8Direction();
+                int direction = jsLinks.getDir();
                 if(joystickMode==false){//->Bewegungsmodus
                     axisOneUp=false;
                     axisOneDown=false;
@@ -555,7 +555,7 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
                 //System.out.println("Rechter Joystick wird bewegt");
-                int direction = jsRechts.get8Direction();
+                int direction = jsRechts.getDir();
                 axisThreeUp=false;
                 axisThreeDown=false;
                 axisFourUp=false;
