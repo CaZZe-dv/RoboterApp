@@ -248,8 +248,8 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
         return pName;
     }
     private int getGeschwindigkeit(){
-        //Speed muss ausgewählt werden -> zwischen 30 und 70 -> umso niedriger umso schneller
-        int speed=axisGeschwindigkeit.getProgress()+40;
+        //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
+        int speed=axisGeschwindigkeit.getProgress()+10;
         return speed;
     }
 
@@ -538,7 +538,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
 
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 //Linker Joystick wird nicht mehr berührt
-                System.out.println("Linker Joystick wird nicht mehr berührt");
                 axisOneUp=false;
                 axisOneDown=false;
                 axisTwoUp=false;
@@ -554,7 +553,6 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
             jsRechts.drawStick(motionEvent);
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
-                //System.out.println("Rechter Joystick wird bewegt");
                 int direction = jsRechts.get8Direction();
                 axisThreeUp=false;
                 axisThreeDown=false;
@@ -591,10 +589,8 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
                 } else if(direction == JoyStickClass.conNone) {
 
                 }
-                //System.out.println("Rechter Joystick Direction axisThreeDown: "+axisThreeDown);
             } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 //Rechter Joystick wird nicht mehr berührt
-                //System.out.println("Rechter Joystick wird nicht mehr berührt");
                 axisThreeUp=false;
                 axisThreeDown=false;
                 axisFourUp=false;
@@ -714,94 +710,83 @@ public class BearbeitenFragmentJoystick extends Fragment implements View.OnTouch
     public void run() {
         try {
             while (true) {
-                speed=getGeschwindigkeit();
+                speed=axisGeschwindigkeit.getProgress()+10;
 
                 //Linker Joystick -> Bewegungs Modus
                 //axisOne
                 if(axisOneUp){
                     int axisOne=curPoint.getAxisOne();
-                    if(axisOne < 180){
+                    if(axisOne < 180 && axisOne>0){
                         curPoint.setAxisOne(axisOne++);
-                        BTConnector.sendMessage("1",String.valueOf(axisOne++));
                     }
                 }else if(axisOneDown){
                     int axisOne=curPoint.getAxisOne();
-                    if(axisOne>0){
+                    if(axisOne < 180 && axisOne>0){
                         curPoint.setAxisOne(axisOne--);
-                        BTConnector.sendMessage("1",String.valueOf(axisOne--));
                     }
                 }
                 //axisTwo
                 if(axisTwoUp){
                     int axisTwo=curPoint.getAxisTwo();
-                    if(axisTwo < 180){
+                    if(axisTwo < 180 && axisTwo>0){
                         curPoint.setAxisTwo(axisTwo++);
-                        BTConnector.sendMessage("2",String.valueOf(axisTwo++));
                     }
                 }else if(axisTwoDown){
                     int axisTwo=curPoint.getAxisTwo();
-                    if(axisTwo>0){
+                    if(axisTwo < 180 && axisTwo>0){
                         curPoint.setAxisTwo(axisTwo--);
-                        BTConnector.sendMessage("2",String.valueOf(axisTwo--));
                     }
                 }
                 //axisFive
                 if(axisFiveUp){
                     int axisFive=curPoint.getAxisFive();
-                    if(axisFive < 180){
+                    if(axisFive < 180 && axisFive>0){
                         curPoint.setAxisFive(axisFive++);
-                        BTConnector.sendMessage("5",String.valueOf(axisFive++));
                     }
                 }else if(axisFiveDown){
                     int axisFive=curPoint.getAxisFive();
-                    if(axisFive>0){
+                    if(axisFive < 180 && axisFive>0){
                         curPoint.setAxisFive(axisFive--);
-                        BTConnector.sendMessage("5",String.valueOf(axisFive--));
                     }
                 }
                 //axisGreifer
                 if(axisGreiferUp){
                     int axisGreifer=curPoint.getAxisSix();
-                    if(axisGreifer < 70){
+                    if(axisGreifer < 180 && axisGreifer>0){
                         curPoint.setAxisSix(axisGreifer++);
-                        BTConnector.sendMessage("6",String.valueOf(axisGreifer++));
                     }
                 }else if(axisGreiferDown){
                     int axisGreifer=curPoint.getAxisSix();
-                    if(axisGreifer>0){
+                    if(axisGreifer < 180 && axisGreifer>0){
                         curPoint.setAxisSix(axisGreifer--);
-                        BTConnector.sendMessage("6",String.valueOf(axisGreifer--));
                     }
                 }
                 //Rechter Joystick
                 //axisThree
                 if(axisThreeUp){
                     int axisThree=curPoint.getAxisThree();
-                    if(axisThree < 180){
+                    if(axisThree < 180 && axisThree>0){
                         curPoint.setAxisThree(axisThree++);
-                        BTConnector.sendMessage("3",String.valueOf(axisThree++));
                     }
                 }else if(axisThreeDown){
                     int axisThree=curPoint.getAxisThree();
-                    if(axisThree>0){
+                    if(axisThree < 180 && axisThree>0){
                         curPoint.setAxisThree(axisThree--);
-                        BTConnector.sendMessage("3",String.valueOf(axisThree--));
                     }
                 }
                 //axisFour
                 if(axisFourUp){
                     int axisFour=curPoint.getAxisFour();
-                    if(axisFour < 180){
+                    if(axisFour < 180 && axisFour>0){
                         curPoint.setAxisFour(axisFour++);
-                        BTConnector.sendMessage("4",String.valueOf(axisFour++));
                     }
                 }else if(axisFourDown){
                     int axisFour=curPoint.getAxisFour();
-                    if(axisFour>0){
+                    if(axisFour < 180 && axisFour>0){
                         curPoint.setAxisFour(axisFour--);
-                        BTConnector.sendMessage("4",String.valueOf(axisFour--));
                     }
                 }
+                BTConnector.goTo(curPoint,speed);
 
                 Thread.sleep(speed);
             }

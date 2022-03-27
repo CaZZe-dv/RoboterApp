@@ -1,5 +1,6 @@
 package com.example.bluetooth.steuerung;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,60 +8,41 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.bluetooth.R;
 import com.example.bluetooth.programme.ProgrammActivity;
-/**
- * @author Matthias Fichtinger
- * @version 11.03.2022
- * Die Klasse ControllerChoose kümmert sich um die Auswahl zwischen
- * Programmen und der Steuerung des Roboters
- */
+
+//Kümmert sich um die Steuerung des Auswählens
 public class ControllerChoose extends AppCompatActivity {
-    /**
-     * Button für das Bestätigen den Modus
-     */
-    public Button auswahlButton;
-    /**
-     * RadioButton für die Programme
-     */
-    public RadioButton programmeButton;
-    /**
-     * RadioButton für die Steuerung
-     */
-    public RadioButton controllerButton;
-    /**
-     * TextView in dem eine Kurzbeschreibung des ausgewählten Modus
-     * angezeigt wird.
-     */
-    public TextView beschreibungModus;
-    /**
-     * RadioGroup, damit immer nur ein RadioButton aktiv sein kann
-     */
+    //Button für das Auswählen des Modus
+    public Button chooseButton;
+    //RadioButton für die Programme
+    public RadioButton programms;
+    //RadioButton für den Controller
+    public RadioButton controller;
+    //Wenn ein RadioButton ausgewählt ist, dann wird in diesem TextView eine
+    //kurze Beschreibung angezeigt
+    public TextView toolTip;
+    //RadioGroup damit immer nur ein RadioButton aktiv sein kann
     public RadioGroup radioGroup;
-    /**
-     * Der AlertDialog.Builder und der AlertDialog werden beide benötigt für das Popup-Fenster
-     * das den Benutzer darauf hinweist, dass das Verbinden mit dem Bluetooth-Modul
-     * einige Sekunden dauern könnte
-     */
+
     public AlertDialog.Builder builder;
     public AlertDialog alert;
-
-    /**
-     * @param savedInstanceState
-     * In der Methode onCreate werden alle Eigenschaften, die deklariert wurden initialisiert.
-     * ZUsätzlich wurden den Komponenten die Ereignisse ausführen wurden Listeners hinzugefügt.
-     */
+    //Methode onCreate der Überklasse überschreiben
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //onCreate MEthode der Überklasse aufrufen
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.auswahl);
-
-        auswahlButton = findViewById(R.id.ChooseButton);
-        programmeButton = findViewById(R.id.Programms);
-        controllerButton = findViewById(R.id.Controller);
-        beschreibungModus = findViewById(R.id.Tooltip);
+        //Als Content unser XML-File für Choose setzen
+        setContentView(R.layout.choose);
+        //Eigenschaften chooseButton, programms, controller, toolTip und radioGroup deklarieren
+        chooseButton = findViewById(R.id.ChooseButton);
+        programms = findViewById(R.id.Programms);
+        controller = findViewById(R.id.Controller);
+        toolTip = findViewById(R.id.Tooltip);
         radioGroup = findViewById(R.id.radioGroup);
 
         builder = new AlertDialog.Builder(this);
@@ -69,62 +51,49 @@ public class ControllerChoose extends AppCompatActivity {
         builder.setTitle("Hinweis");
         builder.setPositiveButton("OK",null);
         alert = builder.create();
-        /**
-         * Dem RadioButton für den Controller wird ein ClickListener hinzugefügt. Wenn dieser gedrückt wird, wird
-         * er aufgrund der RadioGroup als ausgewählt angezeigt. Im TextView für die
-         * Beschreibung wird der Text passend zum Modus verändert.
-         */
-        controllerButton.setOnClickListener(new View.OnClickListener() {
+        //Dem Controller RadioButton einen ClickListener hinzufügen
+        controller.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                controllerButton.setChecked(true);
-                beschreibungModus.setText("Mit diesem Modus können Sie den Roboter steuern");
+                //setChecked auf true setzen und dem TextView toolTip eine kurze
+                //Beschreibung für den Modus Hinzufügen
+                controller.setChecked(true);
+                toolTip.setText("Mit diesem Modus können Sie den Roboter steuern");
             }
         });
-        /**
-         * Dem RadioButton für die Programme wird ein ClickListener hinzugefügt. Wenn dieser gedrückt wird, wird
-         * er aufgrund der RadioGroup als ausgewählt angezeigt. Im TextView für die
-         * Beschreibung wird der Text passend zum Modus verändert.
-         */
-        programmeButton.setOnClickListener(new View.OnClickListener() {
+        //Dem Programms RadioButton einen ClickListener hinzufügen
+        programms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                programmeButton.setChecked(true);
-                beschreibungModus.setText("Mit diesem Modus können Sie Programme erstellen und abspielen");
+                //setChecked auf true setzen und dem TextView toolTip eine kurze
+                //Beschreibung für den Modus Hinzufügen
+                programms.setChecked(true);
+                toolTip.setText("Mit diesem Modus können Sie Programme erstellen und abspielen");
             }
         });
-        /**
-         * Der Button für das Bestätigen der Auswahl hat ebenfalls einen ClickListener. Wenn dieser
-         * gedrückt wurde, wird sich eine Referenz zum Ausgewählten RadioButton in der RadioGroup gemacht,
-         * anschließend wird überprüft welcher der beiden Buttons der Referenz gleich ist und der Modus wird
-         * gewechselt. Anschließend öffnet sich ein Pupup-Fenster das darauf hinweist, dass das Verbinden zum
-         * Bluetooth-Modul einige Sekunden dauern könnte.
-         */
-        auswahlButton.setOnClickListener(new View.OnClickListener() {
+        //dem chooseButton einen ClickListener hinzufügen
+        chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Aus der RadioGroup den ausgwählten RadioButton herrausziehen
                 RadioButton r = findViewById(radioGroup.getCheckedRadioButtonId());
-                if(r.equals(controllerButton)) {
+                //Den Radiobutton mit dem Controller und Programms vergleichen und dann
+                //je nach dem welcher RadioButton ausgewählt wurde wird das nächste Fenster gestartet
+                if(r.equals(controller)) {//Controller Modus
                     switchToMainActivity();
-                }else if(r.equals(programmeButton)){
+                }else if(r.equals(programms)){//Programm Modus
                     switchToProgrammActivity();
                 }
                 alert.show();
             }
         });
     }
-    /**
-     * Mit der Methode switchToMainActivity wird zur Steuerung des Roboter gewechselt.
-     * Dabei wird ein neues Intent mit der Klasse MainActivity erstellt und gestartet.
-     */
+    //Zum Controller XML-File wechseln
     public void switchToMainActivity(){
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
-    /**
-     * Mit der Methode switchToProgrammActivity wird zu den Programmen des Roboter gewechselt.
-     * Dabei wird ein neues Intent mit der Klasse ProgrammActivity erstellt und gestartet.
-     */
+    //Zum Programm XML-File wechseln
     public void switchToProgrammActivity(){
         Intent intent = new Intent(this, ProgrammActivity.class);
         startActivity(intent);

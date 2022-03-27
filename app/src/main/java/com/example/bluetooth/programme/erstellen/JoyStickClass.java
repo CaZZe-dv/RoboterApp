@@ -48,7 +48,7 @@ public class JoyStickClass {
     public JoyStickClass (Context context, ViewGroup layout) {
         mContext = context;
 
-        Drawable drawable = mContext.getDrawable(R.drawable.ic_joystick_controller);
+        Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_joystick_controller);
         stick = drawableToBitmap(drawable);
 
         //stick = BitmapFactory.decodeResource(mContext.getResources(), stick_res_id);

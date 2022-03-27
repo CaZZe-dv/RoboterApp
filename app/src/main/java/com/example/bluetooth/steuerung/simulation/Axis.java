@@ -1,45 +1,21 @@
 package com.example.bluetooth.steuerung.simulation;
-/**
- * @author Matthias Fichtinger
- * @version 11.03.2022
- * Wird für die Simulation benötigt
- */
+//Ein Teil der Simulation des Roboters
 public class Axis {
-    /**
-     * Winkel am dem sich die Achse gerade befindet
-     */
+    //Jede Achse verfügt über einen Winkel in dem er sich gearde befindet
+    //einer Länge der vorherigen Achse und der Achse eins
     public int degree;
-    /**
-     * Länge dieser Achse
-     */
     public int axisLength;
-    /**
-     * Vorherige Achse relativ zur dieser Achse
-     */
     public Axis prev;
-    /**
-     * Referenz zur ersten Achse
-     */
     public Axis axisOne;
-
-    /**
-     * @param degree
-     * @param prev
-     * @param axisLength
-     * @param axisOne
-     * Im Konstruktor werden die Eigenschaften, die deklariert wurden initialisiert
-     */
+    //IM Konstruktor werden dann zu den EIgenschaften die Werte zugewiesen
     public Axis(int degree, Axis prev, int axisLength, Axis axisOne){
         this.degree = degree;
         this.prev = prev;
         this.axisLength = axisLength;
         this.axisOne = axisOne;
     }
-    /**
-     * @return
-     * Die Methode getDegreeRelativ gibt die relativen Grade der Achse wie diese im
-     * Raum steht zurück.
-     */
+    //MIt dieser Methode bekommt man die relativen Grade an der sich der Roboter befindet
+    //Wird für die Simulation benötigt
     public int getDegreeRelativ(){
         if(prev != null){
             int d = prev.getDegreeRelativ() - 90;
@@ -47,36 +23,21 @@ public class Axis {
         }
         return degree;
     }
-
-    /**
-     * @return
-     * Die Methode getRelativeVector gibt bezogen auf die relativen Grade den 2D Vektor,
-     * wie diese Achse im Raum steht zurück.
-     */
+    //Mit dieser MEthode erhält man den relative Vector im Raum
     public Vector2D getRelativVector(){
         int degreeRelativ = getDegreeRelativ();
         int x = (int)(Math.cos(Math.toRadians(degreeRelativ))*axisLength);
         int y = (int)(Math.sin(Math.toRadians(degreeRelativ))*axisLength);
         return new Vector2D(x,y);
     }
-
-    /**
-     * @return
-     * Die Methode getVectorWorld2D gibt bezogen auf die angepsrohene Achse, den Welt 2D Vektor
-     * zurück.
-     */
+    //Mit dieser Methode erhält man den Weltpunkt im Raum für diese Achse als 2-Dimensionaler Vector
     public Vector2D getVectorWorld2D(){
         if(prev != null){
             return Vector2D.addVector2D(getRelativVector(),prev.getVectorWorld2D());
         }
         return getRelativVector();
     }
-
-    /**
-     * @return
-     * Die Methode getVectorWorld3D berechnet sich aus dem 2D Vektor den 3D Vektor, dazu wird die
-     * erste Achse verwendet um die neunen Koordinaten zu bestimmen.
-     */
+    //
     public Vector3D getVectorWorld3D(){
         int degree = axisOne.degree;
         Vector2D vectorWorld2D = getVectorWorld2D();
@@ -85,12 +46,7 @@ public class Axis {
         int y = vectorWorld2D.y;
         return new Vector3D(x,y,z);
     }
-
-    /**
-     * @return
-     * Damit die Achse 1 in der Simulation simuliert werden kann benötigt man den Faktor,
-     * der beim Zeichnen benötigt wird.
-     */
+    //Wird ebenfalls für die Simulation benötigt
     public double getDrawFactor(){
         return Math.cos(Math.toRadians(degree));
     }

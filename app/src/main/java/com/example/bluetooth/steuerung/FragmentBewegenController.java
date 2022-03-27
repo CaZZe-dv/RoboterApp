@@ -94,7 +94,7 @@ public class FragmentBewegenController extends AppCompatActivity implements View
         //
         axes = MainActivity.axes;
         bluetoothSteuerung = MainActivity.bluetoothSteuerung;
-        mainActivity = MainActivity.instanz;
+        mainActivity = MainActivity.instance;
         //Linkes Gamepad initialisieren
         buttonUpLeft = findViewById(R.id.buttonUpLeft);
         buttonLeftLeft = findViewById(R.id.buttonLeftLeft);

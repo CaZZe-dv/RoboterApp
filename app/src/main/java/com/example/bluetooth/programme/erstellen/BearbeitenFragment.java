@@ -204,7 +204,7 @@ public class BearbeitenFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
     private int getGeschwindigkeit(){
         //Speed muss ausgewählt werden -> zwischen 10 und 40 -> umso niedriger umso schneller
-        int speed=axisGeschwindigkeit.getProgress()+20;
+        int speed=axisGeschwindigkeit.getProgress()+10;
         return speed;
     }
 

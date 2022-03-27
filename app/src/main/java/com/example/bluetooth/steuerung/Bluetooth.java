@@ -5,18 +5,15 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Build;
 import android.os.ParcelUuid;
+
 import androidx.annotation.RequiresApi;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-/**
- * @author Matthias Fichtinger
- * @version 11.03.2022
- * Wird benötigt für den Aufbau der Bluetooth-Verbindung und für das
- * Senden der Nachrichten.
- */
+
 public class Bluetooth {
     public OutputStream outputStream;
     public InputStream inputStream;
