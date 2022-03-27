@@ -24,7 +24,7 @@ public class BTConnector {
 
     private static Point curPosition;
     private static int curSpeed;
-    private static int defaultSpeed = 20;
+    //private static int defaultSpeed = 20;
 
     private static boolean connected=false;
 
