@@ -5,37 +5,48 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.bluetooth.R;
-
-//Kümmert sich um die Steuerung des Einloggens
+/**
+ * @author Matthias Fichtinger
+ * @version 11.03.2022
+ * Die Klasse ControllerLogin kümmert sich um die Anmeldemaske
+ */
 public class ControllerLogin extends AppCompatActivity {
-    //Button zum Bestätigen der Anmeldedaten
-    public Button loginButton;
-    //Input Feld für den Benutzernamen
-    public TextView username;
     /**
-     * Input Feld für das Passwort
+     * Button zum Bestätigen der Anmeldedaten
      */
-    public TextView password;
-
+    public Button loginButton;
+    /**
+     * Input-Feld für den Benutzernamen
+     */
+    public TextView benutzername;
+    /**
+     * Input-Feld für das Passwort
+     */
+    public TextView passwort;
+    /**
+     * Der AlertDialog.Builder und der AlertDialog werden beide benötigt für das Popup-Fenster
+     * das erscheint wenn die Benutzerdaten falsch eingegeben wurden.
+     */
     public AlertDialog.Builder builder;
     public AlertDialog alert;
-    //Methode onCreate überschreiben, damit man eigene Daten verwenden kann
+    /**
+     * @param savedInstanceState
+     * In der onCreate Methode wird das login.xml als Content gesetzt und alle Eigenschaften
+     * die oben deklariert worden sind initialisiert. Dem Button für das Login wird ein Event
+     * hinzugefügt.
+     */
     protected void onCreate(Bundle savedInstanceState) {
-        //Methode der Überklasse AppCompatActivity aufrufen
         super.onCreate(savedInstanceState);
-        //Als Content das XML-File für Login setzten
         setContentView(R.layout.login);
-        //Eigenschaften username, password und loginButton deklarieren mit findViewById
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
 
-        username.setText("admin");
-        password.setText("admin");
+        benutzername = findViewById(R.id.username);
+        passwort = findViewById(R.id.password);
+
+        benutzername.setText("admin");
+        passwort.setText("admin");
 
         builder = new AlertDialog.Builder(this);
         builder.setMessage("Benutzername oder Passwort sind falsch, bitte versuchen Sie es erneut!");
@@ -46,14 +57,18 @@ public class ControllerLogin extends AppCompatActivity {
         alert = builder.create();
 
         loginButton = findViewById(R.id.loginButton);
-        //Dem Login Button einen ClickListener hinzufügen
+        /**
+         * Damit die Daten auf Richtigkeit überprüft werden können, wurde dem loginButton
+         * ein ClickListener hinzugefügt. Beim KLicken auf den Button soll überprüft werden,
+         * ob der Benutzername als auch das Passwort dem String admin entsprechen. Ist das der
+         * Fall wird die Methode switchToChoose aufgerufen. Ist das nicht der Fall, erscheint ein
+         * Popup-Fenster.
+         */
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Kontrolliert ob der Username und Passwort gleich admin entsprechen
-                if (username.getText().toString().equals("admin")
-                        && password.getText().toString().equals("admin")) {
-                    //Falls dies zutrifft wird zum nächsten Fenster gewechselt
+                if (benutzername.getText().toString().equals("admin")
+                        && passwort.getText().toString().equals("admin")) {
                     switchToChoose();
                     return;
                 }
@@ -61,7 +76,11 @@ public class ControllerLogin extends AppCompatActivity {
             }
         });
     }
-    //Methode zum Wechseln zum ControllerChoose
+    /**
+     * Mit der Methode switchToChoose kann zum nächsten Fenster, dem Auswhalfenster
+     * gewechselt werden, dabei wird en neues Intent von der Klasse ControllerChoose
+     * erstellt und gestartet.
+     */
     public void switchToChoose(){
         Intent intent = new Intent(this, ControllerChoose.class);
         startActivity(intent);

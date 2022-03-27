@@ -14,13 +14,16 @@
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/drawable/scrollbar_thumb.xml" value="0.1865" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/activity_programm.xml" value="0.33" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/activity_steuerung.xml" value="0.33469202898550726" />
+        <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/auswahl.xml" value="0.28532608695652173" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/bewegen.xml" value="0.33469202898550726" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/choose.xml" value="0.358695652173913" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment3.xml" value="0.33469202898550726" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment4.xml" value="0.33469202898550726" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_bearbeiten.xml" value="0.1" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_bewegen.xml" value="0.33469202898550726" />
+        <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_bewegen_controller.xml" value="0.5" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_bewegen_kontroller.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_console.xml" value="0.3482789855072464" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_einstellungen.xml" value="0.1" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_erstellen.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/matth/RoboterApp/app/src/main/res/layout/fragment_funktionen.xml" value="0.33469202898550726" />
