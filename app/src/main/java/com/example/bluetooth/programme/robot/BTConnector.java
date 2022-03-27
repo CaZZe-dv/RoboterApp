@@ -29,7 +29,7 @@ public class BTConnector {
     private static boolean connected=false;
 
     public static void init(){
-        //connectBluetooth();
+        connectBluetooth();
         curPosition=new Point();
         homePosition();
     }
