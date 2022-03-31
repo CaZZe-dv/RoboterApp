@@ -119,7 +119,8 @@ public class BTConnector {
         calculateDelay(points);
         System.out.println("DELAY 1 NACHER: "+ points.get(0).getDelay());
         PointG point=points.get(0);
-        Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
+        Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),
+                point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
         goTo(p,point.getGeschwindigkeit());
 
         if(points.size()>1){
@@ -137,7 +138,8 @@ public class BTConnector {
                 ArrayList<PointG> points=handler.getArrayList();
                 PointG point=points.get(i);
 
-                Point p=new Point(point.getAxisOne(),point.getAxisTwo(),point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
+                Point p=new Point(point.getAxisOne(),point.getAxisTwo(),
+                        point.getAxisThree(),point.getAxisFour(),point.getAxisFive(),point.getAxisSix());
                 goTo(p,point.getGeschwindigkeit());
 
 
