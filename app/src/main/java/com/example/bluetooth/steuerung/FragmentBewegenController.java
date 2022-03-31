@@ -197,7 +197,6 @@ public class FragmentBewegenController extends AppCompatActivity implements View
                 }
             }
         });
-
         startThread();
     }
 
@@ -213,31 +212,15 @@ public class FragmentBewegenController extends AppCompatActivity implements View
     public void onClick(View v) {
         FloatingActionButton f = (FloatingActionButton)v;
         //Linkes Gamepad
-        if(f.equals(buttonDownLeft)){
-            axisTwoLeft = false;
-        }
-        if(f.equals(buttonUpLeft)){
-            axisTwoRight = false;
-        }
-        if(f.equals(buttonLeftLeft)){
-            axisOneLeft = false;
-        }
-        if(f.equals(buttonRightLeft)){
-            axisOneRight = false;
-        }
+        if(f.equals(buttonDownLeft)){ axisTwoLeft = false; }
+        if(f.equals(buttonUpLeft)){ axisTwoRight = false; }
+        if(f.equals(buttonLeftLeft)){ axisOneLeft = false; }
+        if(f.equals(buttonRightLeft)){ axisOneRight = false; }
         //Rechtes Gamepad
-        if(f.equals(buttonDownRight)){
-            axisThreeLeft = false;
-        }
-        if(f.equals(buttonUpRight)){
-            axisThreeRight = false;
-        }
-        if(f.equals(buttonLeftRight)){
-            axisFourLeft = false;
-        }
-        if(f.equals(buttonRightRight)){
-            axisFourRight = false;
-        }
+        if(f.equals(buttonDownRight)){ axisThreeLeft = false; }
+        if(f.equals(buttonUpRight)){ axisThreeRight = false; }
+        if(f.equals(buttonLeftRight)){ axisFourLeft = false; }
+        if(f.equals(buttonRightRight)){ axisFourRight = false; }
         //Home- und Sleepbutton
         if(f.equals(buttonHome)){
             drawCanvas.axes.changePosition(90, 120, 25, 50, 0, 60);
@@ -265,34 +248,17 @@ public class FragmentBewegenController extends AppCompatActivity implements View
     public boolean onTouch(View v, MotionEvent event) {
         FloatingActionButton f = (FloatingActionButton)v;
         //Linkes Gamepad
-        if(f.equals(buttonDownLeft)){
-            axisTwoLeft = true;
-        }
-        if(f.equals(buttonUpLeft)){
-            axisTwoRight = true;
-        }
-        if(f.equals(buttonLeftLeft)){
-            axisOneLeft = true;
-        }
-        if(f.equals(buttonRightLeft)){
-            axisOneRight = true;
-        }
+        if(f.equals(buttonDownLeft)){ axisTwoLeft = true; }
+        if(f.equals(buttonUpLeft)){ axisTwoRight = true; }
+        if(f.equals(buttonLeftLeft)){ axisOneLeft = true; }
+        if(f.equals(buttonRightLeft)){ axisOneRight = true; }
         //Rechtes Gamepad
-        if(f.equals(buttonDownRight)){
-            axisThreeLeft = true;
-        }
-        if(f.equals(buttonUpRight)){
-            axisThreeRight = true;
-        }
-        if(f.equals(buttonLeftRight)){
-            axisFourLeft = true;
-        }
-        if(f.equals(buttonRightRight)){
-            axisFourRight = true;
-        }
+        if(f.equals(buttonDownRight)){ axisThreeLeft = true; }
+        if(f.equals(buttonUpRight)){ axisThreeRight = true; }
+        if(f.equals(buttonLeftRight)){ axisFourLeft = true; }
+        if(f.equals(buttonRightRight)){ axisFourRight = true; }
         return false;
     }
-
     /**
      * Methode für das Starten des Threads, dabei wird der Thread initilaisiert und
      * diese Klasse mit this übergeben. Anschließend wird der Thread mit der Methode start
@@ -302,7 +268,6 @@ public class FragmentBewegenController extends AppCompatActivity implements View
         runner = new Thread(this);
         runner.start();
     }
-
     /**
      * Gestoppt werden kann der Thread, indem man dieses null setzt.
      */
@@ -367,7 +332,7 @@ public class FragmentBewegenController extends AppCompatActivity implements View
                 Thread.sleep(delay);
             }
         }catch (Exception e){
-
+            mainActivity.fragmentKonsole.writeConsole("Ein unerwarteter Fehler ist aufgetreten");
         }
     }
 }
